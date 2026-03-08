@@ -23,7 +23,7 @@ const mockInvoices = [
   { id: 4, titleRu: "Тестирование и запуск", titleEn: "Testing & Launch", amount: "$600", status: "pending" as const },
 ];
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
   const [loggedIn, setLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState<"projects" | "invoices" | "chat">("projects");
