@@ -1,6 +1,6 @@
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
-import { Zap, Award, ShieldCheck, ArrowRight } from "lucide-react";
+import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2 } from "lucide-react";
 
 const whyUsIcons = [Zap, Award, ShieldCheck];
 const whyUsKeys = [
@@ -10,10 +10,17 @@ const whyUsKeys = [
 ];
 
 const latestProjects = [
-  { title: "FitLife", color: "from-indigo-600 to-cyan-500" },
-  { title: "ShopMax", color: "from-emerald-600 to-teal-400" },
-  { title: "TechCore", color: "from-violet-600 to-fuchsia-500" },
-  { title: "EduPro", color: "from-amber-500 to-orange-500" },
+  { title: "FitLife", color: "from-indigo-600 to-cyan-500", category: "Landing" },
+  { title: "ShopMax", color: "from-emerald-600 to-teal-400", category: "E-commerce" },
+  { title: "TechCore", color: "from-violet-600 to-fuchsia-500", category: "Corporate" },
+  { title: "EduPro", color: "from-amber-500 to-orange-500", category: "Landing" },
+];
+
+const stats = [
+  { icon: TrendingUp, value: "150+", key: "home.stat.projects" },
+  { icon: Users, value: "120+", key: "home.stat.clients" },
+  { icon: Star, value: "4.9", key: "home.stat.rating" },
+  { icon: Code2, value: "7+", key: "home.stat.years" },
 ];
 
 const HomeScreen = () => {
@@ -25,18 +32,39 @@ const HomeScreen = () => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="mt-6 rounded-2xl bg-gradient-to-br from-primary/20 to-accent/10 p-5"
+        className="relative mt-4 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/30 via-primary/10 to-accent/15 p-5"
       >
-        <h1 className="whitespace-pre-line text-xl font-bold leading-tight text-foreground">
+        <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-primary/20 blur-2xl" />
+        <div className="absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-accent/20 blur-2xl" />
+        <h1 className="relative whitespace-pre-line text-xl font-bold leading-tight text-foreground">
           {t("home.hero")}
         </h1>
         <motion.button
           whileTap={{ scale: 0.95 }}
-          className="mt-4 flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground"
+          className="relative mt-4 flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25"
         >
           {t("home.cta")}
           <ArrowRight size={16} />
         </motion.button>
+      </motion.div>
+
+      {/* Stats Grid */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.1 }}
+        className="mt-5 grid grid-cols-4 gap-2"
+      >
+        {stats.map((s, i) => {
+          const Icon = s.icon;
+          return (
+            <div key={i} className="flex flex-col items-center gap-1 rounded-xl bg-card p-3 border border-border">
+              <Icon size={16} className="text-accent" />
+              <span className="text-base font-bold text-foreground">{s.value}</span>
+              <span className="text-[10px] text-muted-foreground text-center leading-tight">{t(s.key)}</span>
+            </div>
+          );
+        })}
       </motion.div>
 
       {/* Why Us */}
@@ -80,13 +108,31 @@ const HomeScreen = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 + i * 0.08 }}
             whileTap={{ scale: 0.97 }}
-            className={`flex min-w-[200px] flex-col justify-end rounded-2xl bg-gradient-to-br ${p.color} p-4 h-[140px]`}
+            className={`flex min-w-[200px] flex-col justify-end rounded-2xl bg-gradient-to-br ${p.color} p-4 h-[140px] shadow-lg`}
           >
             <span className="text-lg font-bold text-white">{p.title}</span>
-            <span className="text-xs text-white/70">webmns.dev</span>
+            <span className="text-xs text-white/70">{p.category}</span>
           </motion.div>
         ))}
       </div>
+
+      {/* Services Banner */}
+      <motion.div
+        initial={{ opacity: 0, y: 15 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="mt-5 mb-2 rounded-2xl border border-border bg-gradient-to-r from-card to-secondary p-4"
+      >
+        <h3 className="text-sm font-bold text-foreground mb-1">{t("home.services")}</h3>
+        <p className="text-xs text-muted-foreground leading-relaxed">{t("home.servicesDesc")}</p>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          className="mt-3 flex items-center gap-1 text-xs font-semibold text-primary"
+        >
+          {t("home.learnMore")}
+          <ArrowRight size={12} />
+        </motion.button>
+      </motion.div>
     </div>
   );
 };

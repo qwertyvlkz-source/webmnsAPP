@@ -18,7 +18,7 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
   const { t } = useLang();
 
   return (
-    <nav className="flex items-end justify-around border-t border-border bg-card px-2 pb-[env(safe-area-inset-bottom)] pt-1">
+    <nav className="flex items-end justify-around border-t border-border bg-card/90 backdrop-blur-md px-2 pb-[env(safe-area-inset-bottom)] pt-1">
       {tabs.map((tab, i) => {
         const Icon = tab.icon;
         const isActive = active === i;
@@ -28,36 +28,30 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
             whileTap={{ scale: 0.9 }}
             onClick={() => onTabChange(i)}
             className={`flex min-h-[56px] min-w-[64px] flex-col items-center justify-center gap-0.5 rounded-xl px-2 py-1 ${
-              tab.accent
-                ? "relative -mt-3"
-                : ""
+              tab.accent ? "relative -mt-3" : ""
             }`}
           >
             {tab.accent ? (
               <span
-                className={`flex h-12 w-12 items-center justify-center rounded-2xl ${
+                className={`flex h-12 w-12 items-center justify-center rounded-2xl shadow-lg ${
                   isActive
-                    ? "bg-primary shadow-lg shadow-primary/30"
+                    ? "bg-primary shadow-primary/30"
                     : "bg-primary/80"
                 }`}
               >
                 <Icon size={24} className="text-primary-foreground" />
               </span>
             ) : (
-              <Icon
-                size={22}
-                className={isActive ? "text-primary" : "text-muted-foreground"}
-              />
+              <span className={`flex h-9 w-9 items-center justify-center rounded-xl transition-colors ${isActive ? "bg-primary/15" : ""}`}>
+                <Icon
+                  size={21}
+                  className={isActive ? "text-primary" : "text-muted-foreground"}
+                />
+              </span>
             )}
             <span
               className={`text-[10px] font-medium ${
-                tab.accent
-                  ? isActive
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                  : isActive
-                  ? "text-primary"
-                  : "text-muted-foreground"
+                isActive ? "text-primary" : "text-muted-foreground"
               }`}
             >
               {t(tab.key)}
