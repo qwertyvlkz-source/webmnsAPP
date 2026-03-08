@@ -61,7 +61,7 @@ const HomeScreen = () => {
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
         transition={{ delay: 0.1 }}
-        className="mt-5 grid grid-cols-4 gap-2"
+        className="mt-4 grid grid-cols-4 gap-3"
       >
         {stats.map((s, i) => {
           const Icon = s.icon;
