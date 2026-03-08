@@ -10,10 +10,9 @@ const whyUsKeys = [
 ];
 
 const latestProjects = [
-  { title: "FitLife", color: "from-indigo-600 to-cyan-500", category: "Landing" },
-  { title: "ShopMax", color: "from-emerald-600 to-teal-400", category: "E-commerce" },
-  { title: "TechCore", color: "from-violet-600 to-fuchsia-500", category: "Corporate" },
-  { title: "EduPro", color: "from-amber-500 to-orange-500", category: "Landing" },
+  { title: "Visa Site", image: "/images/visa.png", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
+  { title: "FIX Service", image: "/images/fix.png", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
+  { title: "SEO Agency", image: "/images/seo.png", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
 ];
 
 const stats = [
@@ -24,7 +23,7 @@ const stats = [
 ];
 
 const HomeScreen = () => {
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4">
@@ -114,10 +113,14 @@ const HomeScreen = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 + i * 0.08 }}
             whileTap={{ scale: 0.97 }}
-            className={`flex flex-col justify-end rounded-2xl bg-gradient-to-br ${p.color} p-4 h-[120px] shadow-lg`}
+            className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] shadow-lg"
           >
-            <span className="text-base font-bold text-white">{p.title}</span>
-            <span className="text-[11px] text-white/70">{p.category}</span>
+            <img src={p.image} alt={p.title} className="absolute inset-0 h-full w-full object-cover" />
+            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+            <div className="relative p-3">
+              <span className="text-sm font-bold text-white">{p.title}</span>
+              <span className="block text-[10px] text-white/70">{lang === "ru" ? p.descRu : p.descEn}</span>
+            </div>
           </motion.div>
         ))}
       </div>
