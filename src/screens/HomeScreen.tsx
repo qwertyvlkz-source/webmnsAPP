@@ -12,12 +12,10 @@ const whyUsKeys = [
 ];
 
 const latestProjects = [
-  { title: "Visa Site", image: "/images/visa.png", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
-  { title: "FIX Service", image: "/images/fix.png", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
-  { title: "SEO Agency", image: "/images/seo.png", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
-  { title: "Visa Site", image: "/images/visa.png", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
-  { title: "FIX Service", image: "/images/fix.png", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
-  { title: "SEO Agency", image: "/images/seo.png", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
+  { title: "Visa Site", image: "/images/visa.png", tech: "Next.js, Tailwind, TypeScript", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
+  { title: "FIX Service", image: "/images/fix.png", tech: "React, Node.js, PostgreSQL", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
+  { title: "SEO Agency", image: "/images/seo.png", tech: "React, Tailwind, Framer Motion", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
+  { title: "Visa Site", image: "/images/visa.png", tech: "Figma, Adobe XD", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
 ];
 
 const stats = [
