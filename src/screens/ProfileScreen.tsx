@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import {
   User, LogOut, CheckCircle, Circle, Loader2,
   FileText, MessageCircle, Send, ChevronRight, CreditCard, Users,
+  Copy, Check, DollarSign, UserPlus, Eye, ShoppingCart,
 } from "lucide-react";
 
 // Mock chat messages
