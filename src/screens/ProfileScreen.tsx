@@ -35,8 +35,18 @@ const mockReferrals = [
 const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
   const [loggedIn, setLoggedIn] = useState(false);
-  const [activeTab, setActiveTab] = useState<"projects" | "invoices" | "chat">("projects");
+  const [activeTab, setActiveTab] = useState<"projects" | "invoices" | "chat" | "partner">("projects");
   const [chatInput, setChatInput] = useState("");
+  const [messages, setMessages] = useState(mockMessages);
+  const [copied, setCopied] = useState(false);
+  const refLink = "https://webmns.com/ref/partner123";
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(refLink);
+    setCopied(true);
+    toast.success(lang === "ru" ? "Ссылка скопирована!" : "Link copied!");
+    setTimeout(() => setCopied(false), 2000);
+  };
   const [messages, setMessages] = useState(mockMessages);
 
   const steps = [
