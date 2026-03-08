@@ -93,8 +93,8 @@ const PortfolioScreen = () => {
           </DrawerHeader>
           <div className="px-4 pb-8">
             {selected && (
-              <div className="relative mb-4 h-[160px] rounded-2xl overflow-hidden">
-                <img src={selected.image} alt={selected.title} className="h-full w-full object-cover" />
+              <div className="relative mb-4 rounded-2xl overflow-hidden">
+                <img src={selected.image} alt={selected.title} className="w-full object-contain" />
               </div>
             )}
             <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
