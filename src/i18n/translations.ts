@@ -32,6 +32,7 @@ const translations: Record<string, Record<Lang, string>> = {
   },
   "home.learnMore": { ru: "Подробнее", en: "Learn More" },
   "home.partner": { ru: "Партнёрская программа", en: "Partner Program" },
+  "home.partner.button": { ru: "Полный цикл разработки", en: "Full-cycle Development" },
   "home.partner.desc": {
     ru: "Приводите клиентов и получайте до 20% от каждого заказа. Выгодные условия для постоянных партнёров!",
     en: "Refer clients and earn up to 20% from every order. Great terms for regular partners!",
