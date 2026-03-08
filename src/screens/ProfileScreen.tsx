@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import {
   User, LogOut, CheckCircle, Circle, Loader2,
-  FileText, MessageCircle, Send, ChevronRight, CreditCard,
+  FileText, MessageCircle, Send, ChevronRight, CreditCard, Users,
 } from "lucide-react";
 
 // Mock chat messages
