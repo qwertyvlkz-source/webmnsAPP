@@ -10,10 +10,9 @@ const whyUsKeys = [
 ];
 
 const latestProjects = [
-  { title: "FitLife", color: "from-indigo-600 to-cyan-500", category: "Landing" },
-  { title: "ShopMax", color: "from-emerald-600 to-teal-400", category: "E-commerce" },
-  { title: "TechCore", color: "from-violet-600 to-fuchsia-500", category: "Corporate" },
-  { title: "EduPro", color: "from-amber-500 to-orange-500", category: "Landing" },
+  { title: "Visa Site", image: "/images/visa.png", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
+  { title: "FIX Service", image: "/images/fix.png", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
+  { title: "SEO Agency", image: "/images/seo.png", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
 ];
 
 const stats = [
