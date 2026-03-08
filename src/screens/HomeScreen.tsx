@@ -101,6 +101,22 @@ const HomeScreen = () => {
         })}
       </div>
 
+      {/* Partner Program */}
+      <motion.div
+        initial={{ opacity: 0, y: 10 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.3 }}
+        className="mt-5 rounded-2xl border border-primary/30 bg-primary/10 p-4"
+      >
+        <div className="flex items-center gap-2 mb-1.5">
+          <span className="flex h-8 w-8 items-center justify-center rounded-xl bg-primary/20">
+            <Users size={16} className="text-primary" />
+          </span>
+          <h3 className="text-sm font-bold text-foreground">{t("home.partner")}</h3>
+        </div>
+        <p className="text-xs text-muted-foreground leading-relaxed">{t("home.partner.desc")}</p>
+      </motion.div>
+
       {/* Latest Projects */}
       <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {t("home.latest")}

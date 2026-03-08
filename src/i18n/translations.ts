@@ -31,6 +31,11 @@ const translations: Record<string, Record<Lang, string>> = {
     en: "From design to launch — we build websites that work for your business",
   },
   "home.learnMore": { ru: "Подробнее", en: "Learn More" },
+  "home.partner": { ru: "Партнёрская программа", en: "Partner Program" },
+  "home.partner.desc": {
+    ru: "Приводите клиентов и получайте до 20% от каждого заказа. Выгодные условия для постоянных партнёров!",
+    en: "Refer clients and earn up to 20% from every order. Great terms for regular partners!",
+  },
 
   // Portfolio
   "portfolio.title": { ru: "Портфолио", en: "Portfolio" },
