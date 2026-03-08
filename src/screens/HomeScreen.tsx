@@ -1,6 +1,7 @@
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
-import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2, Bell } from "lucide-react";
+import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2, Bell, Moon, Sun } from "lucide-react";
 
 const whyUsIcons = [Zap, Award, ShieldCheck];
 const whyUsKeys = [
