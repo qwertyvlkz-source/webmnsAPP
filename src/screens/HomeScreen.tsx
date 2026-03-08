@@ -96,9 +96,6 @@ const HomeScreen = () => {
               <span className="text-xs font-semibold text-foreground leading-tight">
                 {t(item.title)}
               </span>
-              <span className="text-[10px] text-muted-foreground leading-tight">
-                {t(item.desc)}
-              </span>
             </motion.div>
           );
         })}
