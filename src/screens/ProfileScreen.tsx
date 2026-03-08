@@ -184,6 +184,24 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
                   <ChevronRight size={16} className="text-muted-foreground" />
                 </div>
               </div>
+
+              {/* Partner Program Link */}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={onOpenPartner}
+                className="mt-3 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/10 p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
+                    <Users size={18} className="text-primary" />
+                  </span>
+                  <div className="text-left">
+                    <p className="text-sm font-semibold text-foreground">{t("home.partner")}</p>
+                    <p className="text-[10px] text-muted-foreground">{lang === "ru" ? "До 20% с каждого заказа" : "Up to 20% per order"}</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-primary" />
+              </motion.button>
             </motion.div>
           )}
 
