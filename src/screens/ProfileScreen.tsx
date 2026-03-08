@@ -59,6 +59,7 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const tabs = [
     { key: "projects" as const, label: "profile.tab.projects", icon: FileText },
     { key: "invoices" as const, label: "profile.tab.invoices", icon: CreditCard },
+    { key: "partner" as const, label: "profile.tab.partner", icon: Users },
     { key: "chat" as const, label: "profile.tab.chat", icon: MessageCircle },
   ];
 
