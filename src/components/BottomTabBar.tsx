@@ -18,8 +18,8 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
   const { t, lang, setLang } = useLang();
 
   return (
-    <nav className="px-3 pb-[max(env(safe-area-inset-bottom),6px)] pt-1">
-      <div className="flex items-center justify-around rounded-2xl bg-card shadow-[0_2px_20px_rgba(0,0,0,0.08)] border border-border px-1 py-0.5">
+    <nav className="px-3 pb-[max(env(safe-area-inset-bottom),4px)] pt-0.5">
+      <div className="flex items-center justify-around rounded-2xl bg-card shadow-[0_2px_20px_rgba(0,0,0,0.08)] border border-border px-1 py-0">
         {tabs.map((tab, i) => {
           const Icon = tab.icon;
           const isActive = active === i;
