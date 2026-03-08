@@ -35,9 +35,9 @@ const translations: Record<string, Record<Lang, string>> = {
   // Portfolio
   "portfolio.title": { ru: "Портфолио", en: "Portfolio" },
   "portfolio.all": { ru: "Все", en: "All" },
-  "portfolio.landing": { ru: "Лендинги", en: "Landings" },
-  "portfolio.ecommerce": { ru: "Магазины", en: "E-commerce" },
-  "portfolio.corporate": { ru: "Корпоративные", en: "Corporate" },
+  "portfolio.web": { ru: "Веб", en: "Web" },
+  "portfolio.mobile": { ru: "Мобильные", en: "Mobile" },
+  "portfolio.design": { ru: "Дизайн", en: "Design" },
   "portfolio.orderSimilar": { ru: "Заказать похожий", en: "Order Similar" },
   "portfolio.tech": { ru: "Технологии", en: "Tech Stack" },
 
