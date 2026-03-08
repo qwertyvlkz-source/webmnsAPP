@@ -48,23 +48,23 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
           <h1 className="whitespace-pre-line text-xl font-bold leading-tight text-foreground flex-1">
             {t("home.hero")}
           </h1>
-          <div className="flex flex-col gap-2 ml-3 shrink-0">
-            <motion.button whileTap={{ scale: 0.9 }} className="relative flex h-9 w-9 items-center justify-center rounded-full bg-card/80 shadow-sm">
-              <Bell size={17} className="text-foreground" />
-              <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card/80" />
-            </motion.button>
-            <motion.button whileTap={{ scale: 0.9 }} onClick={() => setDark(!dark)} className="flex h-9 w-9 items-center justify-center rounded-full bg-card/80 shadow-sm">
-              {dark ? <Sun size={17} className="text-foreground" /> : <Moon size={17} className="text-foreground" />}
-            </motion.button>
-          </div>
+          <motion.button whileTap={{ scale: 0.9 }} className="relative ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-card/80 shadow-sm">
+            <Bell size={17} className="text-foreground" />
+            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card/80" />
+          </motion.button>
         </div>
-        <motion.button
-          whileTap={{ scale: 0.95 }}
-          className="relative mt-4 flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25"
-        >
-          {t("home.cta")}
-          <ArrowRight size={16} />
-        </motion.button>
+        <div className="relative mt-4 flex items-center gap-3">
+          <motion.button
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25"
+          >
+            {t("home.cta")}
+            <ArrowRight size={16} />
+          </motion.button>
+          <motion.button whileTap={{ scale: 0.9 }} onClick={() => setDark(!dark)} className="flex h-10 w-10 items-center justify-center rounded-full bg-card/80 shadow-sm">
+            {dark ? <Sun size={17} className="text-foreground" /> : <Moon size={17} className="text-foreground" />}
+          </motion.button>
+        </div>
       </motion.div>
 
       {/* Stats Grid */}
