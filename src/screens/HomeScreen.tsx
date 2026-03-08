@@ -28,6 +28,7 @@ const stats = [
 const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
   const [dark, setDark] = useState(() => document.documentElement.classList.contains("dark"));
+  const [selected, setSelected] = useState<typeof latestProjects[0] | null>(null);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
