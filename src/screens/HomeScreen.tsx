@@ -79,16 +79,16 @@ const HomeScreen = () => {
       <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {t("home.why")}
       </h2>
-      <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4">
+      <div className="grid grid-cols-3 gap-2">
         {whyUsKeys.map((item, i) => {
           const Icon = whyUsIcons[i];
           return (
             <motion.div
               key={i}
-              initial={{ opacity: 0, x: 30 }}
-              animate={{ opacity: 1, x: 0 }}
+              initial={{ opacity: 0, y: 10 }}
+              animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="flex min-w-[140px] flex-col gap-2 rounded-2xl bg-card p-4 border border-border"
+              className="flex flex-col gap-2 rounded-2xl bg-card p-3 border border-border"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
                 <Icon size={20} className="text-primary" />
