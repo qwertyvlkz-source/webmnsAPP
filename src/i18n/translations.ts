@@ -36,6 +36,23 @@ const translations: Record<string, Record<Lang, string>> = {
     ru: "Приводите клиентов и получайте до 20% от каждого заказа. Выгодные условия для постоянных партнёров!",
     en: "Refer clients and earn up to 20% from every order. Great terms for regular partners!",
   },
+  "partner.headline": { ru: "Зарабатывайте вместе с нами", en: "Earn With Us" },
+  "partner.intro": {
+    ru: "Рекомендуйте наши услуги друзьям и коллегам — получайте вознаграждение за каждого привлечённого клиента.",
+    en: "Recommend our services to friends and colleagues — get rewarded for every referred client.",
+  },
+  "partner.benefits": { ru: "Преимущества", en: "Benefits" },
+  "partner.benefit1": { ru: "До 20% комиссии", en: "Up to 20% Commission" },
+  "partner.benefit1.desc": { ru: "С каждого оплаченного заказа привлечённого клиента", en: "From every paid order of a referred client" },
+  "partner.benefit2": { ru: "Пассивный доход", en: "Passive Income" },
+  "partner.benefit2.desc": { ru: "Клиент закреплён за вами навсегда", en: "The client stays linked to you forever" },
+  "partner.benefit3": { ru: "Быстрые выплаты", en: "Fast Payouts" },
+  "partner.benefit3.desc": { ru: "Выплаты в течение 3 рабочих дней", en: "Payouts within 3 business days" },
+  "partner.how": { ru: "Как это работает", en: "How It Works" },
+  "partner.step1": { ru: "Зарегистрируйтесь в программе", en: "Sign up for the program" },
+  "partner.step2": { ru: "Поделитесь ссылкой с клиентом", en: "Share the link with a client" },
+  "partner.step3": { ru: "Получите вознаграждение после оплаты", en: "Get rewarded after payment" },
+  "partner.join": { ru: "Стать партнёром", en: "Become a Partner" },
 
   // Portfolio
   "portfolio.title": { ru: "Портфолио", en: "Portfolio" },

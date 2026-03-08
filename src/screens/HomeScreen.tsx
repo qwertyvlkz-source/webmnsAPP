@@ -115,6 +115,13 @@ const HomeScreen = () => {
           <h3 className="text-sm font-bold text-foreground">{t("home.partner")}</h3>
         </div>
         <p className="text-xs text-muted-foreground leading-relaxed">{t("home.partner.desc")}</p>
+        <motion.button
+          whileTap={{ scale: 0.95 }}
+          onClick={onOpenPartner}
+          className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground"
+        >
+          {t("home.learnMore")}
+        </motion.button>
       </motion.div>
 
       {/* Latest Projects */}
