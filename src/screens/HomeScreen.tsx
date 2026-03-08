@@ -88,7 +88,7 @@ const HomeScreen = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="flex flex-col gap-2 rounded-2xl bg-card p-3 border border-border"
+              className="flex flex-col gap-2 rounded-2xl bg-card p-3 border border-border h-full"
             >
               <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
                 <Icon size={20} className="text-primary" />
