@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2, Bell, Moon, Sun } from "lucide-react";
 
 const whyUsIcons = [Zap, Award, ShieldCheck];
