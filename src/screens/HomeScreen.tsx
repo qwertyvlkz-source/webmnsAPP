@@ -25,7 +25,7 @@ const stats = [
   { icon: Code2, value: "7+", key: "home.stat.years" },
 ];
 
-const HomeScreen = () => {
+const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
 
   return (
