@@ -147,7 +147,8 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 + i * 0.08 }}
             whileTap={{ scale: 0.97 }}
-            className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] shadow-lg"
+            onClick={() => setSelected(p)}
+            className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] shadow-lg cursor-pointer"
           >
             <img src={p.image} alt={p.title} className="absolute inset-0 h-full w-full object-cover" />
             <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
@@ -158,6 +159,35 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
           </motion.div>
         ))}
       </div>
+
+      {/* Project Dialog */}
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <DialogContent className="max-w-sm rounded-2xl bg-card border-border p-0 overflow-hidden">
+          <DialogHeader className="px-4 pt-4 pb-0">
+            <DialogTitle className="text-foreground">{selected?.title}</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
+              {selected && (lang === "ru" ? selected.descRu : selected.descEn)}
+            </DialogDescription>
+          </DialogHeader>
+          <div className="px-4 pb-5">
+            {selected && (
+              <div className="relative mb-4 rounded-2xl overflow-hidden">
+                <img src={selected.image} alt={selected.title} className="w-full object-contain" />
+              </div>
+            )}
+            <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
+              {t("portfolio.tech")}
+            </p>
+            <p className="mb-5 text-sm text-foreground">{selected?.tech}</p>
+            <motion.button
+              whileTap={{ scale: 0.95 }}
+              className="w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground"
+            >
+              {t("portfolio.orderSimilar")}
+            </motion.button>
+          </div>
+        </DialogContent>
+      </Dialog>
 
       {/* Services Banner */}
       <motion.div
