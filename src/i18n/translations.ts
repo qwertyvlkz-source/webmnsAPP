@@ -65,19 +65,44 @@ const translations: Record<string, Record<Lang, string>> = {
   },
   "order.newOrder": { ru: "Новая заявка", en: "New Request" },
 
-  // Profile
-  "profile.greeting": { ru: "Привет, Пользователь!", en: "Hello, User!" },
+  // Profile - Auth
+  "profile.login.title": { ru: "Вход в кабинет", en: "Sign In" },
+  "profile.login.email": { ru: "Email", en: "Email" },
+  "profile.login.password": { ru: "Пароль", en: "Password" },
+  "profile.login.button": { ru: "Войти", en: "Sign In" },
+  "profile.login.register": { ru: "Зарегистрироваться", en: "Register" },
+  "profile.login.forgot": { ru: "Забыли пароль?", en: "Forgot password?" },
+  "profile.login.or": { ru: "или", en: "or" },
+  "profile.login.google": { ru: "Войти через Google", en: "Sign in with Google" },
+
+  // Profile - Dashboard
+  "profile.greeting": { ru: "Привет, Алексей!", en: "Hello, Alexey!" },
+  "profile.logout": { ru: "Выйти", en: "Log out" },
+
+  // Profile - Tabs
+  "profile.tab.projects": { ru: "Проекты", en: "Projects" },
+  "profile.tab.invoices": { ru: "Счета", en: "Invoices" },
+  "profile.tab.chat": { ru: "Чат", en: "Chat" },
+
+  // Profile - Projects
   "profile.activeProject": { ru: "Активный проект", en: "Active Project" },
-  "profile.projectName": {
-    ru: "Разработка интернет-магазина",
-    en: "E-commerce Development",
-  },
+  "profile.project1.name": { ru: "Интернет-магазин «ТехноМарт»", en: "E-commerce «TechnoMart»" },
+  "profile.project2.name": { ru: "Лендинг для стартапа", en: "Startup Landing Page" },
   "profile.design": { ru: "Дизайн", en: "Design" },
   "profile.development": { ru: "Разработка", en: "Development" },
   "profile.testing": { ru: "Тестирование", en: "Testing" },
   "profile.release": { ru: "Релиз", en: "Release" },
-  "profile.pay": { ru: "Оплатить этап", en: "Pay for Stage" },
-  "profile.contact": { ru: "Связаться с менеджером", en: "Contact Manager" },
+
+  // Profile - Invoices
+  "profile.invoice.paid": { ru: "Оплачено", en: "Paid" },
+  "profile.invoice.pending": { ru: "Ожидает", en: "Pending" },
+  "profile.invoice.pay": { ru: "Оплатить", en: "Pay" },
+
+  // Profile - Chat
+  "profile.chat.placeholder": { ru: "Написать сообщение...", en: "Type a message..." },
+  "profile.chat.send": { ru: "Отправить", en: "Send" },
+  "profile.chat.manager": { ru: "Менеджер", en: "Manager" },
+  "profile.chat.you": { ru: "Вы", en: "You" },
 };
 
 export default translations;
