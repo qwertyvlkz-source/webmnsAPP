@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
 
-type Category = "all" | "web" | "mobile" | "design";
+type Category = "all" | "web" | "mobile" | "design" | "portals";
 
 const projects = [
   { id: 1, title: "Visa Site", cat: "web" as Category, image: "/images/visa.png", tech: "Next.js, Tailwind, TypeScript", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
@@ -11,7 +11,7 @@ const projects = [
   { id: 3, title: "SEO Agency", cat: "web" as Category, image: "/images/seo.png", tech: "React, Tailwind, Framer Motion", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
   { id: 4, title: "Visa Site", cat: "design" as Category, image: "/images/visa.png", tech: "Figma, Adobe XD", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
   { id: 5, title: "FIX Service", cat: "mobile" as Category, image: "/images/fix.png", tech: "React Native, TypeScript", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
-  { id: 6, title: "SEO Agency", cat: "design" as Category, image: "/images/seo.png", tech: "Figma, Illustrator", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
+  { id: 6, title: "SEO Agency", cat: "portals" as Category, image: "/images/seo.png", tech: "React, Supabase, Stripe", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
 ];
 
 const filters: { key: Category; label: string }[] = [
@@ -19,6 +19,7 @@ const filters: { key: Category; label: string }[] = [
   { key: "web", label: "portfolio.web" },
   { key: "mobile", label: "portfolio.mobile" },
   { key: "design", label: "portfolio.design" },
+  { key: "portals", label: "portfolio.portals" },
 ];
 
 const PortfolioScreen = () => {
