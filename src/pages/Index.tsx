@@ -37,7 +37,7 @@ const Index = () => {
           transition={{ duration: 0.2 }}
           className="flex flex-1 flex-col overflow-hidden"
         >
-          {tab === 0 ? <Screen onOpenPartner={() => setShowPartner(true)} /> : <Screen />}
+          {tab === 0 ? <Screen onOpenPartner={() => setShowPartner(true)} /> : tab === 3 ? <Screen onOpenPartner={() => setShowPartner(true)} /> : <Screen />}
         </motion.div>
       </AnimatePresence>
       <BottomTabBar active={tab} onTabChange={setTab} />

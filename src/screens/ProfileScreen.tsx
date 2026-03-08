@@ -5,7 +5,7 @@ import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import {
   User, LogOut, CheckCircle, Circle, Loader2,
-  FileText, MessageCircle, Send, ChevronRight, CreditCard,
+  FileText, MessageCircle, Send, ChevronRight, CreditCard, Users,
 } from "lucide-react";
 
 // Mock chat messages
@@ -23,7 +23,7 @@ const mockInvoices = [
   { id: 4, titleRu: "Тестирование и запуск", titleEn: "Testing & Launch", amount: "$600", status: "pending" as const },
 ];
 
-const ProfileScreen = () => {
+const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
   const [loggedIn, setLoggedIn] = useState(false);
   const [activeTab, setActiveTab] = useState<"projects" | "invoices" | "chat">("projects");
@@ -184,6 +184,24 @@ const ProfileScreen = () => {
                   <ChevronRight size={16} className="text-muted-foreground" />
                 </div>
               </div>
+
+              {/* Partner Program Link */}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                onClick={onOpenPartner}
+                className="mt-3 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/10 p-4"
+              >
+                <div className="flex items-center gap-3">
+                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
+                    <Users size={18} className="text-primary" />
+                  </span>
+                  <div className="text-left">
+                    <p className="text-sm font-semibold text-foreground">{t("home.partner")}</p>
+                    <p className="text-[10px] text-muted-foreground">{lang === "ru" ? "До 20% с каждого заказа" : "Up to 20% per order"}</p>
+                  </div>
+                </div>
+                <ChevronRight size={16} className="text-primary" />
+              </motion.button>
             </motion.div>
           )}
 

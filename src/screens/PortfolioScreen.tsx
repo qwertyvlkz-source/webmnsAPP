@@ -84,7 +84,7 @@ const PortfolioScreen = () => {
 
       {/* Detail Drawer */}
       <Drawer open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DrawerContent className="bg-card border-border">
+        <DrawerContent className="mx-auto max-w-md bg-card border-border">
           <DrawerHeader>
             <DrawerTitle className="text-foreground">{selected?.title}</DrawerTitle>
             <DrawerDescription className="text-muted-foreground">
