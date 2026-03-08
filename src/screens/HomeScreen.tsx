@@ -23,7 +23,7 @@ const stats = [
 ];
 
 const HomeScreen = () => {
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4">
