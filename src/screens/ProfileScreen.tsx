@@ -3,9 +3,11 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
+import { toast } from "sonner";
 import {
   User, LogOut, CheckCircle, Circle, Loader2,
   FileText, MessageCircle, Send, ChevronRight, CreditCard, Users,
+  Copy, Check, DollarSign, UserPlus, Eye, ShoppingCart,
 } from "lucide-react";
 
 // Mock chat messages
@@ -23,12 +25,28 @@ const mockInvoices = [
   { id: 4, titleRu: "Тестирование и запуск", titleEn: "Testing & Launch", amount: "$600", status: "pending" as const },
 ];
 
+const mockReferrals = [
+  { name: "Иван К.", nameEn: "Ivan K.", date: "05.03.2026", amount: "$150", status: "paid" as const },
+  { name: "Мария С.", nameEn: "Maria S.", date: "01.03.2026", amount: "$300", status: "paid" as const },
+  { name: "Алексей Д.", nameEn: "Alexey D.", date: "28.02.2026", amount: "$0", status: "pending" as const },
+  { name: "Ольга В.", nameEn: "Olga V.", date: "20.02.2026", amount: "$200", status: "paid" as const },
+];
+
 const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
   const [loggedIn, setLoggedIn] = useState(false);
-  const [activeTab, setActiveTab] = useState<"projects" | "invoices" | "chat">("projects");
+  const [activeTab, setActiveTab] = useState<"projects" | "invoices" | "chat" | "partner">("projects");
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState(mockMessages);
+  const [copied, setCopied] = useState(false);
+  const refLink = "https://webmns.com/ref/partner123";
+
+  const handleCopy = () => {
+    navigator.clipboard.writeText(refLink);
+    setCopied(true);
+    toast.success(lang === "ru" ? "Ссылка скопирована!" : "Link copied!");
+    setTimeout(() => setCopied(false), 2000);
+  };
 
   const steps = [
     { key: "profile.design", status: "done" },
@@ -40,6 +58,7 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const tabs = [
     { key: "projects" as const, label: "profile.tab.projects", icon: FileText },
     { key: "invoices" as const, label: "profile.tab.invoices", icon: CreditCard },
+    { key: "partner" as const, label: "profile.tab.partner", icon: Users },
     { key: "chat" as const, label: "profile.tab.chat", icon: MessageCircle },
   ];
 
@@ -185,23 +204,76 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
                 </div>
               </div>
 
-              {/* Partner Program Link */}
-              <motion.button
-                whileTap={{ scale: 0.95 }}
-                onClick={onOpenPartner}
-                className="mt-3 flex items-center justify-between rounded-2xl border border-primary/30 bg-primary/10 p-4"
-              >
-                <div className="flex items-center gap-3">
-                  <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/20">
-                    <Users size={18} className="text-primary" />
-                  </span>
-                  <div className="text-left">
-                    <p className="text-sm font-semibold text-foreground">{t("home.partner")}</p>
-                    <p className="text-[10px] text-muted-foreground">{lang === "ru" ? "До 20% с каждого заказа" : "Up to 20% per order"}</p>
-                  </div>
+            </motion.div>
+          )}
+
+          {activeTab === "partner" && (
+            <motion.div key="partner" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="no-scrollbar h-full overflow-y-auto px-4 pb-4">
+              {/* Stats */}
+              <div className="mt-3 grid grid-cols-2 gap-3">
+                {[
+                  { icon: DollarSign, value: "$650", label: lang === "ru" ? "Заработано" : "Earned" },
+                  { icon: UserPlus, value: "4", label: lang === "ru" ? "Рефералов" : "Referrals" },
+                  { icon: Eye, value: "128", label: lang === "ru" ? "Переходов" : "Clicks" },
+                  { icon: ShoppingCart, value: "3", label: lang === "ru" ? "Заказов" : "Orders" },
+                ].map((s, i) => {
+                  const Icon = s.icon;
+                  return (
+                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="flex flex-col items-center gap-1 rounded-2xl bg-card border border-border p-4">
+                      <Icon size={18} className="text-primary" />
+                      <span className="text-lg font-bold text-foreground">{s.value}</span>
+                      <span className="text-[10px] text-muted-foreground">{s.label}</span>
+                    </motion.div>
+                  );
+                })}
+              </div>
+
+              {/* Referral link */}
+              <div className="mt-3 rounded-2xl bg-card border border-border p-4">
+                <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">
+                  {lang === "ru" ? "Ваша ссылка" : "Your Link"}
+                </p>
+                <div className="flex items-center gap-2">
+                  <div className="flex-1 rounded-xl bg-secondary px-3 py-2.5 text-xs text-foreground truncate">{refLink}</div>
+                  <motion.button whileTap={{ scale: 0.9 }} onClick={handleCopy} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground">
+                    {copied ? <Check size={16} /> : <Copy size={16} />}
+                  </motion.button>
                 </div>
-                <ChevronRight size={16} className="text-primary" />
-              </motion.button>
+              </div>
+
+              {/* Balance */}
+              <div className="mt-3 rounded-2xl border border-primary/30 bg-primary/10 p-4">
+                <div className="flex items-center justify-between mb-2">
+                  <span className="text-xs font-semibold uppercase text-muted-foreground">{lang === "ru" ? "Баланс" : "Balance"}</span>
+                  <span className="text-lg font-bold text-foreground">$650</span>
+                </div>
+                <Progress value={65} className="h-1.5 bg-secondary [&>div]:bg-primary" />
+                <p className="text-[10px] text-muted-foreground mt-1.5">{lang === "ru" ? "$650 из $1000 до бонуса" : "$650 of $1000 to bonus"}</p>
+                <motion.button whileTap={{ scale: 0.95 }} className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground">
+                  {lang === "ru" ? "Вывести средства" : "Withdraw"}
+                </motion.button>
+              </div>
+
+              {/* History */}
+              <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                {lang === "ru" ? "История рефералов" : "Referral History"}
+              </h3>
+              <div className="flex flex-col gap-2">
+                {mockReferrals.map((r, i) => (
+                  <motion.div key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.06 }} className="flex items-center justify-between rounded-xl bg-card border border-border p-3">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{lang === "ru" ? r.name : r.nameEn}</p>
+                      <p className="text-[10px] text-muted-foreground">{r.date}</p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-bold text-foreground">{r.amount}</p>
+                      <span className={`text-[10px] font-semibold ${r.status === "paid" ? "text-accent" : "text-warning"}`}>
+                        {r.status === "paid" ? (lang === "ru" ? "Выплачено" : "Paid") : (lang === "ru" ? "Ожидание" : "Pending")}
+                      </span>
+                    </div>
+                  </motion.div>
+                ))}
+              </div>
             </motion.div>
           )}
 

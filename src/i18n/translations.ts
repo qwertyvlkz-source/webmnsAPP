@@ -108,6 +108,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "profile.tab.projects": { ru: "Проекты", en: "Projects" },
   "profile.tab.invoices": { ru: "Счета", en: "Invoices" },
   "profile.tab.chat": { ru: "Чат", en: "Chat" },
+  "profile.tab.partner": { ru: "Партнёрка", en: "Partner" },
 
   // Profile - Projects
   "profile.activeProject": { ru: "Активный проект", en: "Active Project" },
