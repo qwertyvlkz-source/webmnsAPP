@@ -47,7 +47,6 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
     toast.success(lang === "ru" ? "Ссылка скопирована!" : "Link copied!");
     setTimeout(() => setCopied(false), 2000);
   };
-  const [messages, setMessages] = useState(mockMessages);
 
   const steps = [
     { key: "profile.design", status: "done" },
