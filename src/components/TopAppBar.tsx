@@ -6,7 +6,7 @@ const TopAppBar = () => {
   const { lang, setLang } = useLang();
 
   return (
-    <header className="flex items-center justify-between bg-card/80 backdrop-blur-md px-4 py-3 border-b border-border">
+    <header className="flex items-center justify-between bg-card backdrop-blur-md px-4 py-3 border-b border-border shadow-sm">
       <div className="flex items-center gap-2">
         <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-primary text-xs font-black text-primary-foreground">W</span>
         <span className="text-lg font-bold tracking-tight text-foreground">

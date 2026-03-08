@@ -18,7 +18,7 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
   const { t } = useLang();
 
   return (
-    <nav className="flex items-end justify-around border-t border-border bg-card/90 backdrop-blur-md px-2 pb-[env(safe-area-inset-bottom)] pt-1">
+    <nav className="flex items-end justify-around border-t border-border bg-card shadow-[0_-2px_10px_rgba(0,0,0,0.05)] px-2 pb-[env(safe-area-inset-bottom)] pt-1">
       {tabs.map((tab, i) => {
         const Icon = tab.icon;
         const isActive = active === i;
