@@ -88,15 +88,15 @@ const HomeScreen = () => {
               initial={{ opacity: 0, y: 10 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: i * 0.1 }}
-              className="flex flex-col gap-2 rounded-2xl bg-card p-3 border border-border h-full"
+              className="flex flex-col items-center gap-1.5 rounded-2xl bg-card p-3 border border-border text-center"
             >
-              <span className="flex h-10 w-10 items-center justify-center rounded-xl bg-primary/15">
-                <Icon size={20} className="text-primary" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15">
+                <Icon size={18} className="text-primary" />
               </span>
-              <span className="text-sm font-semibold text-foreground">
+              <span className="text-xs font-semibold text-foreground leading-tight">
                 {t(item.title)}
               </span>
-              <span className="text-xs text-muted-foreground">
+              <span className="text-[10px] text-muted-foreground leading-tight">
                 {t(item.desc)}
               </span>
             </motion.div>
