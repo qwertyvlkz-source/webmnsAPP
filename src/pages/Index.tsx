@@ -1,12 +1,34 @@
-// Update this page (the content is just a fallback if you fail to update the page)
+import { useState } from "react";
+import { AnimatePresence, motion } from "framer-motion";
+import TopAppBar from "@/components/TopAppBar";
+import BottomTabBar from "@/components/BottomTabBar";
+import HomeScreen from "@/screens/HomeScreen";
+import PortfolioScreen from "@/screens/PortfolioScreen";
+import OrderScreen from "@/screens/OrderScreen";
+import ProfileScreen from "@/screens/ProfileScreen";
+
+const screens = [HomeScreen, PortfolioScreen, OrderScreen, ProfileScreen];
 
 const Index = () => {
+  const [tab, setTab] = useState(0);
+  const Screen = screens[tab];
+
   return (
-    <div className="flex min-h-screen items-center justify-center bg-background">
-      <div className="text-center">
-        <h1 className="mb-4 text-4xl font-bold">Welcome to Your Blank App</h1>
-        <p className="text-xl text-muted-foreground">Start building your amazing project here!</p>
-      </div>
+    <div className="mx-auto flex h-[100dvh] max-w-md flex-col overflow-hidden bg-background">
+      <TopAppBar />
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={tab}
+          initial={{ opacity: 0, y: 8 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -8 }}
+          transition={{ duration: 0.2 }}
+          className="flex flex-1 flex-col overflow-hidden"
+        >
+          <Screen />
+        </motion.div>
+      </AnimatePresence>
+      <BottomTabBar active={tab} onTabChange={setTab} />
     </div>
   );
 };
