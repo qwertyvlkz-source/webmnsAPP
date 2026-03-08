@@ -159,10 +159,9 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
         <p className="text-xs text-muted-foreground leading-relaxed">{t("home.servicesDesc")}</p>
         <motion.button
           whileTap={{ scale: 0.95 }}
-          className="mt-3 flex items-center gap-1 text-xs font-semibold text-primary"
+          className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground"
         >
           {t("home.learnMore")}
-          <ArrowRight size={12} />
         </motion.button>
       </motion.div>
     </div>
