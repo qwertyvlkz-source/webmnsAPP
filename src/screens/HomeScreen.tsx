@@ -76,10 +76,10 @@ const HomeScreen = () => {
       </motion.div>
 
       {/* Why Us */}
-      <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
+      <h2 className="mb-3 mt-5 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {t("home.why")}
       </h2>
-      <div className="grid grid-cols-3 gap-2">
+      <div className="grid grid-cols-3 gap-3">
         {whyUsKeys.map((item, i) => {
           const Icon = whyUsIcons[i];
           return (
