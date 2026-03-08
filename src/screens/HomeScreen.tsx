@@ -100,7 +100,7 @@ const HomeScreen = () => {
       <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {t("home.latest")}
       </h2>
-      <div className="no-scrollbar -mx-4 flex gap-3 overflow-x-auto px-4 pb-2">
+      <div className="grid grid-cols-2 gap-3 pb-2">
         {latestProjects.map((p, i) => (
           <motion.div
             key={i}
@@ -108,10 +108,10 @@ const HomeScreen = () => {
             animate={{ opacity: 1, scale: 1 }}
             transition={{ delay: 0.2 + i * 0.08 }}
             whileTap={{ scale: 0.97 }}
-            className={`flex min-w-[200px] flex-col justify-end rounded-2xl bg-gradient-to-br ${p.color} p-4 h-[140px] shadow-lg`}
+            className={`flex flex-col justify-end rounded-2xl bg-gradient-to-br ${p.color} p-4 h-[120px] shadow-lg`}
           >
-            <span className="text-lg font-bold text-white">{p.title}</span>
-            <span className="text-xs text-white/70">{p.category}</span>
+            <span className="text-base font-bold text-white">{p.title}</span>
+            <span className="text-[11px] text-white/70">{p.category}</span>
           </motion.div>
         ))}
       </div>
