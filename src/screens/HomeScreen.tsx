@@ -53,7 +53,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
             <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card/80" />
           </motion.button>
         </div>
-        <div className="relative mt-4 flex items-center gap-3">
+        <div className="relative mt-4 flex items-center justify-between">
           <motion.button
             whileTap={{ scale: 0.95 }}
             className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25"
