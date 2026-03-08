@@ -13,6 +13,9 @@ const latestProjects = [
   { title: "Visa Site", image: "/images/visa.png", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
   { title: "FIX Service", image: "/images/fix.png", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
   { title: "SEO Agency", image: "/images/seo.png", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
+  { title: "Visa Site", image: "/images/visa.png", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
+  { title: "FIX Service", image: "/images/fix.png", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
+  { title: "SEO Agency", image: "/images/seo.png", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
 ];
 
 const stats = [
