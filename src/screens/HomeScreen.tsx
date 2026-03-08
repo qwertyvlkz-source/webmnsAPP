@@ -28,6 +28,11 @@ const stats = [
 
 const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
+  const [dark, setDark] = useState(() => document.documentElement.classList.contains("dark"));
+
+  useEffect(() => {
+    document.documentElement.classList.toggle("dark", dark);
+  }, [dark]);
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4">
