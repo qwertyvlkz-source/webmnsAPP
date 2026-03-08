@@ -21,6 +21,16 @@ const translations: Record<string, Record<Lang, string>> = {
   "home.quality": { ru: "Гарантия качества", en: "Quality Guarantee" },
   "home.quality.desc": { ru: "Тестируем и оптимизируем", en: "Tested & Optimized" },
   "home.latest": { ru: "Последние проекты", en: "Latest Projects" },
+  "home.stat.projects": { ru: "Проектов", en: "Projects" },
+  "home.stat.clients": { ru: "Клиентов", en: "Clients" },
+  "home.stat.rating": { ru: "Рейтинг", en: "Rating" },
+  "home.stat.years": { ru: "Лет опыта", en: "Years" },
+  "home.services": { ru: "Полный цикл разработки", en: "Full-cycle Development" },
+  "home.servicesDesc": {
+    ru: "От дизайна до запуска — создаём сайты, которые работают на ваш бизнес",
+    en: "From design to launch — we build websites that work for your business",
+  },
+  "home.learnMore": { ru: "Подробнее", en: "Learn More" },
 
   // Portfolio
   "portfolio.title": { ru: "Портфолио", en: "Portfolio" },
