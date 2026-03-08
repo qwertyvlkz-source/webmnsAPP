@@ -120,7 +120,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
           onClick={onOpenPartner}
           className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground"
         >
-          {t("home.partner.button")}
+          {t("home.learnMore")}
         </motion.button>
       </motion.div>
 
