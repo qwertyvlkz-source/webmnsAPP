@@ -28,17 +28,23 @@ const HomeScreen = () => {
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4">
-      {/* Hero */}
+      {/* Hero with notification */}
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative mt-4 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/30 via-primary/10 to-accent/15 p-5"
+        className="relative mt-2 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/30 via-primary/10 to-accent/15 p-5"
       >
         <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-primary/20 blur-2xl" />
         <div className="absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-accent/20 blur-2xl" />
-        <h1 className="relative whitespace-pre-line text-xl font-bold leading-tight text-foreground">
-          {t("home.hero")}
-        </h1>
+        <div className="relative flex items-start justify-between">
+          <h1 className="whitespace-pre-line text-xl font-bold leading-tight text-foreground flex-1">
+            {t("home.hero")}
+          </h1>
+          <motion.button whileTap={{ scale: 0.9 }} className="relative ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-card/80 shadow-sm">
+            <Bell size={17} className="text-foreground" />
+            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card/80" />
+          </motion.button>
+        </div>
         <motion.button
           whileTap={{ scale: 0.95 }}
           className="relative mt-4 flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25"
