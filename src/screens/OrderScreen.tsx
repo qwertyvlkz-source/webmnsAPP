@@ -4,13 +4,15 @@ import { useLang } from "@/i18n/LanguageContext";
 import { Progress } from "@/components/ui/progress";
 import { Switch } from "@/components/ui/switch";
 import { Input } from "@/components/ui/input";
-import { CheckCircle, Globe, ShoppingCart, Building2, Sparkles, ArrowLeft } from "lucide-react";
+import { CheckCircle, Globe, ShoppingCart, Building2, Sparkles, ArrowLeft, Smartphone, Apple } from "lucide-react";
 
 const siteTypes = [
   { key: "order.landing", icon: Globe },
   { key: "order.ecommerce", icon: ShoppingCart },
   { key: "order.corporate", icon: Building2 },
   { key: "order.custom", icon: Sparkles },
+  { key: "order.android", icon: Smartphone },
+  { key: "order.ios", icon: Apple },
 ];
 
 const budgetOptions = ["$500–$1k", "$1k–$3k", "$3k–$5k", "$5k+"];

@@ -49,6 +49,8 @@ const translations: Record<string, Record<Lang, string>> = {
   "order.ecommerce": { ru: "Интернет-магазин", en: "E-commerce" },
   "order.corporate": { ru: "Корпоративный", en: "Corporate" },
   "order.custom": { ru: "Индивидуальный", en: "Custom" },
+  "order.android": { ru: "Android приложение", en: "Android App" },
+  "order.ios": { ru: "iPhone приложение", en: "iPhone App" },
   "order.step2": { ru: "Бюджет и сроки", en: "Budget & Timeline" },
   "order.budget": { ru: "Бюджет", en: "Budget" },
   "order.urgent": { ru: "Срочный заказ", en: "Urgent Order" },
