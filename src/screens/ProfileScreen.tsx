@@ -25,6 +25,13 @@ const mockInvoices = [
   { id: 4, titleRu: "Тестирование и запуск", titleEn: "Testing & Launch", amount: "$600", status: "pending" as const },
 ];
 
+const mockReferrals = [
+  { name: "Иван К.", nameEn: "Ivan K.", date: "05.03.2026", amount: "$150", status: "paid" as const },
+  { name: "Мария С.", nameEn: "Maria S.", date: "01.03.2026", amount: "$300", status: "paid" as const },
+  { name: "Алексей Д.", nameEn: "Alexey D.", date: "28.02.2026", amount: "$0", status: "pending" as const },
+  { name: "Ольга В.", nameEn: "Olga V.", date: "20.02.2026", amount: "$200", status: "paid" as const },
+];
+
 const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
   const [loggedIn, setLoggedIn] = useState(false);
