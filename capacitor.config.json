@@ -1,9 +1,0 @@
-{
-  "appId": "app.lovable.746ec72f3b734851bb4027cf30286ae2",
-  "appName": "webmns-mobile-hub",
-  "webDir": "dist",
-  "server": {
-    "url": "https://746ec72f-3b73-4851-bb40-27cf30286ae2.lovableproject.com?forceHideBadge=true",
-    "cleartext": true
-  }
-}
