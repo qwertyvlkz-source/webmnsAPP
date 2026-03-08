@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
-import { Drawer, DrawerContent, DrawerHeader, DrawerTitle, DrawerDescription } from "@/components/ui/drawer";
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
 
 type Category = "all" | "web" | "mobile" | "design" | "portals";
 
@@ -83,15 +83,15 @@ const PortfolioScreen = () => {
       </div>
 
       {/* Detail Drawer */}
-      <Drawer open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
-        <DrawerContent className="bg-card border-border">
-          <DrawerHeader>
-            <DrawerTitle className="text-foreground">{selected?.title}</DrawerTitle>
-            <DrawerDescription className="text-muted-foreground">
+      <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
+        <DialogContent className="max-w-sm rounded-2xl bg-card border-border p-0 overflow-hidden">
+          <DialogHeader className="px-4 pt-4 pb-0">
+            <DialogTitle className="text-foreground">{selected?.title}</DialogTitle>
+            <DialogDescription className="text-muted-foreground">
               {selected && (lang === "ru" ? selected.descRu : selected.descEn)}
-            </DrawerDescription>
-          </DrawerHeader>
-          <div className="px-4 pb-8">
+            </DialogDescription>
+          </DialogHeader>
+          <div className="px-4 pb-5">
             {selected && (
               <div className="relative mb-4 rounded-2xl overflow-hidden">
                 <img src={selected.image} alt={selected.title} className="w-full object-contain" />
@@ -108,8 +108,8 @@ const PortfolioScreen = () => {
               {t("portfolio.orderSimilar")}
             </motion.button>
           </div>
-        </DrawerContent>
-      </Drawer>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
