@@ -68,29 +68,67 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative mt-2 overflow-hidden rounded-2xl bg-gradient-to-br from-primary/30 via-primary/10 to-accent/15 p-5"
+        className="relative mt-4 overflow-hidden rounded-3xl border border-border/50 bg-card/30 backdrop-blur-2xl p-6 shadow-xl shadow-primary/5"
       >
-        <div className="absolute -right-6 -top-6 h-24 w-24 rounded-full bg-primary/20 blur-2xl" />
-        <div className="absolute -bottom-4 -left-4 h-20 w-20 rounded-full bg-accent/20 blur-2xl" />
+        {/* Animated Background Blobs */}
+        <motion.div 
+          animate={{
+            scale: [1, 1.2, 1],
+            x: [0, -15, 0],
+            y: [0, 15, 0],
+          }}
+          transition={{ duration: 6, repeat: Infinity, ease: "easeInOut" }}
+          className="absolute -right-8 -top-8 h-32 w-32 rounded-full bg-primary/40 blur-3xl" 
+        />
+        <motion.div 
+          animate={{
+            scale: [1, 1.3, 1],
+            x: [0, 20, 0],
+            y: [0, -10, 0],
+          }}
+          transition={{ duration: 8, repeat: Infinity, ease: "easeInOut", delay: 1 }}
+          className="absolute -bottom-10 -left-10 h-36 w-36 rounded-full bg-accent/30 blur-3xl" 
+        />
+        <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent mix-blend-overlay pointer-events-none" />
+
         <div className="relative flex items-start justify-between">
-          <h1 className="whitespace-pre-line text-xl font-bold leading-tight text-foreground flex-1">
+          <motion.h1 
+            initial={{ opacity: 0, x: -10 }}
+            animate={{ opacity: 1, x: 0 }}
+            transition={{ delay: 0.2 }}
+            className="whitespace-pre-line text-2xl font-extrabold leading-tight text-foreground flex-1 tracking-tight"
+          >
             {t("home.hero")}
-          </h1>
-          <motion.button whileTap={{ scale: 0.9 }} className="relative ml-3 flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-card/80 shadow-sm">
-            <Bell size={17} className="text-foreground" />
-            <span className="absolute right-1.5 top-1.5 h-2 w-2 rounded-full bg-destructive ring-2 ring-card/80" />
+          </motion.h1>
+          <motion.button 
+            whileTap={{ scale: 0.9 }} 
+            className="relative ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-card shadow-sm border border-border/50"
+          >
+            <Bell size={18} className="text-foreground" />
+            <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-card" />
           </motion.button>
         </div>
-        <div className="relative mt-4 flex items-center justify-between">
+        
+        <div className="relative mt-6 flex items-center justify-between">
           <motion.button
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2 rounded-xl bg-primary px-5 py-3 text-sm font-semibold text-primary-foreground shadow-lg shadow-primary/25"
+            className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-primary to-primary/80 px-6 py-3.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30"
           >
             {t("home.cta")}
-            <ArrowRight size={16} />
+            <motion.div
+              animate={{ x: [0, 4, 0] }}
+              transition={{ duration: 1.5, repeat: Infinity, ease: "easeInOut" }}
+            >
+              <ArrowRight size={18} />
+            </motion.div>
           </motion.button>
-          <motion.button whileTap={{ scale: 0.9 }} onClick={() => setDark(!dark)} className="flex h-10 w-10 items-center justify-center rounded-full bg-card/80 shadow-sm">
-            {dark ? <Sun size={17} className="text-foreground" /> : <Moon size={17} className="text-foreground" />}
+          
+          <motion.button 
+            whileTap={{ scale: 0.9 }} 
+            onClick={() => setDark(!dark)} 
+            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card shadow-sm border border-border/50"
+          >
+            {dark ? <Sun size={20} className="text-foreground" /> : <Moon size={20} className="text-foreground" />}
           </motion.button>
         </div>
       </motion.div>
