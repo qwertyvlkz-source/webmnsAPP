@@ -1,21 +1,15 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
+import { api } from "@/lib/api";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2, Bell, Moon, Sun } from "lucide-react";
+import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2, Bell, Moon, Sun, Loader2, ExternalLink } from "lucide-react";
 
 const whyUsIcons = [Zap, Award, ShieldCheck];
 const whyUsKeys = [
   { title: "home.fast", desc: "home.fast.desc" },
   { title: "home.exp", desc: "home.exp.desc" },
   { title: "home.quality", desc: "home.quality.desc" },
-];
-
-const latestProjects = [
-  { title: "Visa Site", image: "/images/visa.png", tech: "Next.js, Tailwind, TypeScript", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
-  { title: "FIX Service", image: "/images/fix.png", tech: "React, Node.js, PostgreSQL", descRu: "Сайт ремонтного сервиса", descEn: "Repair service website" },
-  { title: "SEO Agency", image: "/images/seo.png", tech: "React, Tailwind, Framer Motion", descRu: "SEO и digital-маркетинг", descEn: "SEO & digital marketing" },
-  { title: "Visa Site", image: "/images/visa.png", tech: "Figma, Adobe XD", descRu: "Сайт визовых заявок", descEn: "Visa application website" },
 ];
 
 const stats = [
@@ -25,14 +19,48 @@ const stats = [
   { icon: Code2, value: "7+", key: "home.stat.years" },
 ];
 
+interface PortfolioItem {
+  id: number;
+  title: string;
+  description: string | null;
+  image: string | null;
+  url: string | null;
+  category: string | null;
+}
+
 const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
-  const { t, lang } = useLang();
+  const { t } = useLang();
   const [dark, setDark] = useState(() => document.documentElement.classList.contains("dark"));
-  const [selected, setSelected] = useState<typeof latestProjects[0] | null>(null);
+  const [selected, setSelected] = useState<PortfolioItem | null>(null);
+  const [latestProjects, setLatestProjects] = useState<PortfolioItem[]>([]);
+  const [loadingProjects, setLoadingProjects] = useState(true);
 
   useEffect(() => {
     document.documentElement.classList.toggle("dark", dark);
   }, [dark]);
+
+  // Load latest projects from API
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        const data = await api.get<{ success: boolean; data: PortfolioItem[] }>("/portfolio", { noAuth: true });
+        if (data.success && data.data) {
+          // Show only the latest 4
+          setLatestProjects(data.data.slice(0, 4));
+        }
+      } catch (error) {
+        console.error("Failed to load portfolio:", error);
+      } finally {
+        setLoadingProjects(false);
+      }
+    };
+    fetchProjects();
+  }, []);
+
+  const getImageUrl = (image: string | null) => {
+    if (!image) return null;
+    return image.startsWith("http") ? image : `https://webmns.com${image}`;
+  };
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4">
@@ -139,26 +167,41 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
       <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
         {t("home.latest")}
       </h2>
-      <div className="grid grid-cols-2 gap-3 pb-2">
-        {latestProjects.map((p, i) => (
-          <motion.div
-            key={i}
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            transition={{ delay: 0.2 + i * 0.08 }}
-            whileTap={{ scale: 0.97 }}
-            onClick={() => setSelected(p)}
-            className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] shadow-lg cursor-pointer"
-          >
-            <img src={p.image} alt={p.title} className="absolute inset-0 h-full w-full object-cover" />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
-            <div className="relative p-3">
-              <span className="text-sm font-bold text-white">{p.title}</span>
-              <span className="block text-[10px] text-white/70">{lang === "ru" ? p.descRu : p.descEn}</span>
-            </div>
-          </motion.div>
-        ))}
-      </div>
+
+      {loadingProjects ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 size={20} className="animate-spin text-primary" />
+        </div>
+      ) : latestProjects.length === 0 ? (
+        <p className="text-xs text-muted-foreground text-center py-4">{t("portfolio.empty")}</p>
+      ) : (
+        <div className="grid grid-cols-2 gap-3 pb-2">
+          {latestProjects.map((p, i) => (
+            <motion.div
+              key={p.id}
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.2 + i * 0.08 }}
+              whileTap={{ scale: 0.97 }}
+              onClick={() => setSelected(p)}
+              className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] shadow-lg cursor-pointer"
+            >
+              {getImageUrl(p.image) ? (
+                <img src={getImageUrl(p.image)!} alt={p.title} className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+              ) : (
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
+              )}
+              <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
+              <div className="relative p-3">
+                <span className="text-sm font-bold text-white">{p.title}</span>
+                {p.category && (
+                  <span className="block text-[10px] text-white/70">{p.category}</span>
+                )}
+              </div>
+            </motion.div>
+          ))}
+        </div>
+      )}
 
       {/* Project Dialog */}
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
@@ -166,25 +209,43 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
           <DialogHeader className="px-4 pt-4 pb-0">
             <DialogTitle className="text-foreground">{selected?.title}</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              {selected && (lang === "ru" ? selected.descRu : selected.descEn)}
+              {selected?.description || selected?.category}
             </DialogDescription>
           </DialogHeader>
           <div className="px-4 pb-5">
-            {selected && (
+            {selected && getImageUrl(selected.image) && (
               <div className="relative mb-4 rounded-2xl overflow-hidden">
-                <img src={selected.image} alt={selected.title} className="w-full object-contain" />
+                <img src={getImageUrl(selected.image)!} alt={selected.title} className="w-full object-contain" />
               </div>
             )}
-            <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
-              {t("portfolio.tech")}
-            </p>
-            <p className="mb-5 text-sm text-foreground">{selected?.tech}</p>
-            <motion.button
-              whileTap={{ scale: 0.95 }}
-              className="w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground"
-            >
-              {t("portfolio.orderSimilar")}
-            </motion.button>
+            {selected?.category && (
+              <>
+                <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
+                  {t("portfolio.tech")}
+                </p>
+                <p className="mb-5 text-sm text-foreground">{selected.category}</p>
+              </>
+            )}
+            <div className="flex gap-2">
+              {selected?.url && (
+                <motion.a
+                  href={selected.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  whileTap={{ scale: 0.95 }}
+                  className="flex-1 flex items-center justify-center gap-2 rounded-xl bg-secondary py-3.5 text-sm font-semibold text-secondary-foreground"
+                >
+                  <ExternalLink size={14} />
+                  {t("home.learnMore")}
+                </motion.a>
+              )}
+              <motion.button
+                whileTap={{ scale: 0.95 }}
+                className="flex-1 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground"
+              >
+                {t("portfolio.orderSimilar")}
+              </motion.button>
+            </div>
           </div>
         </DialogContent>
       </Dialog>
