@@ -15,7 +15,7 @@ const tabs = [
 ];
 
 const BottomTabBar = ({ active, onTabChange }: Props) => {
-  const { t, lang, setLang } = useLang();
+  const { t, langLabel, cycleLang } = useLang();
 
   return (
     <nav className="px-3 pb-[max(env(safe-area-inset-bottom),4px)] pt-0.5">
@@ -63,15 +63,15 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
             </motion.button>
           );
         })}
-        {/* Language toggle */}
+        {/* Language toggle — cycles through UK → RU → EN → PL → DE */}
         <motion.button
           whileTap={{ scale: 0.9 }}
-          onClick={() => setLang(lang === "ru" ? "en" : "ru")}
+          onClick={cycleLang}
           className="flex min-w-[40px] flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 py-1.5"
         >
           <Globe size={19} className="text-muted-foreground" />
           <span className="text-[9px] font-bold leading-none text-primary">
-            {lang.toUpperCase()}
+            {langLabel}
           </span>
         </motion.button>
       </div>

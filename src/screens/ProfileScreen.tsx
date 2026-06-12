@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
+import { useAuth } from "@/contexts/AuthContext";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
@@ -8,43 +9,53 @@ import {
   User, LogOut, CheckCircle, Circle, Loader2,
   FileText, MessageCircle, Send, ChevronRight, CreditCard, Users,
   Copy, Check, DollarSign, UserPlus, Eye, ShoppingCart,
+  Mail, Lock, UserIcon,
 } from "lucide-react";
 
-// Mock chat messages
+// Mock chat messages (will be replaced with real tickets in Stage 3)
 const mockMessages = [
-  { from: "manager", text: "Добрый день! Дизайн утверждён, переходим к разработке.", textEn: "Good day! Design approved, moving to development.", time: "10:30" },
-  { from: "you", text: "Отлично, спасибо!", textEn: "Great, thanks!", time: "10:32" },
-  { from: "manager", text: "Прогресс разработки — 70%. Ожидайте обновление к пятнице.", textEn: "Development progress — 70%. Expect update by Friday.", time: "14:15" },
+  { from: "manager", text: "Добрий день! Дизайн затверджено, переходимо до розробки.", textEn: "Good day! Design approved, moving to development.", time: "10:30" },
+  { from: "you", text: "Чудово, дякую!", textEn: "Great, thanks!", time: "10:32" },
+  { from: "manager", text: "Прогрес розробки — 70%. Очікуйте оновлення до п'ятниці.", textEn: "Development progress — 70%. Expect update by Friday.", time: "14:15" },
 ];
 
-// Mock invoices
+// Mock invoices (will be replaced with real data in Stage 2)
 const mockInvoices = [
-  { id: 1, titleRu: "Дизайн-макет", titleEn: "Design Mockup", amount: "$800", status: "paid" as const },
-  { id: 2, titleRu: "Разработка (этап 1)", titleEn: "Development (phase 1)", amount: "$1,200", status: "paid" as const },
-  { id: 3, titleRu: "Разработка (этап 2)", titleEn: "Development (phase 2)", amount: "$1,200", status: "pending" as const },
-  { id: 4, titleRu: "Тестирование и запуск", titleEn: "Testing & Launch", amount: "$600", status: "pending" as const },
+  { id: 1, titleKey: "Design Mockup", amount: "€800", status: "paid" as const },
+  { id: 2, titleKey: "Development (phase 1)", amount: "€1,200", status: "paid" as const },
+  { id: 3, titleKey: "Development (phase 2)", amount: "€1,200", status: "pending" as const },
+  { id: 4, titleKey: "Testing & Launch", amount: "€600", status: "pending" as const },
 ];
 
 const mockReferrals = [
-  { name: "Иван К.", nameEn: "Ivan K.", date: "05.03.2026", amount: "$150", status: "paid" as const },
-  { name: "Мария С.", nameEn: "Maria S.", date: "01.03.2026", amount: "$300", status: "paid" as const },
-  { name: "Алексей Д.", nameEn: "Alexey D.", date: "28.02.2026", amount: "$0", status: "pending" as const },
-  { name: "Ольга В.", nameEn: "Olga V.", date: "20.02.2026", amount: "$200", status: "paid" as const },
+  { name: "Іван К.", date: "05.03.2026", amount: "€150", status: "paid" as const },
+  { name: "Марія С.", date: "01.03.2026", amount: "€300", status: "paid" as const },
+  { name: "Олексій Д.", date: "28.02.2026", amount: "€0", status: "pending" as const },
+  { name: "Ольга В.", date: "20.02.2026", amount: "€200", status: "paid" as const },
 ];
 
 const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const { t, lang } = useLang();
-  const [loggedIn, setLoggedIn] = useState(false);
+  const { user, isAuthenticated, login, register, logout, isLoading: authLoading } = useAuth();
+  
+  const [isRegisterMode, setIsRegisterMode] = useState(false);
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
+  const [confirmPassword, setConfirmPassword] = useState("");
+  const [loginLoading, setLoginLoading] = useState(false);
+  const [loginError, setLoginError] = useState("");
+
   const [activeTab, setActiveTab] = useState<"projects" | "invoices" | "chat" | "partner">("projects");
   const [chatInput, setChatInput] = useState("");
   const [messages, setMessages] = useState(mockMessages);
   const [copied, setCopied] = useState(false);
-  const refLink = "https://webmns.com/ref/partner123";
+  const refLink = user ? `https://webmns.com?ref=${user.referral_code || 'loading'}` : "";
 
   const handleCopy = () => {
     navigator.clipboard.writeText(refLink);
     setCopied(true);
-    toast.success(lang === "ru" ? "Ссылка скопирована!" : "Link copied!");
+    toast.success(t("partner.linkCopied"));
     setTimeout(() => setCopied(false), 2000);
   };
 
@@ -68,29 +79,125 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
     setChatInput("");
   };
 
-  // LOGIN SCREEN
-  if (!loggedIn) {
+  const handleLogin = async () => {
+    if (!email || !password) return;
+    setLoginLoading(true);
+    setLoginError("");
+    
+    const result = await login(email, password);
+    
+    if (!result.success) {
+      setLoginError(result.error || t("common.error"));
+    }
+    setLoginLoading(false);
+  };
+
+  const handleRegister = async () => {
+    if (!name || !email || !password) return;
+    if (password !== confirmPassword) {
+      setLoginError(lang === "uk" ? "Паролі не збігаються" : "Passwords don't match");
+      return;
+    }
+    setLoginLoading(true);
+    setLoginError("");
+    
+    const result = await register(name, email, password);
+    
+    if (!result.success) {
+      setLoginError(result.error || t("common.error"));
+    }
+    setLoginLoading(false);
+  };
+
+  // Loading state
+  if (authLoading) {
+    return (
+      <div className="flex flex-1 items-center justify-center">
+        <Loader2 className="h-8 w-8 animate-spin text-primary" />
+      </div>
+    );
+  }
+
+  // LOGIN / REGISTER SCREEN
+  if (!isAuthenticated) {
     return (
       <div className="no-scrollbar flex-1 overflow-y-auto px-4 pt-6 pb-4">
         <motion.div initial={{ opacity: 0, y: 20 }} animate={{ opacity: 1, y: 0 }} className="flex flex-col items-center">
           <span className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-primary/15">
             <User size={32} className="text-primary" />
           </span>
-          <h1 className="text-xl font-bold text-foreground mb-1">{t("profile.login.title")}</h1>
+          <h1 className="text-xl font-bold text-foreground mb-1">
+            {isRegisterMode ? t("profile.login.register") : t("profile.login.title")}
+          </h1>
           <p className="text-xs text-muted-foreground mb-6">WebMNS Client Portal</p>
         </motion.div>
 
+        {loginError && (
+          <motion.div initial={{ opacity: 0, y: -5 }} animate={{ opacity: 1, y: 0 }} className="mb-3 rounded-xl bg-destructive/10 border border-destructive/30 p-3">
+            <p className="text-xs text-destructive font-medium">{loginError}</p>
+          </motion.div>
+        )}
+
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="flex flex-col gap-3">
-          <Input placeholder={t("profile.login.email")} type="email" className="rounded-xl bg-card border-border py-5" />
-          <Input placeholder={t("profile.login.password")} type="password" className="rounded-xl bg-card border-border py-5" />
+          {isRegisterMode && (
+            <div className="relative">
+              <UserIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t("profile.login.name")}
+                value={name}
+                onChange={(e) => setName(e.target.value)}
+                className="rounded-xl bg-card border-border py-5 pl-10"
+              />
+            </div>
+          )}
+          <div className="relative">
+            <Mail size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder={t("profile.login.email")}
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              className="rounded-xl bg-card border-border py-5 pl-10"
+            />
+          </div>
+          <div className="relative">
+            <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+            <Input
+              placeholder={t("profile.login.password")}
+              type="password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              onKeyDown={(e) => e.key === "Enter" && !isRegisterMode && handleLogin()}
+              className="rounded-xl bg-card border-border py-5 pl-10"
+            />
+          </div>
+          {isRegisterMode && (
+            <div className="relative">
+              <Lock size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
+              <Input
+                placeholder={t("profile.login.confirmPassword")}
+                type="password"
+                value={confirmPassword}
+                onChange={(e) => setConfirmPassword(e.target.value)}
+                onKeyDown={(e) => e.key === "Enter" && handleRegister()}
+                className="rounded-xl bg-card border-border py-5 pl-10"
+              />
+            </div>
+          )}
+
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => setLoggedIn(true)}
-            className="w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20"
+            onClick={isRegisterMode ? handleRegister : handleLogin}
+            disabled={loginLoading}
+            className="flex items-center justify-center gap-2 w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground shadow-md shadow-primary/20 disabled:opacity-50"
           >
-            {t("profile.login.button")}
+            {loginLoading && <Loader2 size={16} className="animate-spin" />}
+            {isRegisterMode ? t("profile.login.register") : t("profile.login.button")}
           </motion.button>
-          <button className="text-xs text-primary font-medium">{t("profile.login.forgot")}</button>
+
+          {!isRegisterMode && (
+            <button className="text-xs text-primary font-medium">{t("profile.login.forgot")}</button>
+          )}
 
           <div className="flex items-center gap-3 my-2">
             <div className="h-px flex-1 bg-border" />
@@ -100,14 +207,21 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
 
           <motion.button
             whileTap={{ scale: 0.95 }}
-            onClick={() => setLoggedIn(true)}
             className="flex items-center justify-center gap-2 w-full rounded-xl border border-border bg-card py-3.5 text-sm font-semibold text-foreground"
           >
             <svg className="h-4 w-4" viewBox="0 0 24 24"><path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92a5.06 5.06 0 0 1-2.2 3.32v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.1z"/><path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/><path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/><path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/></svg>
             {t("profile.login.google")}
           </motion.button>
 
-          <button className="mt-2 text-xs text-muted-foreground">{t("profile.login.register")}</button>
+          <button
+            onClick={() => {
+              setIsRegisterMode(!isRegisterMode);
+              setLoginError("");
+            }}
+            className="mt-2 text-xs text-muted-foreground"
+          >
+            {isRegisterMode ? t("profile.login.button") : t("profile.login.register")}
+          </button>
         </motion.div>
       </div>
     );
@@ -123,11 +237,13 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
             <User size={20} className="text-primary" />
           </span>
           <div>
-            <h1 className="text-base font-bold text-foreground">{t("profile.greeting")}</h1>
-            <p className="text-[10px] text-muted-foreground">alexey@webmns.com</p>
+            <h1 className="text-base font-bold text-foreground">
+              {t("profile.greeting")}, {user?.name || "User"}!
+            </h1>
+            <p className="text-[10px] text-muted-foreground">{user?.email}</p>
           </div>
         </div>
-        <motion.button whileTap={{ scale: 0.9 }} onClick={() => setLoggedIn(false)} className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary">
+        <motion.button whileTap={{ scale: 0.9 }} onClick={logout} className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary">
           <LogOut size={14} className="text-muted-foreground" />
         </motion.button>
       </div>
@@ -197,7 +313,7 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               <div className="mt-3 rounded-2xl border border-border bg-card p-4 opacity-60">
                 <div className="flex items-center justify-between">
                   <div>
-                    <p className="text-[10px] font-semibold uppercase text-muted-foreground">✓ {lang === "ru" ? "Завершён" : "Completed"}</p>
+                    <p className="text-[10px] font-semibold uppercase text-muted-foreground">✓ {t("profile.completed")}</p>
                     <p className="text-sm font-bold text-foreground">{t("profile.project2.name")}</p>
                   </div>
                   <ChevronRight size={16} className="text-muted-foreground" />
@@ -212,10 +328,10 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               {/* Stats */}
               <div className="mt-3 grid grid-cols-2 gap-3">
                 {[
-                  { icon: DollarSign, value: "$650", label: lang === "ru" ? "Заработано" : "Earned" },
-                  { icon: UserPlus, value: "4", label: lang === "ru" ? "Рефералов" : "Referrals" },
-                  { icon: Eye, value: "128", label: lang === "ru" ? "Переходов" : "Clicks" },
-                  { icon: ShoppingCart, value: "3", label: lang === "ru" ? "Заказов" : "Orders" },
+                  { icon: DollarSign, value: "€650", label: t("partner.earned") },
+                  { icon: UserPlus, value: "4", label: t("partner.referrals") },
+                  { icon: Eye, value: "128", label: t("partner.clicks") },
+                  { icon: ShoppingCart, value: "3", label: t("partner.orders") },
                 ].map((s, i) => {
                   const Icon = s.icon;
                   return (
@@ -231,7 +347,7 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               {/* Referral link */}
               <div className="mt-3 rounded-2xl bg-card border border-border p-4">
                 <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">
-                  {lang === "ru" ? "Ваша ссылка" : "Your Link"}
+                  {t("partner.yourLink")}
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 rounded-xl bg-secondary px-3 py-2.5 text-xs text-foreground truncate">{refLink}</div>
@@ -244,31 +360,31 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               {/* Balance */}
               <div className="mt-3 rounded-2xl border border-primary/30 bg-primary/10 p-4">
                 <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold uppercase text-muted-foreground">{lang === "ru" ? "Баланс" : "Balance"}</span>
-                  <span className="text-lg font-bold text-foreground">$650</span>
+                  <span className="text-xs font-semibold uppercase text-muted-foreground">{t("partner.balance")}</span>
+                  <span className="text-lg font-bold text-foreground">€650</span>
                 </div>
                 <Progress value={65} className="h-1.5 bg-secondary [&>div]:bg-primary" />
-                <p className="text-[10px] text-muted-foreground mt-1.5">{lang === "ru" ? "$650 из $1000 до бонуса" : "$650 of $1000 to bonus"}</p>
+                <p className="text-[10px] text-muted-foreground mt-1.5">€650 / €1000 {t("partner.toBonus")}</p>
                 <motion.button whileTap={{ scale: 0.95 }} className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground">
-                  {lang === "ru" ? "Вывести средства" : "Withdraw"}
+                  {t("partner.withdraw")}
                 </motion.button>
               </div>
 
               {/* History */}
               <h3 className="mt-4 mb-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
-                {lang === "ru" ? "История рефералов" : "Referral History"}
+                {t("partner.history")}
               </h3>
               <div className="flex flex-col gap-2">
                 {mockReferrals.map((r, i) => (
                   <motion.div key={i} initial={{ opacity: 0, y: 5 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.3 + i * 0.06 }} className="flex items-center justify-between rounded-xl bg-card border border-border p-3">
                     <div>
-                      <p className="text-sm font-semibold text-foreground">{lang === "ru" ? r.name : r.nameEn}</p>
+                      <p className="text-sm font-semibold text-foreground">{r.name}</p>
                       <p className="text-[10px] text-muted-foreground">{r.date}</p>
                     </div>
                     <div className="text-right">
                       <p className="text-sm font-bold text-foreground">{r.amount}</p>
                       <span className={`text-[10px] font-semibold ${r.status === "paid" ? "text-accent" : "text-warning"}`}>
-                        {r.status === "paid" ? (lang === "ru" ? "Выплачено" : "Paid") : (lang === "ru" ? "Ожидание" : "Pending")}
+                        {r.status === "paid" ? t("partner.paid") : t("partner.pending")}
                       </span>
                     </div>
                   </motion.div>
@@ -283,7 +399,7 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
                 {mockInvoices.map((inv) => (
                   <div key={inv.id} className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
                     <div>
-                      <p className="text-sm font-semibold text-foreground">{lang === "ru" ? inv.titleRu : inv.titleEn}</p>
+                      <p className="text-sm font-semibold text-foreground">{inv.titleKey}</p>
                       <p className="text-lg font-bold text-foreground">{inv.amount}</p>
                     </div>
                     {inv.status === "paid" ? (
@@ -320,7 +436,7 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
                         <div className={`max-w-[80%] rounded-2xl px-3.5 py-2.5 text-sm ${
                           isYou ? "bg-primary text-primary-foreground rounded-br-md" : "bg-card border border-border text-foreground rounded-bl-md"
                         }`}>
-                          {lang === "ru" ? msg.text : msg.textEn}
+                          {lang === "uk" || lang === "ru" ? msg.text : msg.textEn}
                         </div>
                       </div>
                     );
