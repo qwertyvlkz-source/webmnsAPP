@@ -45,6 +45,7 @@ const OrdersScreen = () => {
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<WebsiteOrder | null>(null);
+  const [payingOrderId, setPayingOrderId] = useState<number | null>(null);
 
   const fetchOrders = async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
@@ -78,6 +79,24 @@ const OrdersScreen = () => {
     const key = `orders.status.${status}`;
     const translated = t(key);
     return translated !== key ? translated : status;
+  };
+
+  const handlePay = async (orderId: number, e?: React.MouseEvent) => {
+    if (e) e.stopPropagation();
+    setPayingOrderId(orderId);
+    try {
+      const data = await api.post<{ paymentUrl?: string; message?: string }>("/payments/create", { orderId });
+      if (data.paymentUrl) {
+        window.open(data.paymentUrl, "_blank");
+      } else {
+        toast.error(data.message || t("common.serverError"));
+      }
+    } catch (error) {
+      console.error("Payment error:", error);
+      toast.error(t("common.serverError"));
+    } finally {
+      setPayingOrderId(null);
+    }
   };
 
   // Not authenticated
@@ -152,13 +171,11 @@ const OrdersScreen = () => {
                   {order.status === "waiting_payment" && (
                     <motion.button
                       whileTap={{ scale: 0.95 }}
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        toast.info("Payment integration coming soon");
-                      }}
-                      className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground"
+                      disabled={payingOrderId === order.id}
+                      onClick={(e) => handlePay(order.id, e)}
+                      className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground disabled:opacity-50"
                     >
-                      <CreditCard size={14} />
+                      {payingOrderId === order.id ? <Loader2 size={14} className="animate-spin" /> : <CreditCard size={14} />}
                       {t("orders.pay")}
                     </motion.button>
                   )}
@@ -219,9 +236,11 @@ const OrdersScreen = () => {
             {selectedOrder.status === "waiting_payment" && (
               <motion.button
                 whileTap={{ scale: 0.95 }}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground"
+                disabled={payingOrderId === selectedOrder.id}
+                onClick={() => handlePay(selectedOrder.id)}
+                className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
               >
-                <ExternalLink size={16} />
+                {payingOrderId === selectedOrder.id ? <Loader2 size={16} className="animate-spin" /> : <ExternalLink size={16} />}
                 {t("orders.pay")} — €{selectedOrder.budget.toLocaleString()}
               </motion.button>
             )}
