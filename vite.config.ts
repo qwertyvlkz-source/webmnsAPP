@@ -11,6 +11,15 @@ export default defineConfig(({ mode }) => ({
     hmr: {
       overlay: false,
     },
+    // Proxy API calls to the production backend in dev so the browser stays
+    // same-origin (the API sends no CORS headers).
+    proxy: {
+      "/api": {
+        target: "https://webmns.com",
+        changeOrigin: true,
+        secure: true,
+      },
+    },
   },
   plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {

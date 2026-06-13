@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import AppShell from "@/components/AppShell";
 import TopAppBar from "@/components/TopAppBar";
 import BottomTabBar from "@/components/BottomTabBar";
 import HomeScreen from "@/screens/HomeScreen";
@@ -16,17 +17,17 @@ const Index = () => {
 
   if (showPartner) {
     return (
-      <div className="mx-auto flex h-[100dvh] max-w-md flex-col overflow-hidden bg-background">
+      <AppShell>
         <TopAppBar />
         <PartnerScreen onBack={() => setShowPartner(false)} />
-      </div>
+      </AppShell>
     );
   }
 
   const Screen = screens[tab];
 
   return (
-    <div className="mx-auto flex h-[100dvh] max-w-md flex-col overflow-hidden bg-background">
+    <AppShell>
       <TopAppBar />
       <AnimatePresence mode="wait">
         <motion.div
@@ -41,7 +42,7 @@ const Index = () => {
         </motion.div>
       </AnimatePresence>
       <BottomTabBar active={tab} onTabChange={setTab} />
-    </div>
+    </AppShell>
   );
 };
 

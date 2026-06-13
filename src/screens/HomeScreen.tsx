@@ -1,9 +1,10 @@
 import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
-import { api } from "@/lib/api";
+import { fetchPortfolio, pickLocale, resolveImageUrl, type PortfolioItem } from "@/lib/portfolio";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription } from "@/components/ui/dialog";
-import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2, Bell, Moon, Sun, Loader2, ExternalLink } from "lucide-react";
+import { Zap, Award, ShieldCheck, ArrowRight, Star, TrendingUp, Users, Code2, Loader2, ExternalLink } from "lucide-react";
+import HeroIllustration from "@/components/HeroIllustration";
 
 const whyUsIcons = [Zap, Award, ShieldCheck];
 const whyUsKeys = [
@@ -19,48 +20,19 @@ const stats = [
   { icon: Code2, value: "7+", key: "home.stat.years" },
 ];
 
-interface PortfolioItem {
-  id: number;
-  title: string;
-  description: string | null;
-  image: string | null;
-  url: string | null;
-  category: string | null;
-}
-
 const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
-  const { t } = useLang();
-  const [dark, setDark] = useState(() => document.documentElement.classList.contains("dark"));
+  const { t, lang } = useLang();
   const [selected, setSelected] = useState<PortfolioItem | null>(null);
   const [latestProjects, setLatestProjects] = useState<PortfolioItem[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
 
-  useEffect(() => {
-    document.documentElement.classList.toggle("dark", dark);
-  }, [dark]);
-
   // Load latest projects from API
   useEffect(() => {
-    const fetchProjects = async () => {
-      try {
-        const data = await api.get<{ success: boolean; data: PortfolioItem[] }>("/portfolio", { noAuth: true });
-        if (data.success && data.data) {
-          // Show only the latest 4
-          setLatestProjects(data.data.slice(0, 4));
-        }
-      } catch (error) {
-        console.error("Failed to load portfolio:", error);
-      } finally {
-        setLoadingProjects(false);
-      }
-    };
-    fetchProjects();
+    fetchPortfolio()
+      .then((data) => setLatestProjects(data.slice(0, 4)))
+      .catch((error) => console.error("Failed to load portfolio:", error))
+      .finally(() => setLoadingProjects(false));
   }, []);
-
-  const getImageUrl = (image: string | null) => {
-    if (!image) return null;
-    return image.startsWith("http") ? image : `https://webmns.com${image}`;
-  };
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4">
@@ -91,28 +63,40 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
         />
         <div className="absolute inset-0 bg-gradient-to-br from-white/10 to-transparent mix-blend-overlay pointer-events-none" />
 
-        <div className="relative flex items-start justify-between">
-          <motion.h1 
-            initial={{ opacity: 0, x: -10 }}
-            animate={{ opacity: 1, x: 0 }}
+        <div className="relative flex flex-col items-center text-center">
+          <motion.span
+            initial={{ opacity: 0, y: -6 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.15 }}
+            className="label-mono mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary"
+          >
+            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />
+            {t("home.badge")}
+          </motion.span>
+          <motion.h1
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="whitespace-pre-line text-2xl font-extrabold leading-tight text-foreground flex-1 tracking-tight"
+            className="whitespace-pre-line text-[28px] leading-[1.1] text-foreground"
           >
             {t("home.hero")}
           </motion.h1>
-          <motion.button 
-            whileTap={{ scale: 0.9 }} 
-            className="relative ml-4 flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-card shadow-sm border border-border/50"
-          >
-            <Bell size={18} className="text-foreground" />
-            <span className="absolute right-2 top-2 h-2.5 w-2.5 rounded-full bg-destructive ring-2 ring-card" />
-          </motion.button>
         </div>
+
+        {/* Hero illustration (monitor + gears + floating badges) */}
+        <motion.div
+          initial={{ opacity: 0, scale: 0.9 }}
+          animate={{ opacity: 1, scale: 1 }}
+          transition={{ delay: 0.3, duration: 0.5 }}
+          className="relative mt-2"
+        >
+          <HeroIllustration />
+        </motion.div>
         
-        <div className="relative mt-6 flex items-center justify-between">
+        <div className="relative mt-4">
           <motion.button
             whileTap={{ scale: 0.95 }}
-            className="flex items-center gap-2.5 rounded-2xl bg-gradient-to-r from-primary to-primary/80 px-6 py-3.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30"
+            className="flex w-full items-center justify-center gap-2.5 rounded-2xl bg-gradient-to-r from-primary to-accent px-6 py-3.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30"
           >
             {t("home.cta")}
             <motion.div
@@ -122,14 +106,6 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               <ArrowRight size={18} />
             </motion.div>
           </motion.button>
-          
-          <motion.button 
-            whileTap={{ scale: 0.9 }} 
-            onClick={() => setDark(!dark)} 
-            className="flex h-12 w-12 items-center justify-center rounded-2xl bg-card shadow-sm border border-border/50"
-          >
-            {dark ? <Sun size={20} className="text-foreground" /> : <Moon size={20} className="text-foreground" />}
-          </motion.button>
         </div>
       </motion.div>
 
@@ -137,40 +113,54 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
       <motion.div
         initial={{ opacity: 0, y: 15 }}
         animate={{ opacity: 1, y: 0 }}
-        transition={{ delay: 0.1 }}
+        transition={{ delay: 0.1, duration: 0.4 }}
         className="mt-4 grid grid-cols-4 gap-3"
       >
         {stats.map((s, i) => {
           const Icon = s.icon;
           return (
-            <div key={i} className="flex flex-col items-center gap-1 rounded-xl bg-card p-3 border border-border">
-              <Icon size={16} className="text-accent" />
-              <span className="text-base font-bold text-foreground">{s.value}</span>
-              <span className="text-[10px] text-muted-foreground text-center leading-tight">{t(s.key)}</span>
-            </div>
+            <motion.div
+              key={i}
+              whileTap={{ scale: 0.92 }}
+              initial={{ opacity: 0, scale: 0.8 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ delay: 0.15 + i * 0.05, type: "spring", stiffness: 300, damping: 20 }}
+              className="flex flex-col items-center gap-1.5 rounded-2xl bg-card/60 backdrop-blur-sm p-3 border border-border/60 shadow-sm"
+            >
+              <Icon size={18} className="text-accent drop-shadow-[0_2px_4px_hsl(var(--accent)/0.3)]" />
+              <span className="text-[17px] font-black text-foreground tracking-tight">{s.value}</span>
+              <span className="text-[9px] font-medium text-muted-foreground uppercase text-center leading-[1.1]">{t(s.key)}</span>
+            </motion.div>
           );
         })}
       </motion.div>
 
       {/* Why Us */}
-      <h2 className="mb-3 mt-5 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        {t("home.why")}
-      </h2>
+      <motion.div 
+        initial={{ opacity: 0, x: -10 }}
+        animate={{ opacity: 1, x: 0 }}
+        transition={{ delay: 0.2 }}
+        className="mb-3 mt-6 flex items-center gap-2"
+      >
+        <span className="h-1 w-4 rounded-full bg-primary" />
+        <h2 className="label-mono text-[11px] font-bold text-muted-foreground uppercase tracking-widest">{t("home.why")}</h2>
+      </motion.div>
       <div className="grid grid-cols-3 gap-3">
         {whyUsKeys.map((item, i) => {
           const Icon = whyUsIcons[i];
           return (
             <motion.div
               key={i}
-              initial={{ opacity: 0, y: 10 }}
+              initial={{ opacity: 0, y: 15 }}
               animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: i * 0.1 }}
-              className="flex flex-col items-center gap-1.5 rounded-2xl bg-card p-3 border border-border text-center"
+              transition={{ delay: 0.25 + i * 0.08, type: "spring", stiffness: 300, damping: 20 }}
+              whileTap={{ scale: 0.92 }}
+              className="flex flex-col items-center gap-2 rounded-[20px] bg-card/60 backdrop-blur-sm p-4 border border-border/60 shadow-sm text-center"
             >
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-primary/15">
-                <Icon size={18} className="text-primary" />
-              </span>
-              <span className="text-xs font-semibold text-foreground leading-tight">
+              <div className="flex h-10 w-10 items-center justify-center rounded-[14px] bg-gradient-to-br from-primary/20 to-primary/5 border border-primary/10 shadow-inner">
+                <Icon size={20} className="text-primary drop-shadow-[0_2px_4px_hsl(var(--primary)/0.3)]" />
+              </div>
+              <span className="text-[11px] font-bold text-foreground leading-tight">
                 {t(item.title)}
               </span>
             </motion.div>
@@ -202,9 +192,10 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
       </motion.div>
 
       {/* Latest Projects */}
-      <h2 className="mb-3 mt-6 text-sm font-semibold uppercase tracking-wider text-muted-foreground">
-        {t("home.latest")}
-      </h2>
+      <div className="mb-3 mt-7 flex items-center gap-2">
+        <span className="h-1 w-4 rounded-full bg-primary" />
+        <h2 className="label-mono text-[11px] font-medium text-muted-foreground">{t("home.latest")}</h2>
+      </div>
 
       {loadingProjects ? (
         <div className="flex items-center justify-center py-8">
@@ -224,14 +215,14 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               onClick={() => setSelected(p)}
               className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] shadow-lg cursor-pointer"
             >
-              {getImageUrl(p.image) ? (
-                <img src={getImageUrl(p.image)!} alt={p.title} className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+              {resolveImageUrl(p.image) ? (
+                <img src={resolveImageUrl(p.image)!} alt={pickLocale(p.title, lang)} className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
               )}
               <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-black/20 to-transparent" />
               <div className="relative p-3">
-                <span className="text-sm font-bold text-white">{p.title}</span>
+                <span className="text-sm font-bold text-white">{pickLocale(p.title, lang)}</span>
                 {p.category && (
                   <span className="block text-[10px] text-white/70">{p.category}</span>
                 )}
@@ -245,23 +236,25 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
       <Dialog open={!!selected} onOpenChange={(o) => !o && setSelected(null)}>
         <DialogContent className="max-w-sm rounded-2xl bg-card border-border p-0 overflow-hidden">
           <DialogHeader className="px-4 pt-4 pb-0">
-            <DialogTitle className="text-foreground">{selected?.title}</DialogTitle>
+            <DialogTitle className="text-foreground">{pickLocale(selected?.title, lang)}</DialogTitle>
             <DialogDescription className="text-muted-foreground">
-              {selected?.description || selected?.category}
+              {pickLocale(selected?.description, lang) || selected?.category}
             </DialogDescription>
           </DialogHeader>
           <div className="px-4 pb-5">
-            {selected && getImageUrl(selected.image) && (
+            {selected && resolveImageUrl(selected.image) && (
               <div className="relative mb-4 rounded-2xl overflow-hidden">
-                <img src={getImageUrl(selected.image)!} alt={selected.title} className="w-full object-contain" />
+                <img src={resolveImageUrl(selected.image)!} alt={pickLocale(selected.title, lang)} className="w-full object-contain" />
               </div>
             )}
-            {selected?.category && (
+            {(selected?.technologies?.length || selected?.category) && (
               <>
                 <p className="mb-1 text-xs font-semibold uppercase text-muted-foreground">
                   {t("portfolio.tech")}
                 </p>
-                <p className="mb-5 text-sm text-foreground">{selected.category}</p>
+                <p className="mb-5 text-sm text-foreground">
+                  {selected?.technologies?.length ? selected.technologies.join(", ") : selected?.category}
+                </p>
               </>
             )}
             <div className="flex gap-2">

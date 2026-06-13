@@ -1,4 +1,7 @@
-const API_BASE_URL = import.meta.env.VITE_API_URL || 'https://webmns.com/api';
+// In dev, use a relative path so requests go through the Vite proxy (avoids CORS).
+// In prod, call the backend directly.
+const API_BASE_URL =
+  import.meta.env.VITE_API_URL || (import.meta.env.DEV ? '/api' : 'https://webmns.com/api');
 
 interface ApiOptions {
   method?: string;

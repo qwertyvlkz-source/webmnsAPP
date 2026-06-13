@@ -19,48 +19,54 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
 
   return (
     <nav className="px-3 pb-[max(env(safe-area-inset-bottom),4px)] pt-0.5">
-      <div className="flex items-center justify-around rounded-2xl bg-card shadow-[0_2px_20px_rgba(0,0,0,0.08)] border border-border px-1 py-0">
+      <div className="flex items-center justify-around rounded-2xl bg-card/75 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.10)] border border-border/60 px-1 py-0">
         {tabs.map((tab, i) => {
           const Icon = tab.icon;
           const isActive = active === i;
           return (
-            <motion.button
+            <button
               key={i}
-              whileTap={{ scale: 0.9 }}
               onClick={() => onTabChange(i)}
-              className="relative flex min-w-[52px] flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 py-1.5"
+              className="relative flex min-w-[56px] flex-col items-center justify-center gap-0.5 px-1 py-2 outline-none"
+              style={{ WebkitTapHighlightColor: "transparent" }}
             >
+              {isActive && (
+                <motion.div
+                  layoutId="bottom-tab-pill"
+                  className="absolute inset-0 rounded-xl bg-primary/10"
+                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+                />
+              )}
               {tab.accent ? (
-                <span
-                  className={`flex h-10 w-10 items-center justify-center rounded-full shadow-md ${
-                    isActive ? "bg-primary shadow-primary/30" : "bg-primary/80"
+                <motion.span
+                  whileTap={{ scale: 0.85 }}
+                  className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full shadow-lg ${
+                    isActive ? "bg-gradient-to-br from-primary to-accent shadow-primary/40" : "bg-primary shadow-primary/20"
                   }`}
                 >
-                  <Icon size={20} className="text-primary-foreground" />
-                </span>
+                  <Icon size={20} className="text-white" />
+                </motion.span>
               ) : (
-                <>
+                <motion.div
+                  whileTap={{ scale: 0.85 }}
+                  animate={isActive ? { y: -2 } : { y: 0 }}
+                  className="relative z-10 flex flex-col items-center gap-0.5"
+                >
                   <Icon
-                    size={19}
-                    className={isActive ? "text-primary" : "text-muted-foreground"}
+                    size={20}
+                    strokeWidth={isActive ? 2.5 : 2}
+                    className={isActive ? "text-primary drop-shadow-[0_2px_4px_hsl(var(--primary)/0.3)]" : "text-muted-foreground/70"}
                   />
-                  {isActive && (
-                    <motion.div
-                      layoutId="tab-dot"
-                      className="absolute -bottom-0 h-1 w-1 rounded-full bg-primary"
-                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
-                    />
-                  )}
-                </>
+                  <span
+                    className={`text-[9px] font-bold leading-none ${
+                      isActive ? "text-primary" : "text-muted-foreground/70"
+                    }`}
+                  >
+                    {t(tab.key)}
+                  </span>
+                </motion.div>
               )}
-              <span
-                className={`text-[9px] font-medium leading-none ${
-                  isActive ? "text-primary" : "text-muted-foreground"
-                }`}
-              >
-                {t(tab.key)}
-              </span>
-            </motion.button>
+            </button>
           );
         })}
         {/* Language toggle — cycles through UK → RU → EN → PL → DE */}

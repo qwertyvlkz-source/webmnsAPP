@@ -24,6 +24,27 @@ const translations: Record<string, Record<Lang, string>> = {
   "nav.orders": { uk: "Замовлення", ru: "Заказы", en: "Orders", pl: "Zamówienia", de: "Bestellungen" },
   "nav.profile": { uk: "Кабінет", ru: "Кабинет", en: "Profile", pl: "Profil", de: "Profil" },
 
+  // ─── Desktop brand panel (landing) ───────────────────
+  "shell.eyebrow": { uk: "Веб- та Android-розробка", ru: "Веб- и Android-разработка", en: "Web & Android Development", pl: "Web i Android", de: "Web- & Android-Entwicklung" },
+  "shell.title": {
+    uk: "Сайти та застосунки,\nякі ростять ваш бізнес",
+    ru: "Сайты и приложения,\nкоторые растят ваш бизнес",
+    en: "Websites & apps\nthat grow your business",
+    pl: "Strony i aplikacje,\nktóre rozwijają biznes",
+    de: "Websites & Apps,\ndie Ihr Geschäft wachsen lassen",
+  },
+  "shell.subtitle": {
+    uk: "Студія WebMNS проєктує, розробляє та запускає продукти повного циклу — від ідеї до релізу.",
+    ru: "Студия WebMNS проектирует, разрабатывает и запускает продукты полного цикла — от идеи до релиза.",
+    en: "WebMNS designs, builds and ships full-cycle digital products — from idea to launch.",
+    pl: "WebMNS projektuje, tworzy i wdraża pełnocyklowe produkty cyfrowe — od pomysłu do startu.",
+    de: "WebMNS entwirft, entwickelt und veröffentlicht digitale Full-Cycle-Produkte — von der Idee bis zum Launch.",
+  },
+  "shell.feat1": { uk: "Веб-сайти та інтернет-магазини", ru: "Веб-сайты и интернет-магазины", en: "Websites & online stores", pl: "Strony i sklepy online", de: "Websites & Online-Shops" },
+  "shell.feat2": { uk: "Android-застосунки та PWA", ru: "Android-приложения и PWA", en: "Android apps & PWA", pl: "Aplikacje Android i PWA", de: "Android-Apps & PWA" },
+  "shell.feat3": { uk: "Дизайн, SEO та підтримка", ru: "Дизайн, SEO и поддержка", en: "Design, SEO & support", pl: "Design, SEO i wsparcie", de: "Design, SEO & Support" },
+  "shell.live": { uk: "Демо застосунку", ru: "Демо приложения", en: "Live app preview", pl: "Podgląd aplikacji", de: "Live-App-Vorschau" },
+
   // ─── Home ────────────────────────────────────────────
   "home.hero": {
     uk: "Сучасні веб-рішення.\nКреативні сайти для бізнесу",
@@ -32,6 +53,7 @@ const translations: Record<string, Record<Lang, string>> = {
     pl: "Nowoczesne rozwiązania webowe.\nKreatywne strony dla biznesu",
     de: "Moderne Web-Lösungen.\nKreative Websites für Unternehmen",
   },
+  "home.badge": { uk: "Веб та Android", ru: "Веб и Android", en: "Web & Android", pl: "Web i Android", de: "Web & Android" },
   "home.cta": { uk: "Безкоштовна консультація", ru: "Бесплатная консультация", en: "Free Consultation", pl: "Bezpłatna konsultacja", de: "Kostenlose Beratung" },
   "home.why": { uk: "Чому ми", ru: "Почему мы", en: "Why Us", pl: "Dlaczego my", de: "Warum wir" },
   "home.fast": { uk: "Швидка доставка", ru: "Быстрая доставка", en: "Fast Delivery", pl: "Szybka dostawa", de: "Schnelle Lieferung" },
