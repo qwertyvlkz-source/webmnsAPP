@@ -96,10 +96,10 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
               >
                 {[
                   { id: "uk", label: "🇺🇦 UA" },
-                  { id: "ru", label: "🇷🇺 RU" },
                   { id: "en", label: "🇬🇧 EN" },
                   { id: "pl", label: "🇵🇱 PL" },
                   { id: "de", label: "🇩🇪 DE" },
+                  { id: "ru", label: "🇷🇺 RU" },
                 ].map((l) => (
                   <button
                     key={l.id}
