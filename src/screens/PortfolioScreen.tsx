@@ -104,7 +104,7 @@ const PortfolioScreen = () => {
                     <img
                       src={resolveImageUrl(p.image)!}
                       alt={pickLocale(p.title, lang)}
-                      className="absolute inset-0 h-full w-full object-cover"
+                      className="absolute inset-0 h-full w-full object-cover object-top"
                       loading="lazy"
                     />
                   ) : (

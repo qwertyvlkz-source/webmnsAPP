@@ -243,7 +243,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] shadow-lg cursor-pointer"
             >
               {resolveImageUrl(p.image) ? (
-                <img src={resolveImageUrl(p.image)!} alt={pickLocale(p.title, lang)} className="absolute inset-0 h-full w-full object-cover" loading="lazy" />
+                <img src={resolveImageUrl(p.image)!} alt={pickLocale(p.title, lang)} className="absolute inset-0 h-full w-full object-cover object-top" loading="lazy" />
               ) : (
                 <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20" />
               )}
