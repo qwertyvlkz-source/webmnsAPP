@@ -1,6 +1,8 @@
+import { useState, useRef, useEffect } from "react";
 import { Home, LayoutGrid, PlusCircle, User, Globe } from "lucide-react";
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
+import type { Lang } from "@/i18n/translations";
 
 interface Props {
   active: number;
@@ -15,7 +17,20 @@ const tabs = [
 ];
 
 const BottomTabBar = ({ active, onTabChange }: Props) => {
-  const { t, langLabel, cycleLang } = useLang();
+  const { t, langLabel, lang, setLang } = useLang();
+  const [showLangMenu, setShowLangMenu] = useState(false);
+  const langMenuRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (!showLangMenu) return;
+    const handler = (e: MouseEvent) => {
+      if (langMenuRef.current && !langMenuRef.current.contains(e.target as Node)) {
+        setShowLangMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handler);
+    return () => document.removeEventListener("mousedown", handler);
+  }, [showLangMenu]);
 
   return (
     <nav className="px-3 pb-[max(env(safe-area-inset-bottom),4px)] pt-0.5">
@@ -69,17 +84,51 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
             </button>
           );
         })}
-        {/* Language toggle — cycles through UK → RU → EN → PL → DE */}
-        <motion.button
-          whileTap={{ scale: 0.9 }}
-          onClick={cycleLang}
-          className="flex min-w-[40px] flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 py-1.5"
-        >
-          <Globe size={19} className="text-muted-foreground" />
-          <span className="text-[9px] font-bold leading-none text-primary">
-            {langLabel}
-          </span>
-        </motion.button>
+        {/* Language menu */}
+        <div className="relative flex" ref={langMenuRef}>
+          <AnimatePresence>
+            {showLangMenu && (
+              <motion.div
+                initial={{ opacity: 0, y: 10, scale: 0.95 }}
+                animate={{ opacity: 1, y: 0, scale: 1 }}
+                exit={{ opacity: 0, y: 10, scale: 0.95 }}
+                className="absolute bottom-full mb-3 right-0 flex flex-col overflow-hidden rounded-2xl bg-card/95 p-1 shadow-2xl backdrop-blur-2xl border border-border/70"
+              >
+                {[
+                  { id: "uk", label: "🇺🇦 UA" },
+                  { id: "ru", label: "🇷🇺 RU" },
+                  { id: "en", label: "🇬🇧 EN" },
+                  { id: "pl", label: "🇵🇱 PL" },
+                  { id: "de", label: "🇩🇪 DE" },
+                ].map((l) => (
+                  <button
+                    key={l.id}
+                    onClick={() => {
+                      setLang(l.id as Lang);
+                      setShowLangMenu(false);
+                    }}
+                    className={`flex items-center justify-center rounded-xl px-4 py-3 text-[13px] font-bold transition-colors ${
+                      lang === l.id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
+                    }`}
+                  >
+                    {l.label}
+                  </button>
+                ))}
+              </motion.div>
+            )}
+          </AnimatePresence>
+
+          <motion.button
+            whileTap={{ scale: 0.9 }}
+            onClick={() => setShowLangMenu((p) => !p)}
+            className="flex min-w-[40px] flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 py-1.5"
+          >
+            <Globe size={19} className="text-muted-foreground" />
+            <span className="text-[9px] font-bold leading-none text-primary">
+              {langLabel}
+            </span>
+          </motion.button>
+        </div>
       </div>
     </nav>
   );
