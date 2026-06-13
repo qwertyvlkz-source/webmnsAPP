@@ -29,10 +29,29 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   // Load latest projects from API
   useEffect(() => {
     fetchPortfolio()
-      .then((data) => setLatestProjects(data.slice(0, 4)))
+      .then((data) => {
+        // Show only the latest 9
+        setLatestProjects(data.slice(0, 9));
+      })
       .catch((error) => console.error("Failed to load portfolio:", error))
       .finally(() => setLoadingProjects(false));
   }, []);
+
+  const renderHeroText = (text: string) => {
+    // Parse <gradient> tags into styled spans
+    const parts = text.split(/(<gradient>.*?<\/gradient>)/g);
+    return parts.map((part, i) => {
+      if (part.startsWith("<gradient>") && part.endsWith("</gradient>")) {
+        const inner = part.slice(10, -11);
+        return (
+          <span key={i} className="bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+            {inner}
+          </span>
+        );
+      }
+      return <span key={i}>{part}</span>;
+    });
+  };
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-4">
@@ -40,7 +59,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
       <motion.div
         initial={{ opacity: 0, y: 20 }}
         animate={{ opacity: 1, y: 0 }}
-        className="relative mt-4 overflow-hidden rounded-3xl border border-border/50 bg-card/30 backdrop-blur-2xl p-6 shadow-xl shadow-primary/5"
+        className="relative mt-4 overflow-hidden rounded-[28px] bg-card/40 backdrop-blur-3xl p-6 shadow-2xl border border-border/50"
       >
         {/* Animated Background Blobs */}
         <motion.div 
@@ -68,7 +87,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
             initial={{ opacity: 0, y: -6 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.15 }}
-            className="label-mono mb-2.5 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-2.5 py-1 text-[10px] font-medium text-primary"
+            className="label-mono mb-3 inline-flex items-center gap-1.5 rounded-full border border-primary/20 bg-primary/10 px-3 py-1.5 text-[10px] font-bold text-primary tracking-widest"
           >
             <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse-dot" />
             {t("home.badge")}
@@ -77,10 +96,18 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
             initial={{ opacity: 0, y: 10 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ delay: 0.2 }}
-            className="whitespace-pre-line text-[28px] leading-[1.1] text-foreground"
+            className="whitespace-pre-line text-[32px] md:text-[38px] leading-[1.1] text-foreground font-['Calistoga',serif] tracking-tight"
           >
-            {t("home.hero")}
+            {renderHeroText(t("home.hero"))}
           </motion.h1>
+          <motion.p
+            initial={{ opacity: 0, y: 10 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ delay: 0.25 }}
+            className="mt-3 text-sm text-muted-foreground max-w-[280px] mx-auto leading-relaxed"
+          >
+            {t("home.hero.desc")}
+          </motion.p>
         </div>
 
         {/* Hero illustration (monitor + gears + floating badges) */}

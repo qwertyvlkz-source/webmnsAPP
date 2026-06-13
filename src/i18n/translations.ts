@@ -47,14 +47,21 @@ const translations: Record<string, Record<Lang, string>> = {
 
   // ─── Home ────────────────────────────────────────────
   "home.hero": {
-    uk: "Сучасні веб-рішення.\nКреативні сайти для бізнесу",
-    ru: "Современные веб-решения.\nКреативные сайты для бизнеса",
-    en: "Modern Web Solutions.\nCreative Websites for Business",
-    pl: "Nowoczesne rozwiązania webowe.\nKreatywne strony dla biznesu",
-    de: "Moderne Web-Lösungen.\nKreative Websites für Unternehmen",
+    uk: "Доступні <gradient>сайти</gradient>\nта <gradient>Android-застосунки</gradient>",
+    ru: "Доступные <gradient>сайты</gradient>\nи <gradient>Android-приложения</gradient>",
+    en: "Affordable <gradient>websites</gradient>\nand <gradient>Android apps</gradient>",
+    pl: "Przystępne <gradient>strony</gradient>\ni <gradient>aplikacje Android</gradient>",
+    de: "Erschwingliche <gradient>Websites</gradient>\nund <gradient>Android-Apps</gradient>",
+  },
+  "home.hero.desc": {
+    uk: "Професійна розробка сайтів та мобільних застосунків за доступними цінами. Сучасний дизайн, швидка здача та підтримка.",
+    ru: "Профессиональная разработка сайтов и мобильных приложений по доступным ценам. Современный дизайн, быстрая сдача и поддержка.",
+    en: "Professional website and mobile app development at affordable prices. Modern design, fast delivery, and support.",
+    pl: "Profesjonalne tworzenie stron i aplikacji mobilnych w przystępnych cenach. Nowoczesny design, szybka dostawa i wsparcie.",
+    de: "Professionelle Website- und Mobile-App-Entwicklung zu erschwinglichen Preisen. Modernes Design, schnelle Lieferung und Support.",
   },
   "home.badge": { uk: "Веб та Android", ru: "Веб и Android", en: "Web & Android", pl: "Web i Android", de: "Web & Android" },
-  "home.cta": { uk: "Безкоштовна консультація", ru: "Бесплатная консультация", en: "Free Consultation", pl: "Bezpłatna konsultacja", de: "Kostenlose Beratung" },
+  "home.cta": { uk: "Почати проєкт →", ru: "Начать проект →", en: "Start project →", pl: "Rozpocznij projekt →", de: "Projekt starten →" },
   "home.why": { uk: "Чому ми", ru: "Почему мы", en: "Why Us", pl: "Dlaczego my", de: "Warum wir" },
   "home.fast": { uk: "Швидка доставка", ru: "Быстрая доставка", en: "Fast Delivery", pl: "Szybka dostawa", de: "Schnelle Lieferung" },
   "home.fast.desc": { uk: "5–10 днів", ru: "5–10 дней", en: "5–10 days", pl: "5–10 dni", de: "5–10 Tage" },
