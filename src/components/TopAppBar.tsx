@@ -30,11 +30,11 @@ const TopAppBar = () => {
             className="relative z-10 text-primary drop-shadow-[0_2px_6px_hsl(var(--primary)/0.35)]"
           />
         </motion.div>
-        <div className="flex flex-col leading-[1.05]">
-          <span className="label-mono text-[13px] font-bold tracking-[0.12em] text-foreground">
+        <div className="flex flex-col leading-[1.05] ml-1">
+          <span className="text-[14px] font-black tracking-[0.15em] text-foreground uppercase">
             DIGITAL
           </span>
-          <span className="label-mono text-[13px] font-bold tracking-[0.12em] bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+          <span className="text-[14px] font-black tracking-[0.15em] bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent uppercase drop-shadow-sm">
             AGENCY
           </span>
         </div>
