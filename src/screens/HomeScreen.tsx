@@ -22,7 +22,7 @@ const whyUsKeys = [
 const stats = [
   { icon: TrendingUp, value: "150+", key: "home.stat.projects" },
   { icon: Users, value: "120+", key: "home.stat.clients" },
-  { icon: Star, value: "4.9", key: "home.stat.rating" },
+  { icon: Star, value: "5", key: "home.stat.rating" },
   { icon: Code2, value: "7+", key: "home.stat.years" },
 ];
 

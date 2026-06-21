@@ -15,7 +15,7 @@ const featureKeys = ["shell.feat1", "shell.feat2", "shell.feat3"] as const;
 const shellStats = [
   { value: "150+", key: "home.stat.projects" },
   { value: "120+", key: "home.stat.clients" },
-  { value: "4.9", key: "home.stat.rating" },
+  { value: "5", key: "home.stat.rating" },
 ] as const;
 
 const AppShell = ({ children }: { children: ReactNode }) => {
