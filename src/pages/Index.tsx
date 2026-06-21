@@ -20,6 +20,7 @@ const Index = () => {
       <AppShell>
         <TopAppBar />
         <PartnerScreen onBack={() => setShowPartner(false)} />
+        <BottomTabBar active={tab} onTabChange={(i) => { setShowPartner(false); setTab(i); }} />
       </AppShell>
     );
   }

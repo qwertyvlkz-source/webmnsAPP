@@ -12,6 +12,20 @@ import {
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 
+/** Parse a JSON-encoded locale string like {"en":"Landing","uk":"Лендінг",...} */
+function parseLocale(val: string | null | undefined, lang: string): string {
+  if (!val) return "";
+  try {
+    const obj = JSON.parse(val);
+    if (typeof obj === "object" && obj !== null) {
+      return obj[lang] || obj.en || obj.uk || Object.values(obj)[0] || val;
+    }
+  } catch {
+    // not JSON, return as-is
+  }
+  return val;
+}
+
 interface Service {
   id: number;
   name: string;
@@ -24,6 +38,7 @@ const fallbackIcons: Record<string, typeof Globe> = {
   "Лендінг": Globe,
   "Лендинг": Globe,
   "E-commerce": ShoppingCart,
+  "Online Store": ShoppingCart,
   "Інтернет-магазин": ShoppingCart,
   "Интернет-магазин": ShoppingCart,
   "Corporate": Building2,
@@ -33,6 +48,10 @@ const fallbackIcons: Record<string, typeof Globe> = {
   "Android": Smartphone,
   "iPhone": Apple,
   "iOS": Apple,
+  "Blog": FileText,
+  "Блог": FileText,
+  "Portfolio": Globe,
+  "Web Application": Globe,
 };
 
 function getIconForService(name: string): typeof Globe {
@@ -166,7 +185,7 @@ const OrderScreen = () => {
             ) : (
               <div className="grid grid-cols-2 gap-3 pb-2">
                 {services.map((service) => {
-                  const Icon = getIconForService(service.name);
+                  const Icon = getIconForService(parseLocale(service.name, "en"));
                   const selected = selectedService?.id === service.id;
                   return (
                     <motion.button
@@ -179,7 +198,7 @@ const OrderScreen = () => {
                     >
                       <Icon size={28} className={selected ? "text-primary" : "text-muted-foreground"} />
                       <span className={`text-xs font-semibold text-center leading-tight ${selected ? "text-primary" : "text-foreground"}`}>
-                        {service.name}
+                        {parseLocale(service.name, lang)}
                       </span>
                       <span className="text-[10px] text-muted-foreground">
                         {t("order.from")} €{Number(service.price).toLocaleString()}
@@ -200,10 +219,10 @@ const OrderScreen = () => {
             {selectedService && (
               <div className="mb-4 rounded-xl border border-primary/30 bg-primary/5 p-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
-                  {(() => { const Icon = getIconForService(selectedService.name); return <Icon size={20} className="text-primary" />; })()}
+                  {(() => { const Icon = getIconForService(parseLocale(selectedService.name, "en")); return <Icon size={20} className="text-primary" />; })()}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{selectedService.name}</p>
+                  <p className="text-sm font-semibold text-foreground">{parseLocale(selectedService.name, lang)}</p>
                   <p className="text-xs text-muted-foreground">{t("order.from")} €{Number(selectedService.price).toLocaleString()}</p>
                 </div>
               </div>
