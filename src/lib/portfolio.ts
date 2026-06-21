@@ -88,7 +88,7 @@ async function loadPortfolio(): Promise<PortfolioItem[]> {
         ? [normalize(r.value.data)]
         : []
     )
-    .sort((a, b) => b.id - a.id);
+    .sort((a, b) => a.id - b.id);
 }
 
 let cache: Promise<PortfolioItem[]> | null = null;

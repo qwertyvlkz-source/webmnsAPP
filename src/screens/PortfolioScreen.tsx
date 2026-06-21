@@ -98,13 +98,13 @@ const PortfolioScreen = () => {
                   exit={{ opacity: 0, scale: 0.95 }}
                   whileTap={{ scale: 0.97 }}
                   onClick={() => setSelected(p)}
-                  className="relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] cursor-pointer shadow-sm"
+                  className="group relative flex flex-col justify-end rounded-2xl overflow-hidden h-[140px] cursor-pointer shadow-sm transition-shadow hover:shadow-lg hover:shadow-primary/10"
                 >
                   {resolveImageUrl(p.image) ? (
                     <img
                       src={resolveImageUrl(p.image)!}
                       alt={pickLocale(p.title, lang)}
-                      className="absolute inset-0 h-full w-full object-cover object-top"
+                      className="absolute inset-0 h-full w-full object-cover transition-transform duration-500 ease-out group-hover:scale-110"
                       loading="lazy"
                     />
                   ) : (

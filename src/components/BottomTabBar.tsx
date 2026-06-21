@@ -16,11 +16,24 @@ const tabs = [
   { icon: User, key: "nav.profile" },
 ];
 
+const haptic = () => {
+  if (typeof navigator !== "undefined" && "vibrate" in navigator) navigator.vibrate(10);
+};
+
+const langOptions = [
+  { id: "uk" as Lang, label: "🇺🇦 UA" },
+  { id: "en" as Lang, label: "🇬🇧 EN" },
+  { id: "pl" as Lang, label: "🇵🇱 PL" },
+  { id: "de" as Lang, label: "🇩🇪 DE" },
+  { id: "ru" as Lang, label: "🇷🇺 RU" },
+];
+
 const BottomTabBar = ({ active, onTabChange }: Props) => {
   const { t, langLabel, lang, setLang } = useLang();
   const [showLangMenu, setShowLangMenu] = useState(false);
   const langMenuRef = useRef<HTMLDivElement>(null);
 
+  // Close on outside click
   useEffect(() => {
     if (!showLangMenu) return;
     const handler = (e: MouseEvent) => {
@@ -39,52 +52,56 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
           const Icon = tab.icon;
           const isActive = active === i;
           return (
-            <button
+            <motion.button
               key={i}
-              onClick={() => onTabChange(i)}
-              className="relative flex min-w-[56px] flex-col items-center justify-center gap-0.5 px-1 py-2 outline-none"
-              style={{ WebkitTapHighlightColor: "transparent" }}
+              whileTap={{ scale: 0.9 }}
+              onClick={() => { haptic(); onTabChange(i); }}
+              aria-label={t(tab.key)}
+              aria-current={isActive ? "page" : undefined}
+              className="relative flex min-h-[44px] min-w-[52px] flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 py-1.5"
             >
-              {isActive && (
-                <motion.div
-                  layoutId="bottom-tab-pill"
-                  className="absolute inset-0 rounded-xl bg-primary/10"
-                  transition={{ type: "spring", stiffness: 350, damping: 25 }}
+              {isActive && !tab.accent && (
+                <motion.span
+                  layoutId="tab-bg"
+                  className="absolute inset-x-1 inset-y-1 z-0 rounded-xl bg-primary/10"
+                  transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
               {tab.accent ? (
-                <motion.span
-                  whileTap={{ scale: 0.85 }}
-                  className={`relative z-10 flex h-10 w-10 items-center justify-center rounded-full shadow-lg ${
-                    isActive ? "bg-gradient-to-br from-primary to-accent shadow-primary/40" : "bg-primary shadow-primary/20"
+                <span
+                  className={`flex h-10 w-10 items-center justify-center rounded-full shadow-md ${
+                    isActive ? "bg-primary shadow-primary/30" : "bg-primary/80"
                   }`}
                 >
-                  <Icon size={20} className="text-white" />
-                </motion.span>
+                  <Icon size={20} className="text-primary-foreground" />
+                </span>
               ) : (
-                <motion.div
-                  whileTap={{ scale: 0.85 }}
-                  animate={isActive ? { y: -2 } : { y: 0 }}
-                  className="relative z-10 flex flex-col items-center gap-0.5"
-                >
+                <>
                   <Icon
-                    size={20}
-                    strokeWidth={isActive ? 2.5 : 2}
-                    className={isActive ? "text-primary drop-shadow-[0_2px_4px_hsl(var(--primary)/0.3)]" : "text-muted-foreground/70"}
+                    size={19}
+                    className={`relative z-10 ${isActive ? "text-primary" : "text-muted-foreground"}`}
                   />
-                  <span
-                    className={`text-[9px] font-bold leading-none ${
-                      isActive ? "text-primary" : "text-muted-foreground/70"
-                    }`}
-                  >
-                    {t(tab.key)}
-                  </span>
-                </motion.div>
+                  {isActive && (
+                    <motion.div
+                      layoutId="tab-dot"
+                      className="absolute -bottom-0 h-1 w-1 rounded-full bg-primary"
+                      transition={{ type: "spring", stiffness: 400, damping: 25 }}
+                    />
+                  )}
+                </>
               )}
-            </button>
+              <span
+                className={`relative z-10 text-[9px] font-medium leading-none ${
+                  isActive ? "text-primary" : "text-muted-foreground"
+                }`}
+              >
+                {t(tab.key)}
+              </span>
+            </motion.button>
           );
         })}
-        {/* Language menu */}
+
+        {/* Language dropdown — opens upward */}
         <div className="relative flex" ref={langMenuRef}>
           <AnimatePresence>
             {showLangMenu && (
@@ -92,23 +109,21 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
                 initial={{ opacity: 0, y: 10, scale: 0.95 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
                 exit={{ opacity: 0, y: 10, scale: 0.95 }}
-                className="absolute bottom-full mb-3 right-0 flex flex-col overflow-hidden rounded-2xl bg-card/95 p-1 shadow-2xl backdrop-blur-2xl border border-border/70"
+                transition={{ duration: 0.18, ease: "easeOut" }}
+                className="absolute bottom-full mb-3 right-0 flex flex-col overflow-hidden rounded-2xl bg-card/95 p-1 shadow-2xl backdrop-blur-2xl border border-border/70 z-50"
               >
-                {[
-                  { id: "uk", label: "🇺🇦 UA" },
-                  { id: "en", label: "🇬🇧 EN" },
-                  { id: "pl", label: "🇵🇱 PL" },
-                  { id: "de", label: "🇩🇪 DE" },
-                  { id: "ru", label: "🇷🇺 RU" },
-                ].map((l) => (
+                {langOptions.map((l) => (
                   <button
                     key={l.id}
                     onClick={() => {
-                      setLang(l.id as Lang);
+                      setLang(l.id);
                       setShowLangMenu(false);
+                      haptic();
                     }}
-                    className={`flex items-center justify-center rounded-xl px-4 py-3 text-[13px] font-bold transition-colors ${
-                      lang === l.id ? "bg-primary text-primary-foreground" : "text-foreground hover:bg-secondary"
+                    className={`flex items-center justify-center rounded-xl px-4 py-2.5 text-[13px] font-bold transition-colors ${
+                      lang === l.id
+                        ? "bg-primary text-primary-foreground"
+                        : "text-foreground hover:bg-secondary"
                     }`}
                   >
                     {l.label}
@@ -120,8 +135,9 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
 
           <motion.button
             whileTap={{ scale: 0.9 }}
-            onClick={() => setShowLangMenu((p) => !p)}
-            className="flex min-w-[40px] flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 py-1.5"
+            onClick={() => { haptic(); setShowLangMenu((p) => !p); }}
+            aria-label="Change language"
+            className="flex min-h-[44px] min-w-[44px] flex-col items-center justify-center gap-0.5 rounded-xl px-1.5 py-1.5"
           >
             <Globe size={19} className="text-muted-foreground" />
             <span className="text-[9px] font-bold leading-none text-primary">

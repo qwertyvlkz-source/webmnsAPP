@@ -19,10 +19,7 @@ const Index = () => {
     return (
       <AppShell>
         <TopAppBar />
-        <div className="flex flex-1 flex-col overflow-hidden">
-          <PartnerScreen onBack={() => setShowPartner(false)} />
-        </div>
-        <BottomTabBar active={tab} onTabChange={(t) => { setShowPartner(false); setTab(t); }} />
+        <PartnerScreen onBack={() => setShowPartner(false)} />
       </AppShell>
     );
   }

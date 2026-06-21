@@ -10,7 +10,7 @@ interface LangContextType {
 }
 
 const LANG_STORAGE_KEY = "webmns_app_lang";
-const LANG_ORDER: Lang[] = ["uk", "en", "pl", "de", "ru"];
+const LANG_ORDER: Lang[] = ["uk", "ru", "en", "pl", "de"];
 
 function getInitialLang(): Lang {
   const saved = localStorage.getItem(LANG_STORAGE_KEY) as Lang | null;

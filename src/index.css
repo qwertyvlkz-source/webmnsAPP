@@ -105,6 +105,14 @@
     -moz-osx-font-smoothing: grayscale;
     /* Prevent pull-to-refresh and bounce on iOS */
     overscroll-behavior: none;
+    scroll-behavior: smooth;
+  }
+
+  /* Visible focus ring for keyboard users (accessibility) */
+  :focus-visible {
+    outline: none;
+    box-shadow: 0 0 0 2px hsl(var(--background)), 0 0 0 4px hsl(var(--primary) / 0.6);
+    border-radius: 0.5rem;
   }
 
   /* Editorial display headings (Calistoga) per the boutique SaaS system */
@@ -181,4 +189,31 @@
 }
 .animate-pulse-dot {
   animation: pulseDot 1.6s ease-in-out infinite;
+}
+
+/* Sweeping shine across primary CTAs */
+@keyframes ctaShine {
+  0% { transform: translateX(-130%) skewX(-20deg); }
+  100% { transform: translateX(230%) skewX(-20deg); }
+}
+.cta-shine::after {
+  content: "";
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  left: 0;
+  width: 45%;
+  background: linear-gradient(90deg, transparent, hsl(0 0% 100% / 0.35), transparent);
+  animation: ctaShine 3.2s ease-in-out infinite;
+  pointer-events: none;
+}
+
+/* Respect users who prefer reduced motion */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
 }
