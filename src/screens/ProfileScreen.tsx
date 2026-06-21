@@ -1,10 +1,11 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
+import { api } from "@/lib/api";
 import {
   User, LogOut, CheckCircle, Circle, Loader2,
   FileText, ChevronRight, CreditCard, Users,
@@ -30,7 +31,18 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
 
   const [activeTab, setActiveTab] = useState<"projects" | "orders" | "tickets" | "partner" | "settings">("projects");
   const [copied, setCopied] = useState(false);
-  const refLink = user ? `https://webmns.com?ref=${user.referral_code || 'loading'}` : "";
+  const [refData, setRefData] = useState<{ referral_code: string; referral_link: string; total_referrals: number; total_earnings: number } | null>(null);
+
+  // Fetch referral data when partner tab is active
+  useEffect(() => {
+    if (isAuthenticated && activeTab === "partner" && !refData) {
+      api.get<{ data: any }>("/referral")
+        .then((res) => { if (res.data) setRefData(res.data); })
+        .catch(() => {});
+    }
+  }, [isAuthenticated, activeTab]);
+
+  const refLink = refData?.referral_link || (user ? `https://webmns.com?ref=${user.referral_code || 'loading'}` : "");
 
   const handleCopy = () => {
     navigator.clipboard.writeText(refLink);
@@ -263,10 +275,10 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               {/* Stats */}
               <div className="mt-3 grid grid-cols-2 gap-3">
                 {[
-                  { icon: DollarSign, value: "€0", label: t("partner.earned") },
-                  { icon: UserPlus, value: "0", label: t("partner.referrals") },
+                  { icon: DollarSign, value: `€${refData?.total_earnings || 0}`, label: t("partner.earned") },
+                  { icon: UserPlus, value: String(refData?.total_referrals || 0), label: t("partner.referrals") },
                   { icon: Eye, value: "—", label: t("partner.clicks") },
-                  { icon: ShoppingCart, value: "0", label: t("partner.orders") },
+                  { icon: ShoppingCart, value: "—", label: t("partner.orders") },
                 ].map((s, i) => {
                   const Icon = s.icon;
                   return (
@@ -290,10 +302,10 @@ const ProfileScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               <div className="mt-3 rounded-2xl border border-primary/30 bg-primary/10 p-4">
                 <div className="flex items-center justify-between mb-2">
                   <span className="text-xs font-semibold uppercase text-muted-foreground">{t("partner.balance")}</span>
-                  <span className="text-lg font-bold text-foreground">€0</span>
+                  <span className="text-lg font-bold text-foreground">€{refData?.total_earnings || 0}</span>
                 </div>
-                <Progress value={0} className="h-1.5 bg-secondary [&>div]:bg-primary" />
-                <p className="text-[10px] text-muted-foreground mt-1.5">€0 / €1000 {t("partner.toBonus")}</p>
+                <Progress value={Math.min(((refData?.total_earnings || 0) / 1000) * 100, 100)} className="h-1.5 bg-secondary [&>div]:bg-primary" />
+                <p className="text-[10px] text-muted-foreground mt-1.5">€{refData?.total_earnings || 0} / €1000 {t("partner.toBonus")}</p>
                 <motion.button whileTap={{ scale: 0.95 }} className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground">
                   {t("partner.withdraw")}
                 </motion.button>
