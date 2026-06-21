@@ -7,7 +7,7 @@ import { Loader2, AlertCircle, ExternalLink } from "lucide-react";
 
 type Category = "all" | string;
 
-const PortfolioScreen = () => {
+const PortfolioScreen = ({ onTabChange }: { onTabChange?: (tab: number) => void }) => {
   const { t, lang } = useLang();
   const [items, setItems] = useState<PortfolioItem[]>([]);
   const [loading, setLoading] = useState(true);
@@ -172,6 +172,7 @@ const PortfolioScreen = () => {
               )}
               <motion.button
                 whileTap={{ scale: 0.95 }}
+                onClick={() => { setSelected(null); onTabChange?.(2); }}
                 className="flex-1 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground"
               >
                 {t("portfolio.orderSimilar")}

@@ -26,7 +26,7 @@ const stats = [
   { icon: Code2, value: "7+", key: "home.stat.years" },
 ];
 
-const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
+const HomeScreen = ({ onOpenPartner, onTabChange }: { onOpenPartner?: () => void; onTabChange?: (tab: number) => void }) => {
   const { t, lang } = useLang();
   const [selected, setSelected] = useState<PortfolioItem | null>(null);
   const [latestProjects, setLatestProjects] = useState<PortfolioItem[]>([]);
@@ -162,6 +162,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
           <motion.button
             whileHover={{ scale: 1.02 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => onTabChange?.(2)}
             className="cta-shine relative flex min-h-[48px] w-full items-center justify-center gap-2.5 overflow-hidden rounded-2xl bg-gradient-to-r from-primary to-accent px-6 py-3.5 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30"
           >
             {t("home.cta")}
@@ -333,6 +334,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               )}
               <motion.button
                 whileTap={{ scale: 0.95 }}
+                onClick={() => { setSelected(null); onTabChange?.(2); }}
                 className="flex-1 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground"
               >
                 {t("portfolio.orderSimilar")}
@@ -421,6 +423,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
         <p className="text-xs text-muted-foreground leading-relaxed">{t("home.servicesDesc")}</p>
         <motion.button
           whileTap={{ scale: 0.95 }}
+          onClick={() => onTabChange?.(2)}
           className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground"
         >
           {t("home.learnMore")}
