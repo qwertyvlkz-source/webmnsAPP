@@ -350,7 +350,7 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
       {(() => {
         const r = testimonials[reviewIdx];
         return (
-          <div className="relative">
+          <div>
             <AnimatePresence initial={false} custom={reviewDir} mode="popLayout">
               <motion.div
                 key={reviewIdx}
@@ -380,31 +380,29 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
               </motion.div>
             </AnimatePresence>
 
+            {/* Arrows + Dots row below the card */}
             {testimonials.length > 1 && (
-              <>
+              <div className="mt-3 flex items-center justify-center gap-3">
                 <button
                   onClick={() => { setReviewDir(-1); setReviewIdx((p) => (p - 1 + testimonials.length) % testimonials.length); }}
-                  className="absolute left-1.5 top-1/2 -translate-y-1/2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-secondary/80 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-secondary"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-foreground shadow-sm transition-colors hover:bg-secondary/80"
                 >
                   <ChevronLeft size={16} />
                 </button>
+                <div className="flex gap-1.5">
+                  {testimonials.map((_, i) => (
+                    <span
+                      key={i}
+                      className={`h-1.5 rounded-full transition-all duration-300 ${i === reviewIdx ? "w-4 bg-primary" : "w-1.5 bg-border"}`}
+                    />
+                  ))}
+                </div>
                 <button
                   onClick={() => { setReviewDir(1); setReviewIdx((p) => (p + 1) % testimonials.length); }}
-                  className="absolute right-1.5 top-1/2 -translate-y-1/2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-secondary/80 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-secondary"
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-foreground shadow-sm transition-colors hover:bg-secondary/80"
                 >
                   <ChevronRight size={16} />
                 </button>
-              </>
-            )}
-
-            {testimonials.length > 1 && (
-              <div className="mt-2.5 flex justify-center gap-1.5">
-                {testimonials.map((_, i) => (
-                  <span
-                    key={i}
-                    className={`h-1.5 rounded-full transition-all duration-300 ${i === reviewIdx ? "w-4 bg-primary" : "w-1.5 bg-border"}`}
-                  />
-                ))}
               </div>
             )}
           </div>
