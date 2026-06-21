@@ -54,7 +54,7 @@ const translations: Record<string, Record<Lang, string>> = {
     de: "Moderne Web-Lösungen.\nKreative Websites für Unternehmen",
   },
   "home.badge": { uk: "Веб та Android", ru: "Веб и Android", en: "Web & Android", pl: "Web i Android", de: "Web & Android" },
-  "home.cta": { uk: "Безкоштовна консультація", ru: "Бесплатная консультация", en: "Free Consultation", pl: "Bezpłatna konsultacja", de: "Kostenlose Beratung" },
+  "home.cta": { uk: "Замовити проєкт", ru: "Заказать проект", en: "Order Project", pl: "Zamów projekt", de: "Projekt bestellen" },
   "home.why": { uk: "Чому ми", ru: "Почему мы", en: "Why Us", pl: "Dlaczego my", de: "Warum wir" },
   "home.fast": { uk: "Швидка доставка", ru: "Быстрая доставка", en: "Fast Delivery", pl: "Szybka dostawa", de: "Schnelle Lieferung" },
   "home.fast.desc": { uk: "5–10 днів", ru: "5–10 дней", en: "5–10 days", pl: "5–10 dni", de: "5–10 Tage" },
