@@ -32,7 +32,9 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
   const [latestProjects, setLatestProjects] = useState<PortfolioItem[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [heroIndex, setHeroIndex] = useState(0);
-  const [heroDir, setHeroDir] = useState(0); // -1 left, 1 right
+  const [heroDir, setHeroDir] = useState(0);
+  const [reviewIdx, setReviewIdx] = useState(0);
+  const [reviewDir, setReviewDir] = useState(0);
 
   // Load latest projects from API
   useEffect(() => {
@@ -345,34 +347,69 @@ const HomeScreen = ({ onOpenPartner }: { onOpenPartner?: () => void }) => {
         <span className="h-1 w-4 rounded-full bg-primary" />
         <h2 className="label-mono text-[11px] font-medium text-muted-foreground">{t("home.reviews")}</h2>
       </div>
-      <div className="flex gap-3 overflow-x-auto no-scrollbar pb-1 -mx-1 px-1 snap-x snap-mandatory">
-        {testimonials.map((r, i) => (
-          <Reveal
-            key={i}
-            delay={i * 0.08}
-            className="min-w-[78%] snap-start sm:min-w-[260px]"
-          >
-            <div className="flex h-full flex-col rounded-2xl border border-border bg-card p-4">
-              <Quote size={18} className="mb-2 text-primary/60" />
-              <p className="flex-1 text-xs leading-relaxed text-foreground">{t(r.text)}</p>
-              <div className="mt-3 flex items-center gap-2">
-                <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-[11px] font-bold text-primary-foreground">
-                  {r.name.charAt(0)}
-                </span>
-                <div className="leading-tight">
-                  <p className="text-xs font-semibold text-foreground">{r.name}</p>
-                  <p className="text-[10px] text-muted-foreground">{t(r.role)}</p>
+      {(() => {
+        const r = testimonials[reviewIdx];
+        return (
+          <div className="relative">
+            <AnimatePresence initial={false} custom={reviewDir} mode="popLayout">
+              <motion.div
+                key={reviewIdx}
+                custom={reviewDir}
+                initial={{ opacity: 0, x: reviewDir > 0 ? 60 : -60 }}
+                animate={{ opacity: 1, x: 0 }}
+                exit={{ opacity: 0, x: reviewDir > 0 ? -60 : 60 }}
+                transition={{ duration: 0.25, ease: "easeInOut" }}
+                className="rounded-2xl border border-border bg-card p-4"
+              >
+                <Quote size={18} className="mb-2 text-primary/60" />
+                <p className="text-xs leading-relaxed text-foreground">{t(r.text)}</p>
+                <div className="mt-3 flex items-center gap-2">
+                  <span className="flex h-8 w-8 items-center justify-center rounded-full bg-gradient-to-br from-primary to-accent text-[11px] font-bold text-primary-foreground">
+                    {r.name.charAt(0)}
+                  </span>
+                  <div className="leading-tight">
+                    <p className="text-xs font-semibold text-foreground">{r.name}</p>
+                    <p className="text-[10px] text-muted-foreground">{t(r.role)}</p>
+                  </div>
+                  <div className="ml-auto flex gap-0.5">
+                    {Array.from({ length: 5 }).map((_, s) => (
+                      <Star key={s} size={10} className="fill-primary text-primary" />
+                    ))}
+                  </div>
                 </div>
-                <div className="ml-auto flex gap-0.5">
-                  {Array.from({ length: 5 }).map((_, s) => (
-                    <Star key={s} size={10} className="fill-primary text-primary" />
-                  ))}
-                </div>
+              </motion.div>
+            </AnimatePresence>
+
+            {testimonials.length > 1 && (
+              <>
+                <button
+                  onClick={() => { setReviewDir(-1); setReviewIdx((p) => (p - 1 + testimonials.length) % testimonials.length); }}
+                  className="absolute left-1.5 top-1/2 -translate-y-1/2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-secondary/80 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-secondary"
+                >
+                  <ChevronLeft size={16} />
+                </button>
+                <button
+                  onClick={() => { setReviewDir(1); setReviewIdx((p) => (p + 1) % testimonials.length); }}
+                  className="absolute right-1.5 top-1/2 -translate-y-1/2 z-10 flex h-7 w-7 items-center justify-center rounded-full bg-secondary/80 text-foreground shadow-sm backdrop-blur-sm transition-colors hover:bg-secondary"
+                >
+                  <ChevronRight size={16} />
+                </button>
+              </>
+            )}
+
+            {testimonials.length > 1 && (
+              <div className="mt-2.5 flex justify-center gap-1.5">
+                {testimonials.map((_, i) => (
+                  <span
+                    key={i}
+                    className={`h-1.5 rounded-full transition-all duration-300 ${i === reviewIdx ? "w-4 bg-primary" : "w-1.5 bg-border"}`}
+                  />
+                ))}
               </div>
-            </div>
-          </Reveal>
-        ))}
-      </div>
+            )}
+          </div>
+        );
+      })()}
 
       {/* Services Banner */}
       <motion.div
