@@ -44,7 +44,7 @@ const TopAppBar = () => {
 
   const handleNotificationsOpen = async (open: boolean) => {
     setNotificationsOpen(open);
-    if (!open) return;
+    if (!open || !isAuthenticated) return;
     await loadNotifications();
     try {
       await api.post("/notifications/mark-all-read");
@@ -96,29 +96,27 @@ const TopAppBar = () => {
         </div>
       </div>
 
-        <div className="flex items-center gap-2">
-          {isAuthenticated && (
-            <motion.button
-              whileTap={{ scale: 0.9 }}
-              onClick={() => void handleNotificationsOpen(true)}
-              aria-label={t("notifications.title")}
-              className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 shadow-sm backdrop-blur-md"
-            >
-              <Bell size={18} className="text-foreground" />
-              {hasUnread && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />}
-            </motion.button>
-          )}
-          <motion.button
-            whileTap={{ scale: 0.9 }}
-            onClick={() => setTheme(isDark ? "light" : "dark")}
-            aria-label={isDark ? t("settings.light") : t("settings.dark")}
-            aria-pressed={isDark}
-            title={isDark ? t("settings.light") : t("settings.dark")}
-            className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 text-foreground shadow-sm backdrop-blur-md"
-          >
-            {isDark ? <Sun size={18} /> : <Moon size={18} />}
-          </motion.button>
-        </div>
+      <div className="flex items-center gap-2">
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => void handleNotificationsOpen(true)}
+          aria-label={t("notifications.title")}
+          className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 shadow-sm backdrop-blur-md"
+        >
+          <Bell size={18} className="text-foreground" />
+          {hasUnread && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />}
+        </motion.button>
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => setTheme(isDark ? "light" : "dark")}
+          aria-label={isDark ? t("settings.light") : t("settings.dark")}
+          aria-pressed={isDark}
+          title={isDark ? t("settings.light") : t("settings.dark")}
+          className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 text-foreground shadow-sm backdrop-blur-md"
+        >
+          {isDark ? <Sun size={18} /> : <Moon size={18} />}
+        </motion.button>
+      </div>
       </div>
 
       <Dialog open={notificationsOpen} onOpenChange={(open) => void handleNotificationsOpen(open)}>
@@ -127,7 +125,9 @@ const TopAppBar = () => {
             <DialogTitle>{t("notifications.title")}</DialogTitle>
             <DialogDescription>{t("notifications.description")}</DialogDescription>
           </DialogHeader>
-          {loading ? (
+          {!isAuthenticated ? (
+            <p className="py-8 text-center text-sm text-muted-foreground">{t("notifications.loginRequired")}</p>
+          ) : loading ? (
             <div className="flex justify-center py-8"><Loader2 size={22} className="animate-spin text-primary" /></div>
           ) : notifications.length === 0 ? (
             <p className="py-8 text-center text-sm text-muted-foreground">{t("notifications.empty")}</p>

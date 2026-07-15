@@ -279,6 +279,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "notifications.title": { uk: "Сповіщення", ru: "Уведомления", en: "Notifications", pl: "Powiadomienia", de: "Benachrichtigungen" },
   "notifications.description": { uk: "Оновлення щодо ваших замовлень і підтримки", ru: "Обновления по вашим заказам и поддержке", en: "Updates about your orders and support", pl: "Aktualizacje zamówień i wsparcia", de: "Neuigkeiten zu Bestellungen und Support" },
   "notifications.empty": { uk: "Нових сповіщень немає", ru: "Новых уведомлений нет", en: "No notifications yet", pl: "Brak powiadomień", de: "Noch keine Benachrichtigungen" },
+  "notifications.loginRequired": { uk: "Увійдіть у кабінет, щоб переглядати сповіщення", ru: "Войдите в кабинет, чтобы просматривать уведомления", en: "Log in to view notifications", pl: "Zaloguj się, aby zobaczyć powiadomienia", de: "Melden Sie sich an, um Benachrichtigungen zu sehen" },
 
   // ─── Common ─────────────────────────────────────────
   "common.loading": { uk: "Завантаження...", ru: "Загрузка...", en: "Loading...", pl: "Ładowanie...", de: "Laden..." },
