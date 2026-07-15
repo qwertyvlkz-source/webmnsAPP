@@ -8,6 +8,7 @@ import {
   ClipboardList, Loader2, AlertCircle, ChevronRight,
   Clock, CheckCircle, Circle, CreditCard, ExternalLink,
   RefreshCw,
+  X,
 } from "lucide-react";
 
 interface WebsiteOrder {
@@ -103,7 +104,7 @@ const OrdersScreen = () => {
       }
     } catch (error) {
       console.error("Payment error:", error);
-      toast.error(t("common.serverError"));
+      toast.error(error instanceof Error ? error.message : t("common.serverError"));
     } finally {
       setPayingOrderId(null);
     }
@@ -235,9 +236,18 @@ const OrdersScreen = () => {
                 <p className="text-[10px] font-mono text-muted-foreground">{selectedOrder.order_number}</p>
                 <h2 className="text-lg font-bold text-foreground">{selectedOrder.website_type}</h2>
               </div>
-              <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${statusColors[selectedOrder.status] || "bg-secondary text-secondary-foreground"}`}>
-                {getStatusKey(selectedOrder.status)}
-              </span>
+              <div className="flex items-center gap-2">
+                <span className={`inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-xs font-semibold ${statusColors[selectedOrder.status] || "bg-secondary text-secondary-foreground"}`}>
+                  {getStatusKey(selectedOrder.status)}
+                </span>
+                <button
+                  onClick={() => setSelectedOrder(null)}
+                  aria-label={t("common.close")}
+                  className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary text-muted-foreground"
+                >
+                  <X size={15} />
+                </button>
+              </div>
             </div>
 
             <div className="grid grid-cols-2 gap-3 mb-4">

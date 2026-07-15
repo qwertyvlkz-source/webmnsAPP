@@ -94,7 +94,7 @@ const TicketsScreen = () => {
       setTimeout(() => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" }), 100);
     } catch (error) {
       console.error("Failed to load ticket:", error);
-      toast.error(t("common.serverError"));
+      toast.error(error instanceof Error ? error.message : t("common.serverError"));
       setView("list");
     } finally {
       setLoadingDetail(false);
@@ -111,7 +111,7 @@ const TicketsScreen = () => {
         priority,
       });
       if (data.success) {
-        toast.success(t("tickets.status.open"));
+        toast.success(t("tickets.created"));
         setSubject("");
         setMessage("");
         setPriority("medium");
@@ -120,7 +120,7 @@ const TicketsScreen = () => {
       }
     } catch (error) {
       console.error("Failed to create ticket:", error);
-      toast.error(t("common.serverError"));
+      toast.error(error instanceof Error ? error.message : t("common.serverError"));
     } finally {
       setCreating(false);
     }
@@ -138,7 +138,7 @@ const TicketsScreen = () => {
       await openTicket(selectedTicket.id);
     } catch (error) {
       console.error("Failed to send message:", error);
-      toast.error(t("common.serverError"));
+      toast.error(error instanceof Error ? error.message : t("common.serverError"));
     } finally {
       setSending(false);
     }

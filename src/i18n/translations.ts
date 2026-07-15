@@ -245,6 +245,8 @@ const translations: Record<string, Record<Lang, string>> = {
   "profile.login.name": { uk: "Ваше ім'я", ru: "Ваше имя", en: "Your Name", pl: "Twoje imię", de: "Ihr Name" },
   "profile.login.confirmPassword": { uk: "Підтвердити пароль", ru: "Подтвердить пароль", en: "Confirm Password", pl: "Potwierdź hasło", de: "Passwort bestätigen" },
   "profile.login.emailRequired": { uk: "Введіть коректний email", ru: "Введите корректный email", en: "Enter a valid email", pl: "Wpisz poprawny adres email", de: "Geben Sie eine gültige E-Mail-Adresse ein" },
+  "profile.login.nameRequired": { uk: "Введіть ваше ім’я", ru: "Введите ваше имя", en: "Enter your name", pl: "Wpisz swoje imię", de: "Geben Sie Ihren Namen ein" },
+  "profile.login.passwordRequired": { uk: "Введіть пароль", ru: "Введите пароль", en: "Enter your password", pl: "Wpisz hasło", de: "Geben Sie Ihr Passwort ein" },
   "profile.login.resetSent": { uk: "Посилання для відновлення надіслано на email", ru: "Ссылка для восстановления отправлена на email", en: "Password reset link sent by email", pl: "Link resetujący został wysłany emailem", de: "Link zum Zurücksetzen wurde per E-Mail gesendet" },
   "profile.login.google": { uk: "Продовжити з Google", ru: "Продолжить с Google", en: "Continue with Google", pl: "Kontynuuj z Google", de: "Mit Google fortfahren" },
   "profile.login.or": { uk: "або через email", ru: "или через email", en: "or use email", pl: "lub przez email", de: "oder mit E-Mail" },
@@ -286,6 +288,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "tickets.status.closed": { uk: "Закритий", ru: "Закрыт", en: "Closed", pl: "Zamknięty", de: "Geschlossen" },
   "tickets.empty": { uk: "Немає тікетів", ru: "Нет тикетов", en: "No tickets", pl: "Brak zgłoszeń", de: "Keine Tickets" },
   "tickets.create": { uk: "Створити", ru: "Создать", en: "Create", pl: "Utwórz", de: "Erstellen" },
+  "tickets.created": { uk: "Тікет створено", ru: "Тикет создан", en: "Ticket created", pl: "Zgłoszenie utworzone", de: "Ticket erstellt" },
   "tickets.send": { uk: "Надіслати", ru: "Отправить", en: "Send", pl: "Wyślij", de: "Senden" },
 
   // ─── Settings ───────────────────────────────────────
@@ -306,6 +309,8 @@ const translations: Record<string, Record<Lang, string>> = {
   "settings.passwordMin": { uk: "Пароль має містити щонайменше 8 символів", ru: "Пароль должен содержать не менее 8 символов", en: "Password must be at least 8 characters", pl: "Hasło musi mieć co najmniej 8 znaków", de: "Das Passwort muss mindestens 8 Zeichen lang sein" },
   "settings.passwordMismatch": { uk: "Паролі не збігаються", ru: "Пароли не совпадают", en: "Passwords do not match", pl: "Hasła nie są zgodne", de: "Die Passwörter stimmen nicht überein" },
   "settings.passwordSaved": { uk: "Пароль змінено", ru: "Пароль изменён", en: "Password changed", pl: "Hasło zmienione", de: "Passwort geändert" },
+  "settings.googleAccount": { uk: "Обліковий запис Google", ru: "Аккаунт Google", en: "Google account", pl: "Konto Google", de: "Google-Konto" },
+  "settings.googlePassword": { uk: "Пароль керується у вашому Google-акаунті", ru: "Пароль управляется в вашем Google-аккаунте", en: "Your password is managed by Google", pl: "Hasłem zarządza konto Google", de: "Ihr Passwort wird von Google verwaltet" },
 
   // ─── Notifications ─────────────────────────────────
   "notifications.title": { uk: "Сповіщення", ru: "Уведомления", en: "Notifications", pl: "Powiadomienia", de: "Benachrichtigungen" },
@@ -318,6 +323,7 @@ const translations: Record<string, Record<Lang, string>> = {
   "common.error": { uk: "Помилка", ru: "Ошибка", en: "Error", pl: "Błąd", de: "Fehler" },
   "common.retry": { uk: "Повторити", ru: "Повторить", en: "Retry", pl: "Ponów", de: "Wiederholen" },
   "common.cancel": { uk: "Скасувати", ru: "Отмена", en: "Cancel", pl: "Anuluj", de: "Abbrechen" },
+  "common.close": { uk: "Закрити", ru: "Закрыть", en: "Close", pl: "Zamknij", de: "Schließen" },
   "common.save": { uk: "Зберегти", ru: "Сохранить", en: "Save", pl: "Zapisz", de: "Speichern" },
   "common.noInternet": { uk: "Немає з'єднання з інтернетом", ru: "Нет подключения к интернету", en: "No internet connection", pl: "Brak połączenia z internetem", de: "Keine Internetverbindung" },
   "common.serverError": { uk: "Помилка сервера. Спробуйте пізніше", ru: "Ошибка сервера. Попробуйте позже", en: "Server error. Try again later", pl: "Błąd serwera. Spróbuj później", de: "Serverfehler. Versuchen Sie es später" },

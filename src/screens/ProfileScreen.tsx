@@ -20,6 +20,7 @@ import FAQScreen from "@/screens/FAQScreen";
 import { langNames, type Lang } from "@/i18n/translations";
 import ReferralDashboard from "@/components/ReferralDashboard";
 import { normalizeReferralData, type ReferralData } from "@/lib/referral";
+import { getLoginValidationKey, getRegistrationValidationKey } from "@/lib/profile-validation";
 
 const GoogleIcon = () => (
   <svg aria-hidden="true" viewBox="0 0 18 18" className="h-[18px] w-[18px] shrink-0">
@@ -33,7 +34,7 @@ const GoogleIcon = () => (
 const ProfileScreen = () => {
   const { t, lang, setLang } = useLang();
   const { theme, setTheme } = useTheme();
-  const { user, isAuthenticated, login, loginWithGoogle, register, logout, updateUser, isLoading: authLoading } = useAuth();
+  const { user, token, isAuthenticated, login, loginWithGoogle, register, logout, updateUser, isLoading: authLoading } = useAuth();
   
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [email, setEmail] = useState("");
@@ -78,6 +79,23 @@ const ProfileScreen = () => {
     setRefError("");
   }, [user?.id]);
 
+  useEffect(() => {
+    if (!isAuthenticated) return;
+    let cancelled = false;
+
+    api.get<{ preferences?: { notifications?: boolean } }>("/user/preferences")
+      .then((response) => {
+        if (!cancelled && typeof response.preferences?.notifications === "boolean") {
+          setNotificationsEnabled(response.preferences.notifications);
+        }
+      })
+      .catch(() => {
+        // Local defaults remain available if server preferences cannot be loaded.
+      });
+
+    return () => { cancelled = true; };
+  }, [isAuthenticated, user?.id]);
+
   // The referral endpoint creates a code on first read, so authenticated users
   // are enrolled automatically and do not need a fake second "join" action.
   useEffect(() => {
@@ -94,7 +112,11 @@ const ProfileScreen = () => {
   ];
 
   const handleLogin = async () => {
-    if (!email || !password) return;
+    const validationKey = getLoginValidationKey(email, password);
+    if (validationKey) {
+      setLoginError(t(validationKey));
+      return;
+    }
     setLoginLoading(true);
     setLoginError("");
     const result = await login(email, password);
@@ -103,9 +125,9 @@ const ProfileScreen = () => {
   };
 
   const handleRegister = async () => {
-    if (!name || !email || !password) return;
-    if (password !== confirmPassword) {
-      setLoginError(lang === "uk" ? "Паролі не збігаються" : "Passwords don't match");
+    const validationKey = getRegistrationValidationKey(name, email, password, confirmPassword);
+    if (validationKey) {
+      setLoginError(t(validationKey));
       return;
     }
     setLoginLoading(true);
@@ -306,7 +328,13 @@ const ProfileScreen = () => {
             <p className="text-[10px] text-muted-foreground">{user?.email}</p>
           </div>
         </div>
-        <motion.button whileTap={{ scale: 0.9 }} onClick={logout} className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary">
+        <motion.button
+          whileTap={{ scale: 0.9 }}
+          onClick={() => void logout()}
+          aria-label={t("profile.logout")}
+          title={t("profile.logout")}
+          className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary"
+        >
           <LogOut size={14} className="text-muted-foreground" />
         </motion.button>
       </div>
@@ -411,10 +439,20 @@ const ProfileScreen = () => {
                   <span className="text-sm font-semibold text-foreground">{t("settings.editProfile")}</span>
                   <ChevronRight size={16} className="text-muted-foreground" />
                 </button>
-                <button onClick={() => setChangePasswordOpen(true)} className="flex items-center justify-between rounded-xl border border-border bg-card p-3.5">
-                  <span className="text-sm font-semibold text-foreground">{t("settings.changePassword")}</span>
-                  <ChevronRight size={16} className="text-muted-foreground" />
-                </button>
+                {token ? (
+                  <button onClick={() => setChangePasswordOpen(true)} className="flex items-center justify-between rounded-xl border border-border bg-card p-3.5">
+                    <span className="text-sm font-semibold text-foreground">{t("settings.changePassword")}</span>
+                    <ChevronRight size={16} className="text-muted-foreground" />
+                  </button>
+                ) : (
+                  <div className="flex items-center justify-between gap-3 rounded-xl border border-border bg-card p-3.5">
+                    <div>
+                      <p className="text-sm font-semibold text-foreground">{t("settings.googleAccount")}</p>
+                      <p className="mt-0.5 text-[10px] text-muted-foreground">{t("settings.googlePassword")}</p>
+                    </div>
+                    <GoogleIcon />
+                  </div>
+                )}
                 <div className="flex items-center justify-between rounded-xl border border-border bg-card p-3.5">
                   <span className="text-sm font-semibold text-foreground">{t("settings.notifications")}</span>
                   <Switch
