@@ -442,10 +442,55 @@ const HomeScreen = ({ onOpenPartner, onTabChange, onSelectService }: { onOpenPar
         )}
       </section>
 
-      <motion.section initial={{ opacity: 0, y: 12 }} whileInView={{ opacity: 1, y: 0 }} viewport={{ once: true }} className="mt-7 overflow-hidden rounded-[1.7rem] border border-violet-300/25 bg-gradient-to-br from-violet-500/12 via-fuchsia-500/8 to-blue-500/12 p-5">
-        <div className="flex items-center gap-3"><span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-600 to-fuchsia-500 text-white shadow-lg shadow-violet-500/25"><Users size={20} /></span><div><p className="text-[10px] font-black uppercase tracking-widest text-primary">10%</p><h3 className="text-base font-black text-foreground">{t("home.partner")}</h3></div></div>
-        <p className="mt-3 text-xs leading-relaxed text-muted-foreground">{t("home.partner.desc")}</p>
-        <button onClick={onOpenPartner} className="mt-4 flex min-h-[44px] w-full items-center justify-center gap-2 rounded-2xl bg-foreground text-xs font-extrabold text-background">{t("home.learnMore")} <ArrowRight size={15} /></button>
+      <motion.section
+        initial={{ opacity: 0, y: 16 }}
+        whileInView={{ opacity: 1, y: 0 }}
+        viewport={{ once: true, amount: 0.25 }}
+        className="relative mt-9 min-h-[285px] overflow-hidden rounded-[2rem] border border-violet-300/40 bg-gradient-to-br from-[#f4efff] via-[#fff4fc] to-[#edf6ff] p-6 shadow-[0_24px_65px_rgba(101,74,205,0.16)] dark:border-violet-500/25 dark:from-[#21143b] dark:via-[#2a1536] dark:to-[#102842]"
+      >
+        <div aria-hidden className="pointer-events-none absolute -right-14 -top-16 h-44 w-44 rounded-full bg-gradient-to-br from-fuchsia-400/30 to-violet-500/10 blur-2xl" />
+        <div aria-hidden className="pointer-events-none absolute -bottom-20 -left-16 h-48 w-48 rounded-full bg-blue-400/20 blur-3xl" />
+        <div aria-hidden className="absolute -right-6 top-8 h-24 w-24 rounded-full border-[16px] border-violet-500/[0.07]" />
+
+        <div className="relative flex items-center justify-between gap-4">
+          <span className="flex h-14 w-14 items-center justify-center rounded-[1.25rem] bg-gradient-to-br from-violet-600 via-fuchsia-500 to-blue-500 text-white shadow-[0_14px_30px_rgba(109,64,210,0.3)]">
+            <Users size={27} strokeWidth={2.2} />
+          </span>
+          <div className="rounded-2xl border border-white/80 bg-white/75 px-4 py-2 text-right shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/10">
+            <p className="text-2xl font-black leading-none text-primary">10%</p>
+            <p className="mt-1 text-[9px] font-extrabold uppercase tracking-wider text-muted-foreground">{t("partner.benefit1")}</p>
+          </div>
+        </div>
+
+        <h3 className="relative mt-5 max-w-[310px] text-[24px] font-black leading-[1.05] tracking-[-0.035em] text-foreground">
+          {t("home.partner")}
+        </h3>
+        <p className="relative mt-3 max-w-[355px] text-[13px] font-medium leading-6 text-muted-foreground">
+          {t("home.partner.desc")}
+        </p>
+
+        <div className="relative mt-4 grid grid-cols-2 gap-2.5">
+          <div className="flex items-center gap-2 rounded-xl border border-white/80 bg-white/65 px-3 py-2.5 text-[10px] font-bold text-foreground shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/10">
+            <TrendingUp size={15} className="shrink-0 text-violet-600 dark:text-violet-300" />
+            {t("partner.benefit2")}
+          </div>
+          <div className="flex items-center gap-2 rounded-xl border border-white/80 bg-white/65 px-3 py-2.5 text-[10px] font-bold text-foreground shadow-sm backdrop-blur-md dark:border-white/10 dark:bg-white/10">
+            <Zap size={15} className="shrink-0 text-fuchsia-500" />
+            {t("partner.benefit3")}
+          </div>
+        </div>
+
+        <motion.button
+          whileHover={{ y: -2 }}
+          whileTap={{ scale: 0.97 }}
+          onClick={onOpenPartner}
+          className="cta-shine relative mt-5 flex min-h-[54px] w-full items-center justify-center gap-3 overflow-hidden rounded-2xl bg-gradient-to-r from-violet-600 via-fuchsia-500 to-blue-500 px-5 text-sm font-black text-white shadow-[0_16px_32px_rgba(103,67,205,0.3)]"
+        >
+          {t("home.learnMore")}
+          <span className="flex h-7 w-7 items-center justify-center rounded-full bg-white/20">
+            <ArrowRight size={16} />
+          </span>
+        </motion.button>
       </motion.section>
 
       <section className="mt-9">
