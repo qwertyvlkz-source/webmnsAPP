@@ -15,6 +15,8 @@ interface ScreenProps {
   onOpenPartner?: () => void;
   onTabChange?: (tab: number) => void;
   onRequireAuth?: () => void;
+  onSelectService?: (serviceId: number) => void;
+  initialServiceId?: number | null;
 }
 
 const screens: ComponentType<ScreenProps>[] = [HomeScreen, PortfolioScreen, OrderScreen, ProfileScreen];
@@ -28,6 +30,13 @@ const ScreenLoader = () => (
 const Index = () => {
   const [tab, setTab] = useState(0);
   const [showPartner, setShowPartner] = useState(false);
+  const [initialServiceId, setInitialServiceId] = useState<number | null>(null);
+
+  const openTab = (nextTab: number) => {
+    setShowPartner(false);
+    if (nextTab === 2) setInitialServiceId(null);
+    setTab(nextTab);
+  };
 
   if (showPartner) {
     return (
@@ -39,7 +48,7 @@ const Index = () => {
             onRequireAuth={() => { setShowPartner(false); setTab(3); }}
           />
         </Suspense>
-        <BottomTabBar active={tab} onTabChange={(i) => { setShowPartner(false); setTab(i); }} />
+        <BottomTabBar active={tab} onTabChange={openTab} />
       </AppShell>
     );
   }
@@ -60,18 +69,25 @@ const Index = () => {
         >
           <Suspense fallback={<ScreenLoader />}>
             {tab === 0 ? (
-              <Screen onOpenPartner={() => setShowPartner(true)} onTabChange={setTab} />
+              <Screen
+                onOpenPartner={() => setShowPartner(true)}
+                onTabChange={setTab}
+                onSelectService={(serviceId) => {
+                  setInitialServiceId(serviceId);
+                  setTab(2);
+                }}
+              />
             ) : tab === 1 ? (
               <Screen onTabChange={setTab} />
             ) : tab === 2 ? (
-              <Screen onRequireAuth={() => setTab(3)} />
+              <Screen onRequireAuth={() => setTab(3)} initialServiceId={initialServiceId} />
             ) : (
               <Screen />
             )}
           </Suspense>
         </motion.div>
       </AnimatePresence>
-      <BottomTabBar active={tab} onTabChange={setTab} />
+      <BottomTabBar active={tab} onTabChange={openTab} />
     </AppShell>
   );
 };

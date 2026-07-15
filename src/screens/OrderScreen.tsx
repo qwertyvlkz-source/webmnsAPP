@@ -41,7 +41,7 @@ function getIconForService(name: string): typeof Globe {
   return Globe;
 }
 
-const OrderScreen = ({ onRequireAuth }: { onRequireAuth?: () => void }) => {
+const OrderScreen = ({ onRequireAuth, initialServiceId }: { onRequireAuth?: () => void; initialServiceId?: number | null }) => {
   const { t, lang } = useLang();
   const { isAuthenticated, user } = useAuth();
   const [step, setStep] = useState(0);
@@ -72,6 +72,12 @@ const OrderScreen = ({ onRequireAuth }: { onRequireAuth?: () => void }) => {
   useEffect(() => {
     fetchServices();
   }, [fetchServices]);
+
+  useEffect(() => {
+    if (!initialServiceId || services.length === 0) return;
+    const requestedService = services.find((service) => service.id === initialServiceId);
+    if (requestedService) setSelectedService(requestedService);
+  }, [initialServiceId, services]);
 
   useEffect(() => {
     if (user) {

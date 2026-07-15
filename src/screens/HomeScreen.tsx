@@ -21,7 +21,6 @@ import {
   Palette,
   Quote,
   RefreshCw,
-  Rocket,
   ShieldCheck,
   ShoppingCart,
   Smartphone,
@@ -37,12 +36,10 @@ import { useLang } from "@/i18n/LanguageContext";
 import { fetchPortfolio, pickLocale, resolveImageUrl, type PortfolioItem } from "@/lib/portfolio";
 import {
   fetchServices,
-  formatApproximateUah,
   formatServicePrice,
   getServiceFeatures,
   getServiceName,
   isPopularService,
-  isStartingPrice,
   type Service,
 } from "@/lib/services";
 
@@ -67,12 +64,34 @@ const stats = [
 ];
 
 const cardTones = [
-  "from-blue-500/14 via-blue-500/5 to-transparent border-blue-400/25",
-  "from-fuchsia-500/14 via-violet-500/5 to-transparent border-fuchsia-400/25",
-  "from-emerald-500/14 via-emerald-500/5 to-transparent border-emerald-400/25",
-  "from-violet-500/14 via-blue-500/5 to-transparent border-violet-400/25",
-  "from-amber-400/15 via-orange-400/5 to-transparent border-amber-400/25",
+  { surface: "border-blue-200 bg-[#edf6ff] dark:border-blue-700/40 dark:bg-[#101e38]", icon: "text-blue-500", glow: "bg-blue-400/20" },
+  { surface: "border-fuchsia-200 bg-[#fff0fb] dark:border-fuchsia-700/40 dark:bg-[#30152d]", icon: "text-fuchsia-500", glow: "bg-fuchsia-400/20" },
+  { surface: "border-emerald-200 bg-[#effbf5] dark:border-emerald-700/40 dark:bg-[#112b23]", icon: "text-emerald-500", glow: "bg-emerald-400/20" },
+  { surface: "border-violet-200 bg-[#f3f0ff] dark:border-violet-700/40 dark:bg-[#21183a]", icon: "text-violet-500", glow: "bg-violet-400/20" },
+  { surface: "border-amber-200 bg-[#fff9e8] dark:border-amber-700/40 dark:bg-[#302514]", icon: "text-amber-500", glow: "bg-amber-400/20" },
+  { surface: "border-cyan-200 bg-[#edfbff] dark:border-cyan-700/40 dark:bg-[#102930]", icon: "text-cyan-500", glow: "bg-cyan-400/20" },
+  { surface: "border-sky-200 bg-[#eef8ff] dark:border-sky-700/40 dark:bg-[#102436]", icon: "text-sky-500", glow: "bg-sky-400/20" },
+  { surface: "border-indigo-200 bg-[#f0f2ff] dark:border-indigo-700/40 dark:bg-[#181d3a]", icon: "text-indigo-500", glow: "bg-indigo-400/20" },
+  { surface: "border-rose-200 bg-[#fff1f3] dark:border-rose-700/40 dark:bg-[#32171d]", icon: "text-rose-500", glow: "bg-rose-400/20" },
 ];
+
+const pricingCardVariants = {
+  enter: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? 90 : -90,
+    rotateY: direction > 0 ? 86 : -86,
+    scale: 0.92,
+    filter: "blur(7px)",
+  }),
+  center: { opacity: 1, x: 0, rotateY: 0, scale: 1, filter: "blur(0px)" },
+  exit: (direction: number) => ({
+    opacity: 0,
+    x: direction > 0 ? -90 : 90,
+    rotateY: direction > 0 ? -86 : 86,
+    scale: 0.92,
+    filter: "blur(7px)",
+  }),
+};
 
 function getServiceIcon(serviceId: number): LucideIcon {
   const icons: Record<number, LucideIcon> = {
@@ -89,13 +108,15 @@ function getServiceIcon(serviceId: number): LucideIcon {
   return icons[serviceId] ?? Globe2;
 }
 
-const HomeScreen = ({ onOpenPartner, onTabChange }: { onOpenPartner?: () => void; onTabChange?: (tab: number) => void }) => {
+const HomeScreen = ({ onOpenPartner, onTabChange, onSelectService }: { onOpenPartner?: () => void; onTabChange?: (tab: number) => void; onSelectService?: (serviceId: number) => void }) => {
   const { t, lang } = useLang();
   const [selected, setSelected] = useState<PortfolioItem | null>(null);
   const [latestProjects, setLatestProjects] = useState<PortfolioItem[]>([]);
   const [loadingProjects, setLoadingProjects] = useState(true);
   const [services, setServices] = useState<Service[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
+  const [pricingIndex, setPricingIndex] = useState(0);
+  const [pricingDirection, setPricingDirection] = useState(1);
   const [reviewIdx, setReviewIdx] = useState(0);
   const [reviewDir, setReviewDir] = useState(0);
 
@@ -122,6 +143,18 @@ const HomeScreen = ({ onOpenPartner, onTabChange }: { onOpenPartner?: () => void
   }, []);
 
   const heroLines = t("home.hero").split("\n");
+  const activeService = services.length > 0 ? services[pricingIndex % services.length] : null;
+
+  const changePricingCard = (direction: number) => {
+    if (services.length < 2) return;
+    setPricingDirection(direction);
+    setPricingIndex((current) => (current + direction + services.length) % services.length);
+  };
+
+  const openServiceOrder = (serviceId: number) => {
+    if (onSelectService) onSelectService(serviceId);
+    else onTabChange?.(2);
+  };
 
   return (
     <div className="no-scrollbar flex-1 overflow-y-auto px-4 pb-6">
@@ -256,55 +289,112 @@ const HomeScreen = ({ onOpenPartner, onTabChange }: { onOpenPartner?: () => void
         </div>
 
         {loadingServices ? (
-          <div className="flex gap-3 overflow-hidden">
-            {[0, 1].map((item) => <div key={item} className="h-[350px] w-[82%] shrink-0 animate-pulse rounded-[1.7rem] bg-secondary" />)}
-          </div>
+          <div className="mx-auto h-[540px] w-[calc(100%-12px)] animate-pulse rounded-[2rem] bg-secondary" />
         ) : services.length === 0 ? (
           <button onClick={loadPricing} className="flex w-full items-center justify-center gap-2 rounded-2xl border border-border bg-card p-6 text-sm font-bold text-primary"><RefreshCw size={17} />{t("common.retry")}</button>
-        ) : (
-          <div className="no-scrollbar -mx-4 flex snap-x snap-mandatory gap-3 overflow-x-auto px-4 pb-3">
-            {services.map((service, index) => {
-              const Icon = getServiceIcon(service.id);
-              const popular = isPopularService(service.id);
-              return (
-                <motion.article
-                  key={service.id}
-                  initial={{ opacity: 0, x: 20 }}
-                  whileInView={{ opacity: 1, x: 0 }}
-                  viewport={{ once: true, amount: 0.2 }}
-                  className={`relative flex w-[84%] shrink-0 snap-center flex-col overflow-hidden rounded-[1.7rem] border bg-gradient-to-br ${cardTones[index % cardTones.length]} bg-card p-5 shadow-[0_18px_45px_rgba(37,32,90,0.10)]`}
-                >
-                  <div className="flex min-h-7 items-start justify-between gap-2">
-                    <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-card text-primary shadow-sm"><Icon size={22} /></span>
-                    {popular ? (
-                      <span className="rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500 px-3 py-1 text-[9px] font-black uppercase tracking-wider text-white">{t("pricing.popular")}</span>
-                    ) : (
-                      <span className="rounded-full bg-card/75 px-2.5 py-1 text-[9px] font-bold text-muted-foreground shadow-sm">{t("pricing.installments")}</span>
-                    )}
-                  </div>
-                  <h3 className="mt-4 text-xl font-black tracking-[-0.025em] text-foreground">{getServiceName(service, lang)}</h3>
-                  <div className="mt-2 flex items-end gap-1.5">
-                    {isStartingPrice(service.id) && <span className="pb-1 text-xs font-bold text-muted-foreground">{t("pricing.from")}</span>}
-                    <span className="text-[32px] font-black leading-none tracking-[-0.04em] text-foreground">€{formatServicePrice(service.price)}</span>
-                    <span className="pb-1 text-[10px] font-semibold text-muted-foreground">/{t("pricing.project")}</span>
-                  </div>
-                  <p className="mt-1.5 text-[11px] font-semibold text-muted-foreground">≈ {formatApproximateUah(service.price, lang)} ₴</p>
-                  <ul className="mt-5 flex-1 space-y-3">
-                    {getServiceFeatures(service, lang).map((feature) => (
-                      <li key={feature} className="flex items-start gap-2.5 text-[12px] font-medium leading-relaxed text-foreground/80">
-                        <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full border border-emerald-400/60 bg-emerald-400/10 text-emerald-600 dark:text-emerald-300"><Check size={10} strokeWidth={3} /></span>
-                        {feature}
-                      </li>
-                    ))}
-                  </ul>
-                  <motion.button whileTap={{ scale: 0.97 }} onClick={() => onTabChange?.(2)} className={`mt-5 flex min-h-[46px] items-center justify-center gap-2 rounded-2xl text-xs font-extrabold ${popular ? "bg-gradient-to-r from-violet-600 to-fuchsia-500 text-white shadow-lg shadow-violet-500/25" : "bg-foreground text-background"}`}>
-                    {t("pricing.orderNow")} <ArrowRight size={15} />
-                  </motion.button>
-                </motion.article>
-              );
-            })}
+        ) : activeService ? (
+          <div>
+            <div className="relative min-h-[540px] px-1 [perspective:1400px]">
+              <AnimatePresence initial={false} custom={pricingDirection}>
+                {(() => {
+                  const service = activeService;
+                  const Icon = getServiceIcon(service.id);
+                  const popular = isPopularService(service.id);
+                  const tone = cardTones[pricingIndex % cardTones.length];
+                  return (
+                    <motion.article
+                      key={service.id}
+                      custom={pricingDirection}
+                      variants={pricingCardVariants}
+                      initial="enter"
+                      animate="center"
+                      exit="exit"
+                      transition={{ duration: 0.46, ease: [0.22, 1, 0.36, 1] }}
+                      style={{ transformStyle: "preserve-3d", backfaceVisibility: "hidden" }}
+                      className={`absolute inset-x-1 top-0 flex min-h-[540px] flex-col overflow-hidden rounded-[2rem] border p-6 shadow-[0_24px_65px_rgba(40,45,90,0.13)] ${tone.surface}`}
+                    >
+                      <span aria-hidden className={`pointer-events-none absolute -right-16 -top-16 h-52 w-52 rounded-full blur-3xl ${tone.glow}`} />
+                      <div className="relative flex min-h-12 items-start justify-between gap-3">
+                        <Icon size={34} strokeWidth={2.2} className={tone.icon} />
+                        {popular ? (
+                          <span className="rounded-full bg-gradient-to-r from-violet-600 to-fuchsia-500 px-3.5 py-2 text-[9px] font-black uppercase tracking-wider text-white shadow-md shadow-violet-500/20">{t("pricing.popular")}</span>
+                        ) : (
+                          <span className="max-w-[190px] rounded-full bg-slate-500/[0.07] px-3.5 py-2 text-right text-[9px] font-extrabold leading-tight text-slate-600 dark:bg-white/10 dark:text-slate-200">{t("pricing.installments")}</span>
+                        )}
+                      </div>
+
+                      <h3 className="relative mt-7 text-[27px] font-black leading-tight tracking-[-0.035em] text-foreground">{getServiceName(service, lang)}</h3>
+                      <div className="relative mt-5 flex items-end gap-2">
+                        <span className="pb-1 text-base font-bold text-muted-foreground">{t("pricing.from")}</span>
+                        <span className="text-[46px] font-black leading-[0.85] tracking-[-0.055em] text-foreground">€{formatServicePrice(service.price)}</span>
+                      </div>
+
+                      <ul className="relative mt-8 flex-1 space-y-4">
+                        {getServiceFeatures(service, lang).map((feature) => (
+                          <li key={feature} className="flex items-start gap-3.5 text-[14px] font-medium leading-relaxed text-foreground/75">
+                            <span className="mt-0.5 flex h-5 w-5 shrink-0 items-center justify-center rounded-full border-2 border-emerald-500 text-emerald-600 dark:text-emerald-300"><Check size={11} strokeWidth={3} /></span>
+                            {feature}
+                          </li>
+                        ))}
+                      </ul>
+
+                      <motion.button
+                        whileHover={{ y: -2 }}
+                        whileTap={{ scale: 0.97 }}
+                        onClick={() => openServiceOrder(service.id)}
+                        className="relative mt-7 flex min-h-[56px] items-center justify-center gap-3 overflow-hidden rounded-[1.15rem] bg-gradient-to-r from-blue-600 via-violet-600 to-cyan-500 px-5 text-sm font-black text-white shadow-[0_15px_30px_rgba(57,92,220,0.28)]"
+                      >
+                        {t("pricing.orderNow")} <ArrowRight size={19} />
+                      </motion.button>
+                    </motion.article>
+                  );
+                })()}
+              </AnimatePresence>
+
+            </div>
+
+            <div className="mt-4 flex items-center justify-between gap-3">
+              <motion.button
+                whileHover={{ scale: 1.08, x: -2 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => changePricingCard(-1)}
+                aria-label={t("pricing.previous")}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full border border-white/70 bg-card/95 text-foreground shadow-[0_10px_30px_rgba(38,37,80,0.16)] backdrop-blur-xl dark:border-white/10"
+              >
+                <ChevronLeft size={20} />
+              </motion.button>
+
+              <div className="flex min-w-0 flex-1 flex-col items-center gap-2">
+                <span className="text-[10px] font-black text-muted-foreground">{pricingIndex + 1} / {services.length}</span>
+                <div className="flex items-center justify-center gap-1.5">
+                  {services.map((service, index) => (
+                    <button
+                      key={service.id}
+                      onClick={() => {
+                        if (index === pricingIndex) return;
+                        setPricingDirection(index > pricingIndex ? 1 : -1);
+                        setPricingIndex(index);
+                      }}
+                      aria-label={`${getServiceName(service, lang)} — ${index + 1}`}
+                      aria-current={index === pricingIndex ? "true" : undefined}
+                      className={`h-2 rounded-full transition-all duration-300 ${index === pricingIndex ? "w-6 bg-gradient-to-r from-violet-600 to-blue-500" : "w-2 bg-border hover:bg-primary/35"}`}
+                    />
+                  ))}
+                </div>
+              </div>
+
+              <motion.button
+                whileHover={{ scale: 1.08, x: 2 }}
+                whileTap={{ scale: 0.9 }}
+                onClick={() => changePricingCard(1)}
+                aria-label={t("pricing.next")}
+                className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-gradient-to-br from-violet-600 to-blue-500 text-white shadow-[0_10px_30px_rgba(80,65,190,0.28)]"
+              >
+                <ChevronRight size={20} />
+              </motion.button>
+            </div>
           </div>
-        )}
+        ) : null}
       </section>
 
       <motion.section
