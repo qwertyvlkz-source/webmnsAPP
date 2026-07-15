@@ -183,36 +183,52 @@ const HomeScreen = ({ onOpenPartner, onTabChange, onSelectService }: { onOpenPar
         </div>
 
         <div className="hero-visual-grid relative mt-5 h-[188px] overflow-hidden rounded-[1.6rem] border border-white/70 bg-white/65 shadow-inner dark:border-white/10 dark:bg-slate-950/55">
-          <motion.div
-            animate={{ y: [0, -5, 0], rotate: [0, 1, 0] }}
-            transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
-            className="absolute left-1/2 top-1/2 w-[230px] -translate-x-1/2 -translate-y-1/2 rounded-2xl border border-violet-300/40 bg-white/90 p-3 shadow-[0_18px_50px_rgba(88,70,190,0.22)] dark:bg-slate-900/90"
-          >
-            <div className="mb-3 flex items-center gap-1.5 border-b border-border/60 pb-2">
-              <span className="h-2 w-2 rounded-full bg-rose-400" />
-              <span className="h-2 w-2 rounded-full bg-amber-400" />
-              <span className="h-2 w-2 rounded-full bg-emerald-400" />
-              <span className="ml-auto text-[8px] font-bold uppercase tracking-widest text-muted-foreground">webmns.dev</span>
-            </div>
-            <div className="grid grid-cols-[1fr_58px] gap-3">
-              <div className="space-y-2">
-                <span className="block h-2.5 w-4/5 rounded-full bg-gradient-to-r from-violet-500 to-blue-500" />
-                <span className="block h-2 w-full rounded-full bg-violet-200 dark:bg-violet-800/70" />
-                <span className="block h-2 w-2/3 rounded-full bg-blue-200 dark:bg-blue-800/70" />
-                <div className="flex gap-2 pt-1">
-                  <span className="h-8 flex-1 rounded-lg bg-violet-100 dark:bg-violet-900/60" />
-                  <span className="h-8 flex-1 rounded-lg bg-blue-100 dark:bg-blue-900/60" />
+          <div aria-hidden className="absolute left-1/2 top-1/2 h-28 w-52 -translate-x-1/2 -translate-y-1/2 rounded-full bg-gradient-to-r from-violet-400/20 via-fuchsia-300/15 to-blue-400/20 blur-2xl" />
+
+          <div className="absolute inset-0 flex items-center justify-center px-14">
+            <motion.div
+              animate={{ y: [2, -4, 2] }}
+              transition={{ duration: 4.5, repeat: Infinity, ease: "easeInOut" }}
+              className="relative w-full max-w-[230px] rounded-2xl border border-violet-300/40 bg-white/95 p-3 shadow-[0_18px_50px_rgba(88,70,190,0.22)] dark:bg-slate-900/95"
+            >
+              <div className="mb-3 flex items-center gap-1.5 border-b border-border/60 pb-2">
+                <span className="h-2 w-2 rounded-full bg-rose-400" />
+                <span className="h-2 w-2 rounded-full bg-amber-400" />
+                <span className="h-2 w-2 rounded-full bg-emerald-400" />
+                <span className="ml-auto text-[8px] font-bold uppercase tracking-widest text-muted-foreground">webmns.dev</span>
+              </div>
+              <div className="grid grid-cols-[1fr_58px] gap-3">
+                <div className="space-y-2">
+                  <motion.span
+                    animate={{ scaleX: [0.72, 1, 0.72] }}
+                    transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }}
+                    className="block h-2.5 w-4/5 origin-left rounded-full bg-gradient-to-r from-violet-500 to-blue-500"
+                  />
+                  <span className="block h-2 w-full rounded-full bg-violet-200 dark:bg-violet-800/70" />
+                  <span className="block h-2 w-2/3 rounded-full bg-blue-200 dark:bg-blue-800/70" />
+                  <div className="flex gap-2 pt-1">
+                    <span className="h-8 flex-1 rounded-lg bg-violet-100 dark:bg-violet-900/60" />
+                    <span className="h-8 flex-1 rounded-lg bg-blue-100 dark:bg-blue-900/60" />
+                  </div>
+                </div>
+                <div className="flex items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-blue-500 text-white shadow-lg shadow-violet-500/30">
+                  <Code2 size={27} />
                 </div>
               </div>
-              <div className="flex items-center justify-center rounded-xl bg-gradient-to-br from-violet-600 to-blue-500 text-white shadow-lg shadow-violet-500/30">
-                <Code2 size={27} />
-              </div>
-            </div>
-          </motion.div>
-          <motion.span animate={{ y: [0, 6, 0] }} transition={{ duration: 3, repeat: Infinity }} className="absolute left-3 top-5 rounded-xl bg-violet-600 px-3 py-1.5 text-[10px] font-black text-white shadow-lg">UI/UX</motion.span>
-          <motion.span animate={{ y: [0, -6, 0] }} transition={{ duration: 3.6, repeat: Infinity }} className="absolute bottom-4 left-5 rounded-xl bg-slate-900 px-3 py-1.5 text-[10px] font-black text-white shadow-lg dark:bg-white dark:text-slate-900">HTML</motion.span>
-          <motion.span animate={{ y: [0, 5, 0] }} transition={{ duration: 4, repeat: Infinity }} className="absolute right-3 top-7 rounded-xl bg-fuchsia-500 px-3 py-1.5 text-[10px] font-black text-white shadow-lg">API</motion.span>
-          <span className="absolute bottom-4 right-5 flex h-10 w-10 items-center justify-center rounded-xl bg-blue-500 text-white shadow-lg shadow-blue-500/30"><Smartphone size={19} /></span>
+
+              <motion.span
+                animate={{ scale: [1, 1.08, 1] }}
+                transition={{ duration: 2.8, repeat: Infinity, ease: "easeInOut" }}
+                className="absolute -bottom-3 -right-3 flex h-10 w-10 items-center justify-center rounded-xl border-2 border-white bg-blue-500 text-white shadow-lg shadow-blue-500/30 dark:border-slate-900"
+              >
+                <Smartphone size={19} />
+              </motion.span>
+            </motion.div>
+          </div>
+
+          <motion.span animate={{ y: [0, 5, 0] }} transition={{ duration: 3.2, repeat: Infinity, ease: "easeInOut" }} className="absolute left-3 top-5 rounded-xl bg-violet-600 px-3 py-1.5 text-[10px] font-black text-white shadow-lg">UI/UX</motion.span>
+          <motion.span animate={{ y: [0, -5, 0] }} transition={{ duration: 3.8, repeat: Infinity, ease: "easeInOut" }} className="absolute bottom-4 left-5 rounded-xl bg-slate-900 px-3 py-1.5 text-[10px] font-black text-white shadow-lg dark:bg-white dark:text-slate-900">HTML</motion.span>
+          <motion.span animate={{ y: [0, 5, 0] }} transition={{ duration: 4.1, repeat: Infinity, ease: "easeInOut" }} className="absolute right-3 top-7 rounded-xl bg-fuchsia-500 px-3 py-1.5 text-[10px] font-black text-white shadow-lg">API</motion.span>
         </div>
 
         <div className="relative mt-5 grid grid-cols-[1fr_auto] gap-2">
