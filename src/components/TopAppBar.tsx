@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { motion } from "framer-motion";
-import { Rocket, Bell, Loader2 } from "lucide-react";
+import { Rocket, Bell, Loader2, Moon, Sun } from "lucide-react";
+import { useTheme } from "next-themes";
 import { useAuth } from "@/contexts/AuthContext";
 import { useLang } from "@/i18n/LanguageContext";
 import { api } from "@/lib/api";
@@ -18,6 +19,7 @@ interface NotificationItem {
 const TopAppBar = () => {
   const { isAuthenticated } = useAuth();
   const { t, lang } = useLang();
+  const { resolvedTheme, setTheme } = useTheme();
   const [notifications, setNotifications] = useState<NotificationItem[]>([]);
   const [notificationsOpen, setNotificationsOpen] = useState(false);
   const [loading, setLoading] = useState(false);
@@ -53,6 +55,7 @@ const TopAppBar = () => {
   };
 
   const hasUnread = notifications.some((item) => !item.read);
+  const isDark = resolvedTheme !== "light";
 
   return (
     <>
@@ -93,17 +96,29 @@ const TopAppBar = () => {
         </div>
       </div>
 
-        {isAuthenticated && (
+        <div className="flex items-center gap-2">
+          {isAuthenticated && (
+            <motion.button
+              whileTap={{ scale: 0.9 }}
+              onClick={() => void handleNotificationsOpen(true)}
+              aria-label={t("notifications.title")}
+              className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 shadow-sm backdrop-blur-md"
+            >
+              <Bell size={18} className="text-foreground" />
+              {hasUnread && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />}
+            </motion.button>
+          )}
           <motion.button
             whileTap={{ scale: 0.9 }}
-            onClick={() => void handleNotificationsOpen(true)}
-            aria-label={t("notifications.title")}
-            className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 shadow-sm backdrop-blur-md"
+            onClick={() => setTheme(isDark ? "light" : "dark")}
+            aria-label={isDark ? t("settings.light") : t("settings.dark")}
+            aria-pressed={isDark}
+            title={isDark ? t("settings.light") : t("settings.dark")}
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 text-foreground shadow-sm backdrop-blur-md"
           >
-            <Bell size={18} className="text-foreground" />
-            {hasUnread && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />}
+            {isDark ? <Sun size={18} /> : <Moon size={18} />}
           </motion.button>
-        )}
+        </div>
       </div>
 
       <Dialog open={notificationsOpen} onOpenChange={(open) => void handleNotificationsOpen(open)}>
