@@ -1,14 +1,9 @@
-import { useLocation } from "react-router-dom";
-import { useEffect } from "react";
 import { motion } from "framer-motion";
 import { Compass, ArrowLeft } from "lucide-react";
+import { useLang } from "@/i18n/LanguageContext";
 
 const NotFound = () => {
-  const location = useLocation();
-
-  useEffect(() => {
-    console.error("404 Error: User attempted to access non-existent route:", location.pathname);
-  }, [location.pathname]);
+  const { t } = useLang();
 
   return (
     <div className="relative flex min-h-[100dvh] items-center justify-center overflow-hidden bg-background px-6">
@@ -35,9 +30,9 @@ const NotFound = () => {
         <h1 className="bg-gradient-to-r from-primary to-accent bg-clip-text text-6xl font-black tracking-tight text-transparent">
           404
         </h1>
-        <p className="mt-2 text-lg font-semibold text-foreground">Page not found</p>
+        <p className="mt-2 text-lg font-semibold text-foreground">{t("notFound.title")}</p>
         <p className="mt-1 text-sm text-muted-foreground">
-          The page you're looking for doesn't exist or has been moved.
+          {t("notFound.description")}
         </p>
 
         <a
@@ -45,7 +40,7 @@ const NotFound = () => {
           className="mt-6 inline-flex items-center gap-2 rounded-2xl bg-gradient-to-r from-primary to-primary/80 px-6 py-3 text-sm font-bold text-primary-foreground shadow-lg shadow-primary/30 transition-transform active:scale-95"
         >
           <ArrowLeft size={16} />
-          Back to Home
+          {t("notFound.home")}
         </a>
       </motion.div>
     </div>

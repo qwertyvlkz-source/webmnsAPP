@@ -19,6 +19,7 @@ interface AuthContextType {
   login: (email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   register: (name: string, email: string, password: string) => Promise<{ success: boolean; error?: string }>;
   logout: () => void;
+  updateUser: (user: User) => void;
 }
 
 const AuthContext = createContext<AuthContextType>({
@@ -29,6 +30,7 @@ const AuthContext = createContext<AuthContextType>({
   login: async () => ({ success: false }),
   register: async () => ({ success: false }),
   logout: () => {},
+  updateUser: () => {},
 });
 
 export const useAuth = () => useContext(AuthContext);
@@ -87,11 +89,12 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
 
   const register = useCallback(async (name: string, email: string, password: string) => {
     try {
+      const ref = new URLSearchParams(window.location.search).get('ref') || undefined;
       const data = await api.post<{
         user: User;
         token: string;
         message: string;
-      }>('/auth/register', { name, email, password }, { noAuth: true });
+      }>('/auth/register', { name, email, password, ref }, { noAuth: true });
 
       if (data.token) {
         setToken(data.token);
@@ -114,6 +117,11 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     setTokenState(null);
   }, []);
 
+  const updateUser = useCallback((updatedUser: User) => {
+    setUser(updatedUser);
+    localStorage.setItem('auth_user', JSON.stringify(updatedUser));
+  }, []);
+
   return (
     <AuthContext.Provider
       value={{
@@ -124,6 +132,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
         login,
         register,
         logout,
+        updateUser,
       }}
     >
       {children}

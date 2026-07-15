@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -29,7 +29,7 @@ interface ReferralData {
   }>;
 }
 
-const PartnerScreen = ({ onBack }: { onBack: () => void }) => {
+const PartnerScreen = ({ onBack, onRequireAuth }: { onBack: () => void; onRequireAuth?: () => void }) => {
   const { t } = useLang();
   const { isAuthenticated } = useAuth();
   const [joined, setJoined] = useState(false);
@@ -37,7 +37,7 @@ const PartnerScreen = ({ onBack }: { onBack: () => void }) => {
   const [loading, setLoading] = useState(false);
   const [referralData, setReferralData] = useState<ReferralData | null>(null);
 
-  const fetchReferralData = async () => {
+  const fetchReferralData = useCallback(async () => {
     if (!isAuthenticated) return;
     setLoading(true);
     try {
@@ -48,24 +48,30 @@ const PartnerScreen = ({ onBack }: { onBack: () => void }) => {
       }
     } catch (error) {
       console.error("Failed to load referral data:", error);
+      toast.error(error instanceof Error ? error.message : t("common.serverError"));
     } finally {
       setLoading(false);
     }
-  };
+  }, [isAuthenticated, t]);
 
   useEffect(() => {
     if (isAuthenticated) {
       fetchReferralData();
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchReferralData]);
 
-  const refLink = referralData?.referral_link || "https://webmns.com?ref=...";
+  const refLink = referralData?.referral_link || "";
 
-  const handleCopy = () => {
-    navigator.clipboard.writeText(refLink);
-    setCopied(true);
-    toast.success(t("partner.linkCopied"));
-    setTimeout(() => setCopied(false), 2000);
+  const handleCopy = async () => {
+    if (!referralData?.referral_link) return;
+    try {
+      await navigator.clipboard.writeText(refLink);
+      setCopied(true);
+      toast.success(t("partner.linkCopied"));
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error(t("common.error"));
+    }
   };
 
   return (
@@ -148,10 +154,11 @@ const PartnerScreen = ({ onBack }: { onBack: () => void }) => {
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 onClick={() => {
-                  if (isAuthenticated) {
-                    fetchReferralData();
+                  if (!isAuthenticated) {
+                    onRequireAuth?.();
+                    return;
                   }
-                  setJoined(true);
+                  fetchReferralData();
                 }}
                 className="w-full rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground"
               >
@@ -197,12 +204,13 @@ const PartnerScreen = ({ onBack }: { onBack: () => void }) => {
                 </p>
                 <div className="flex items-center gap-2">
                   <div className="flex-1 rounded-xl bg-secondary px-3 py-2.5 text-xs text-foreground truncate">
-                    {refLink}
+                    {refLink || t("common.loading")}
                   </div>
                   <motion.button
                     whileTap={{ scale: 0.9 }}
                     onClick={handleCopy}
-                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground"
+                    disabled={!refLink}
+                    className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground disabled:opacity-50"
                   >
                     {copied ? <Check size={16} /> : <Copy size={16} />}
                   </motion.button>
@@ -231,12 +239,6 @@ const PartnerScreen = ({ onBack }: { onBack: () => void }) => {
                 <p className="text-[10px] text-muted-foreground mt-1.5">
                   €{referralData?.total_earnings || 0} / €1000 {t("partner.toBonus")}
                 </p>
-                <motion.button
-                  whileTap={{ scale: 0.95 }}
-                  className="mt-3 w-full rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground"
-                >
-                  {t("partner.withdraw")}
-                </motion.button>
               </motion.div>
 
               {/* Referral history */}

@@ -133,7 +133,6 @@ const translations: Record<string, Record<Lang, string>> = {
   "partner.join": { uk: "Стати партнером", ru: "Стать партнёром", en: "Become a Partner", pl: "Zostań partnerem", de: "Partner werden" },
   "partner.yourLink": { uk: "Ваше посилання", ru: "Ваша ссылка", en: "Your Link", pl: "Twój link", de: "Ihr Link" },
   "partner.balance": { uk: "Баланс", ru: "Баланс", en: "Balance", pl: "Saldo", de: "Guthaben" },
-  "partner.withdraw": { uk: "Вивести кошти", ru: "Вывести средства", en: "Withdraw", pl: "Wypłać", de: "Abheben" },
   "partner.earned": { uk: "Зароблено", ru: "Заработано", en: "Earned", pl: "Zarobiono", de: "Verdient" },
   "partner.referrals": { uk: "Рефералів", ru: "Рефералов", en: "Referrals", pl: "Poleconych", de: "Empfehlungen" },
   "partner.clicks": { uk: "Переходів", ru: "Переходов", en: "Clicks", pl: "Kliknięć", de: "Klicks" },
@@ -190,11 +189,13 @@ const translations: Record<string, Record<Lang, string>> = {
   "order.loadingServices": { uk: "Завантаження послуг...", ru: "Загрузка услуг...", en: "Loading services...", pl: "Ładowanie usług...", de: "Dienste laden..." },
   "order.payFull": { uk: "Повна оплата", ru: "Полная оплата", en: "Full Payment", pl: "Pełna płatność", de: "Vollständige Zahlung" },
   "order.payInstallment": { uk: "Оплата частинами", ru: "Оплата частями", en: "Pay in Installments", pl: "Płatność ratalna", de: "Ratenzahlung" },
+  "order.loginRequired": { uk: "Увійдіть у кабінет, щоб надіслати замовлення", ru: "Войдите в кабинет, чтобы отправить заказ", en: "Log in to submit your order", pl: "Zaloguj się, aby wysłać zamówienie", de: "Melden Sie sich an, um die Bestellung abzusenden" },
 
   // ─── Orders tracking ────────────────────────────────
   "orders.title": { uk: "Мої замовлення", ru: "Мои заказы", en: "My Orders", pl: "Moje zamówienia", de: "Meine Bestellungen" },
   "orders.empty": { uk: "У вас ще немає замовлень", ru: "У вас ещё нет заказов", en: "You have no orders yet", pl: "Nie masz jeszcze zamówień", de: "Sie haben noch keine Bestellungen" },
   "orders.status.waiting_payment": { uk: "Очікує оплати", ru: "Ожидает оплаты", en: "Awaiting Payment", pl: "Oczekuje płatności", de: "Zahlung ausstehend" },
+  "orders.status.pending": { uk: "Очікує оплати", ru: "Ожидает оплаты", en: "Awaiting Payment", pl: "Oczekuje płatności", de: "Zahlung ausstehend" },
   "orders.status.paid": { uk: "Оплачено", ru: "Оплачено", en: "Paid", pl: "Opłacone", de: "Bezahlt" },
   "orders.status.in_progress": { uk: "В роботі", ru: "В работе", en: "In Progress", pl: "W trakcie", de: "In Bearbeitung" },
   "orders.status.review": { uk: "На перевірці", ru: "На проверке", en: "Under Review", pl: "W recenzji", de: "In Überprüfung" },
@@ -211,32 +212,21 @@ const translations: Record<string, Record<Lang, string>> = {
   "profile.login.button": { uk: "Увійти", ru: "Войти", en: "Sign In", pl: "Zaloguj się", de: "Anmelden" },
   "profile.login.register": { uk: "Зареєструватися", ru: "Зарегистрироваться", en: "Register", pl: "Zarejestruj się", de: "Registrieren" },
   "profile.login.forgot": { uk: "Забули пароль?", ru: "Забыли пароль?", en: "Forgot password?", pl: "Zapomniałeś hasła?", de: "Passwort vergessen?" },
-  "profile.login.or": { uk: "або", ru: "или", en: "or", pl: "lub", de: "oder" },
-  "profile.login.google": { uk: "Увійти через Google", ru: "Войти через Google", en: "Sign in with Google", pl: "Zaloguj się przez Google", de: "Mit Google anmelden" },
   "profile.login.name": { uk: "Ваше ім'я", ru: "Ваше имя", en: "Your Name", pl: "Twoje imię", de: "Ihr Name" },
   "profile.login.confirmPassword": { uk: "Підтвердити пароль", ru: "Подтвердить пароль", en: "Confirm Password", pl: "Potwierdź hasło", de: "Passwort bestätigen" },
+  "profile.login.emailRequired": { uk: "Введіть коректний email", ru: "Введите корректный email", en: "Enter a valid email", pl: "Wpisz poprawny adres email", de: "Geben Sie eine gültige E-Mail-Adresse ein" },
+  "profile.login.resetSent": { uk: "Посилання для відновлення надіслано на email", ru: "Ссылка для восстановления отправлена на email", en: "Password reset link sent by email", pl: "Link resetujący został wysłany emailem", de: "Link zum Zurücksetzen wurde per E-Mail gesendet" },
 
   // ─── Profile - Dashboard ────────────────────────────
   "profile.greeting": { uk: "Привіт", ru: "Привет", en: "Hello", pl: "Cześć", de: "Hallo" },
   "profile.logout": { uk: "Вийти", ru: "Выйти", en: "Log out", pl: "Wyloguj się", de: "Abmelden" },
 
   // ─── Profile - Tabs ─────────────────────────────────
-  "profile.tab.projects": { uk: "Проєкти", ru: "Проекты", en: "Projects", pl: "Projekty", de: "Projekte" },
   "profile.tab.invoices": { uk: "Рахунки", ru: "Счета", en: "Invoices", pl: "Faktury", de: "Rechnungen" },
   "profile.tab.chat": { uk: "Чат", ru: "Чат", en: "Chat", pl: "Czat", de: "Chat" },
   "profile.tab.partner": { uk: "Партнерка", ru: "Партнёрка", en: "Partner", pl: "Partner", de: "Partner" },
   "profile.tab.tickets": { uk: "Тікети", ru: "Тикеты", en: "Tickets", pl: "Zgłoszenia", de: "Tickets" },
   "profile.tab.settings": { uk: "Налаштування", ru: "Настройки", en: "Settings", pl: "Ustawienia", de: "Einstellungen" },
-
-  // ─── Profile - Projects ─────────────────────────────
-  "profile.activeProject": { uk: "Активний проєкт", ru: "Активный проект", en: "Active Project", pl: "Aktywny projekt", de: "Aktives Projekt" },
-  "profile.project1.name": { uk: "Інтернет-магазин «ТехноМарт»", ru: "Интернет-магазин «ТехноМарт»", en: "E-commerce «TechnoMart»", pl: "Sklep «TechnoMart»", de: "E-Commerce «TechnoMart»" },
-  "profile.project2.name": { uk: "Лендінг для стартапу", ru: "Лендинг для стартапа", en: "Startup Landing Page", pl: "Landing dla startupu", de: "Startup Landing Page" },
-  "profile.design": { uk: "Дизайн", ru: "Дизайн", en: "Design", pl: "Design", de: "Design" },
-  "profile.development": { uk: "Розробка", ru: "Разработка", en: "Development", pl: "Rozwój", de: "Entwicklung" },
-  "profile.testing": { uk: "Тестування", ru: "Тестирование", en: "Testing", pl: "Testowanie", de: "Testen" },
-  "profile.release": { uk: "Реліз", ru: "Релиз", en: "Release", pl: "Wydanie", de: "Veröffentlichung" },
-  "profile.completed": { uk: "Завершено", ru: "Завершён", en: "Completed", pl: "Ukończony", de: "Abgeschlossen" },
 
   // ─── Profile - Invoices ─────────────────────────────
   "profile.invoice.paid": { uk: "Оплачено", ru: "Оплачено", en: "Paid", pl: "Opłacone", de: "Bezahlt" },
@@ -275,6 +265,20 @@ const translations: Record<string, Record<Lang, string>> = {
   "settings.notifications": { uk: "Сповіщення", ru: "Уведомления", en: "Notifications", pl: "Powiadomienia", de: "Benachrichtigungen" },
   "settings.changePassword": { uk: "Змінити пароль", ru: "Сменить пароль", en: "Change Password", pl: "Zmień hasło", de: "Passwort ändern" },
   "settings.editProfile": { uk: "Редагувати профіль", ru: "Редактировать профиль", en: "Edit Profile", pl: "Edytuj profil", de: "Profil bearbeiten" },
+  "settings.profileDescription": { uk: "Оновіть ім'я та email облікового запису", ru: "Обновите имя и email учётной записи", en: "Update your account name and email", pl: "Zaktualizuj nazwę i email konta", de: "Aktualisieren Sie Name und E-Mail Ihres Kontos" },
+  "settings.profileSaved": { uk: "Профіль оновлено", ru: "Профиль обновлён", en: "Profile updated", pl: "Profil zaktualizowany", de: "Profil aktualisiert" },
+  "settings.passwordDescription": { uk: "Новий пароль має містити щонайменше 8 символів", ru: "Новый пароль должен содержать не менее 8 символов", en: "The new password must be at least 8 characters", pl: "Nowe hasło musi mieć co najmniej 8 znaków", de: "Das neue Passwort muss mindestens 8 Zeichen lang sein" },
+  "settings.currentPassword": { uk: "Поточний пароль", ru: "Текущий пароль", en: "Current password", pl: "Obecne hasło", de: "Aktuelles Passwort" },
+  "settings.newPassword": { uk: "Новий пароль", ru: "Новый пароль", en: "New password", pl: "Nowe hasło", de: "Neues Passwort" },
+  "settings.confirmPassword": { uk: "Підтвердьте новий пароль", ru: "Подтвердите новый пароль", en: "Confirm new password", pl: "Potwierdź nowe hasło", de: "Neues Passwort bestätigen" },
+  "settings.passwordMin": { uk: "Пароль має містити щонайменше 8 символів", ru: "Пароль должен содержать не менее 8 символов", en: "Password must be at least 8 characters", pl: "Hasło musi mieć co najmniej 8 znaków", de: "Das Passwort muss mindestens 8 Zeichen lang sein" },
+  "settings.passwordMismatch": { uk: "Паролі не збігаються", ru: "Пароли не совпадают", en: "Passwords do not match", pl: "Hasła nie są zgodne", de: "Die Passwörter stimmen nicht überein" },
+  "settings.passwordSaved": { uk: "Пароль змінено", ru: "Пароль изменён", en: "Password changed", pl: "Hasło zmienione", de: "Passwort geändert" },
+
+  // ─── Notifications ─────────────────────────────────
+  "notifications.title": { uk: "Сповіщення", ru: "Уведомления", en: "Notifications", pl: "Powiadomienia", de: "Benachrichtigungen" },
+  "notifications.description": { uk: "Оновлення щодо ваших замовлень і підтримки", ru: "Обновления по вашим заказам и поддержке", en: "Updates about your orders and support", pl: "Aktualizacje zamówień i wsparcia", de: "Neuigkeiten zu Bestellungen und Support" },
+  "notifications.empty": { uk: "Нових сповіщень немає", ru: "Новых уведомлений нет", en: "No notifications yet", pl: "Brak powiadomień", de: "Noch keine Benachrichtigungen" },
 
   // ─── Common ─────────────────────────────────────────
   "common.loading": { uk: "Завантаження...", ru: "Загрузка...", en: "Loading...", pl: "Ładowanie...", de: "Laden..." },
@@ -284,6 +288,11 @@ const translations: Record<string, Record<Lang, string>> = {
   "common.save": { uk: "Зберегти", ru: "Сохранить", en: "Save", pl: "Zapisz", de: "Speichern" },
   "common.noInternet": { uk: "Немає з'єднання з інтернетом", ru: "Нет подключения к интернету", en: "No internet connection", pl: "Brak połączenia z internetem", de: "Keine Internetverbindung" },
   "common.serverError": { uk: "Помилка сервера. Спробуйте пізніше", ru: "Ошибка сервера. Попробуйте позже", en: "Server error. Try again later", pl: "Błąd serwera. Spróbuj później", de: "Serverfehler. Versuchen Sie es später" },
+
+  // ─── Not found ─────────────────────────────────────
+  "notFound.title": { uk: "Сторінку не знайдено", ru: "Страница не найдена", en: "Page not found", pl: "Nie znaleziono strony", de: "Seite nicht gefunden" },
+  "notFound.description": { uk: "Цієї сторінки не існує або її було переміщено.", ru: "Этой страницы не существует или она была перемещена.", en: "This page does not exist or has been moved.", pl: "Ta strona nie istnieje lub została przeniesiona.", de: "Diese Seite existiert nicht oder wurde verschoben." },
+  "notFound.home": { uk: "На головну", ru: "На главную", en: "Back to Home", pl: "Wróć na stronę główną", de: "Zur Startseite" },
 
   // ─── FAQ ────────────────────────────────────────────
   "faq.title": { uk: "Часті запитання", ru: "Частые вопросы", en: "FAQ", pl: "FAQ", de: "FAQ" },
@@ -307,4 +316,3 @@ const translations: Record<string, Record<Lang, string>> = {
 };
 
 export default translations;
-

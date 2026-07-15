@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -61,9 +61,9 @@ function getIconForService(name: string): typeof Globe {
   return Globe;
 }
 
-const OrderScreen = () => {
+const OrderScreen = ({ onRequireAuth }: { onRequireAuth?: () => void }) => {
   const { t, lang } = useLang();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, user } = useAuth();
   const [step, setStep] = useState(0);
   const [services, setServices] = useState<Service[]>([]);
   const [loadingServices, setLoadingServices] = useState(true);
@@ -76,58 +76,64 @@ const OrderScreen = () => {
   const [submitting, setSubmitting] = useState(false);
   const totalSteps = 3;
 
-  // Load services from API
-  useEffect(() => {
-    const fetchServices = async () => {
-      try {
-        const data = await api.get<{ success: boolean; services: Service[] }>("/services", { noAuth: true });
-        if (data.success && data.services) {
-          setServices(data.services);
-        }
-      } catch (error) {
-        console.error("Failed to load services:", error);
-        toast.error(t("common.serverError"));
-      } finally {
-        setLoadingServices(false);
+  const fetchServices = useCallback(async () => {
+    setLoadingServices(true);
+    try {
+      const data = await api.get<{ success: boolean; services: Service[] }>("/services", { noAuth: true });
+      if (data.success && Array.isArray(data.services)) {
+        setServices(data.services);
       }
-    };
-    fetchServices();
+    } catch (error) {
+      console.error("Failed to load services:", error);
+      setServices([]);
+      toast.error(t("common.serverError"));
+    } finally {
+      setLoadingServices(false);
+    }
   }, [t]);
+
+  useEffect(() => {
+    fetchServices();
+  }, [fetchServices]);
+
+  useEffect(() => {
+    if (user) {
+      setName((value) => value || user.name || "");
+      setEmail((value) => value || user.email);
+    }
+  }, [user]);
+
+  const hasValidContact = phone.trim().length >= 6 || /^\S+@\S+\.\S+$/.test(email.trim());
 
   const canNext =
     (step === 0 && selectedService) ||
     (step === 1 && description.trim()) ||
-    (step === 2 && name && (phone || email));
+    (step === 2 && name.trim() && hasValidContact);
 
   const handleSubmit = async () => {
     if (!selectedService) return;
+    if (!isAuthenticated) {
+      toast.error(t("order.loginRequired"));
+      onRequireAuth?.();
+      return;
+    }
     setSubmitting(true);
 
     try {
-      // If authenticated, create via API
-      if (isAuthenticated) {
-        await api.post("/website-orders", {
-          service_id: selectedService.id,
-          description: JSON.stringify({
-            type: selectedService.name,
-            description,
-            deadline,
-            contact_name: name,
-            contact_phone: phone,
-            contact_email: email,
-          }),
-          total: selectedService.price,
-        });
-      }
+      await api.post("/orders", {
+        service_id: selectedService.id,
+        total: selectedService.price,
+        type: parseLocale(selectedService.name, lang),
+        description: description.trim(),
+        deadline: deadline || null,
+        contact_name: name.trim(),
+        contact_phone: phone.trim() || null,
+        contact_email: email.trim() || null,
+      });
       setStep(3);
     } catch (error) {
       console.error("Order submission error:", error);
-      // Even if API fails, show success for non-authenticated users
-      if (!isAuthenticated) {
-        setStep(3);
-      } else {
-        toast.error(t("common.serverError"));
-      }
+      toast.error(error instanceof Error ? error.message : t("common.serverError"));
     } finally {
       setSubmitting(false);
     }
@@ -176,7 +182,7 @@ const OrderScreen = () => {
                 <p className="text-sm text-muted-foreground">{t("common.serverError")}</p>
                 <motion.button
                   whileTap={{ scale: 0.95 }}
-                  onClick={() => { setLoadingServices(true); window.location.reload(); }}
+                  onClick={fetchServices}
                   className="text-xs text-primary font-semibold"
                 >
                   {t("common.retry")}
@@ -267,12 +273,15 @@ const OrderScreen = () => {
                 placeholder={t("order.name")}
                 value={name}
                 onChange={(e) => setName(e.target.value)}
+                autoComplete="name"
                 className="rounded-xl border-border bg-card py-6 text-foreground placeholder:text-muted-foreground"
               />
               <Input
                 placeholder={t("order.phone")}
+                type="tel"
                 value={phone}
                 onChange={(e) => setPhone(e.target.value)}
+                autoComplete="tel"
                 className="rounded-xl border-border bg-card py-6 text-foreground placeholder:text-muted-foreground"
               />
               <Input
@@ -280,6 +289,7 @@ const OrderScreen = () => {
                 type="email"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                autoComplete="email"
                 className="rounded-xl border-border bg-card py-6 text-foreground placeholder:text-muted-foreground"
               />
             </div>

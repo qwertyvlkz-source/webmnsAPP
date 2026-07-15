@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
@@ -21,6 +21,7 @@ interface WebsiteOrder {
 }
 
 const statusColors: Record<string, string> = {
+  pending: "bg-amber-500/15 text-amber-600",
   waiting_payment: "bg-amber-500/15 text-amber-600",
   paid: "bg-blue-500/15 text-blue-600",
   in_progress: "bg-primary/15 text-primary",
@@ -30,6 +31,7 @@ const statusColors: Record<string, string> = {
 };
 
 const statusIcons: Record<string, typeof Clock> = {
+  pending: Clock,
   waiting_payment: Clock,
   paid: CreditCard,
   in_progress: Loader2,
@@ -39,16 +41,18 @@ const statusIcons: Record<string, typeof Clock> = {
 };
 
 const OrdersScreen = () => {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const { isAuthenticated } = useAuth();
   const [orders, setOrders] = useState<WebsiteOrder[]>([]);
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
   const [selectedOrder, setSelectedOrder] = useState<WebsiteOrder | null>(null);
   const [payingOrderId, setPayingOrderId] = useState<number | null>(null);
+  const [loadError, setLoadError] = useState(false);
 
-  const fetchOrders = async (showRefresh = false) => {
+  const fetchOrders = useCallback(async (showRefresh = false) => {
     if (showRefresh) setRefreshing(true);
+    setLoadError(false);
     try {
       const data = await api.get<{ success: boolean; data: WebsiteOrder[] }>("/website-orders");
       if (data.success) {
@@ -56,16 +60,13 @@ const OrdersScreen = () => {
       }
     } catch (error) {
       console.error("Failed to load orders:", error);
-      if (!showRefresh) {
-        // Silent fail on first load
-      } else {
-        toast.error(t("common.serverError"));
-      }
+      setLoadError(true);
+      if (showRefresh) toast.error(t("common.serverError"));
     } finally {
       setLoading(false);
       setRefreshing(false);
     }
-  };
+  }, [t]);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -73,7 +74,7 @@ const OrdersScreen = () => {
     } else {
       setLoading(false);
     }
-  }, [isAuthenticated]);
+  }, [isAuthenticated, fetchOrders]);
 
   const getStatusKey = (status: string) => {
     const key = `orders.status.${status}`;
@@ -81,13 +82,22 @@ const OrdersScreen = () => {
     return translated !== key ? translated : status;
   };
 
-  const handlePay = async (orderId: number, e?: React.MouseEvent) => {
+  const handlePay = async (order: WebsiteOrder, e?: React.MouseEvent) => {
     if (e) e.stopPropagation();
-    setPayingOrderId(orderId);
+    setPayingOrderId(order.id);
     try {
-      const data = await api.post<{ paymentUrl?: string; message?: string }>("/payments/create", { orderId });
-      if (data.paymentUrl) {
-        window.open(data.paymentUrl, "_blank");
+      const data = await api.post<{ success?: boolean; pageUrl?: string; message?: string }>("/payments/monobank/create-order", {
+        orderId: order.id,
+        amount: order.budget,
+        currency: "EUR",
+        productName: order.website_type,
+        locale: lang,
+        installmentParts: 1,
+      });
+      if (data.success && data.pageUrl) {
+        const paymentUrl = new URL(data.pageUrl);
+        if (paymentUrl.protocol !== "https:") throw new Error("Invalid payment URL");
+        window.location.assign(paymentUrl.toString());
       } else {
         toast.error(data.message || t("common.serverError"));
       }
@@ -98,6 +108,8 @@ const OrdersScreen = () => {
       setPayingOrderId(null);
     }
   };
+
+  const canPay = (status: string) => status === "pending" || status === "waiting_payment";
 
   // Not authenticated
   if (!isAuthenticated) {
@@ -132,7 +144,15 @@ const OrdersScreen = () => {
         </motion.button>
       </div>
 
-      {orders.length === 0 ? (
+      {loadError ? (
+        <div className="flex flex-1 flex-col items-center justify-center px-4 gap-3">
+          <AlertCircle size={48} className="text-destructive/50" />
+          <p className="text-sm text-muted-foreground text-center">{t("common.serverError")}</p>
+          <button onClick={() => fetchOrders(true)} className="rounded-xl bg-primary px-5 py-2.5 text-xs font-semibold text-primary-foreground">
+            {t("common.retry")}
+          </button>
+        </div>
+      ) : orders.length === 0 ? (
         <div className="flex flex-1 flex-col items-center justify-center px-4 gap-3">
           <ClipboardList size={48} className="text-muted-foreground/30" />
           <p className="text-sm text-muted-foreground">{t("orders.empty")}</p>
@@ -168,11 +188,11 @@ const OrdersScreen = () => {
                     <span className="text-sm font-bold text-foreground">€{order.budget.toLocaleString()}</span>
                   </div>
 
-                  {order.status === "waiting_payment" && (
+                  {canPay(order.status) && (
                     <motion.button
                       whileTap={{ scale: 0.95 }}
                       disabled={payingOrderId === order.id}
-                      onClick={(e) => handlePay(order.id, e)}
+                      onClick={(e) => handlePay(order, e)}
                       className="mt-3 w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-2.5 text-xs font-semibold text-primary-foreground disabled:opacity-50"
                     >
                       {payingOrderId === order.id ? <Loader2 size={14} className="animate-spin" /> : <CreditCard size={14} />}
@@ -233,11 +253,11 @@ const OrdersScreen = () => {
               </div>
             </div>
 
-            {selectedOrder.status === "waiting_payment" && (
+            {canPay(selectedOrder.status) && (
               <motion.button
                 whileTap={{ scale: 0.95 }}
                 disabled={payingOrderId === selectedOrder.id}
-                onClick={() => handlePay(selectedOrder.id)}
+                onClick={() => handlePay(selectedOrder)}
                 className="w-full flex items-center justify-center gap-2 rounded-xl bg-primary py-3.5 text-sm font-semibold text-primary-foreground disabled:opacity-50"
               >
                 {payingOrderId === selectedOrder.id ? <Loader2 size={16} className="animate-spin" /> : <ExternalLink size={16} />}

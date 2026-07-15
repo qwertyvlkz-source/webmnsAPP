@@ -56,6 +56,7 @@ export const LanguageProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   // Persist on change
   useEffect(() => {
     localStorage.setItem(LANG_STORAGE_KEY, lang);
+    document.documentElement.lang = lang;
   }, [lang]);
 
   return (

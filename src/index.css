@@ -136,7 +136,7 @@
     -webkit-touch-callout: none;
     user-select: none;
     /* Safe areas for notch/rounded corners */
-    padding: env(safe-area-inset-top) env(safe-area-inset-right) 0 env(safe-area-inset-left);
+    padding: 0 env(safe-area-inset-right) 0 env(safe-area-inset-left);
   }
 
   /* Allow text selection in inputs and textareas */

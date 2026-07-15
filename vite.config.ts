@@ -3,6 +3,14 @@ import react from "@vitejs/plugin-react-swc";
 import path from "path";
 import { componentTagger } from "lovable-tagger";
 
+const apiProxy = {
+  "/api": {
+    target: "https://webmns.com",
+    changeOrigin: true,
+    secure: true,
+  },
+};
+
 // https://vitejs.dev/config/
 export default defineConfig(({ mode }) => ({
   server: {
@@ -13,15 +21,26 @@ export default defineConfig(({ mode }) => ({
     },
     // Proxy API calls to the production backend in dev so the browser stays
     // same-origin (the API sends no CORS headers).
-    proxy: {
-      "/api": {
-        target: "https://webmns.com",
-        changeOrigin: true,
-        secure: true,
+    proxy: apiProxy,
+  },
+  preview: {
+    host: "::",
+    port: 4173,
+    proxy: apiProxy,
+  },
+  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
+  build: {
+    rollupOptions: {
+      output: {
+        manualChunks(id) {
+          if (id.includes("framer-motion")) return "motion";
+          if (id.includes("@radix-ui")) return "radix-ui";
+          if (id.includes("react") || id.includes("@tanstack/react-query")) return "react-vendor";
+          return undefined;
+        },
       },
     },
   },
-  plugins: [react(), mode === "development" && componentTagger()].filter(Boolean),
   resolve: {
     alias: {
       "@": path.resolve(__dirname, "./src"),
