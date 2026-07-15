@@ -46,8 +46,8 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
   }, [showLangMenu]);
 
   return (
-    <nav className="px-3 pb-[max(env(safe-area-inset-bottom),4px)] pt-0.5">
-      <div className="flex items-center justify-around rounded-2xl bg-card/75 backdrop-blur-xl shadow-[0_8px_30px_rgba(0,0,0,0.10)] border border-border/60 px-1 py-0">
+    <nav className="relative z-20 px-3 pb-[max(env(safe-area-inset-bottom),6px)] pt-1.5">
+      <div className="flex items-center justify-around rounded-[1.35rem] border border-white/60 bg-card/85 px-1 py-0 shadow-[0_12px_36px_rgba(71,48,145,0.16)] backdrop-blur-2xl dark:border-white/10">
         {tabs.map((tab, i) => {
           const Icon = tab.icon;
           const isActive = active === i;
@@ -63,14 +63,14 @@ const BottomTabBar = ({ active, onTabChange }: Props) => {
               {isActive && !tab.accent && (
                 <motion.span
                   layoutId="tab-bg"
-                  className="absolute inset-x-1 inset-y-1 z-0 rounded-xl bg-primary/10"
+                  className="absolute inset-x-1 inset-y-1 z-0 rounded-xl bg-gradient-to-br from-violet-500/15 to-blue-500/10"
                   transition={{ type: "spring", stiffness: 400, damping: 30 }}
                 />
               )}
               {tab.accent ? (
                 <span
                   className={`flex h-10 w-10 items-center justify-center rounded-full shadow-md ${
-                    isActive ? "bg-primary shadow-primary/30" : "bg-primary/80"
+                    isActive ? "bg-gradient-to-br from-violet-600 via-fuchsia-500 to-blue-500 shadow-violet-500/35" : "bg-gradient-to-br from-violet-500 to-blue-500 shadow-violet-500/20"
                   }`}
                 >
                   <Icon size={20} className="text-primary-foreground" />

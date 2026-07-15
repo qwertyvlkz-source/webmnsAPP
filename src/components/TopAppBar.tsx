@@ -59,13 +59,13 @@ const TopAppBar = () => {
 
   return (
     <>
-      <div className="relative z-10 flex items-center justify-between px-4 pt-[max(env(safe-area-inset-top),12px)] pb-3 bg-background/60 backdrop-blur-xl border-b border-border/40">
-      {/* Animated rocket logo + DIGITAL AGENCY (webmns.com style) */}
-      <div className="flex items-center gap-2.5">
+      <header className="relative z-10 flex items-center justify-between border-b border-white/30 bg-background/70 px-4 pb-3 pt-[max(env(safe-area-inset-top),12px)] shadow-[0_8px_30px_rgba(70,48,150,0.06)] backdrop-blur-2xl dark:border-white/5">
+        {/* Animated rocket logo + DIGITAL AGENCY (webmns.com style) */}
+        <div className="flex items-center gap-2.5">
         <motion.div
           animate={{ y: [0, -2.5, 0], rotate: [0, -4, 0] }}
           transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
-          className="relative flex h-9 w-9 items-center justify-center"
+          className="relative flex h-10 w-10 items-center justify-center rounded-2xl bg-gradient-to-br from-violet-500/15 via-fuchsia-500/10 to-blue-500/15 shadow-sm"
         >
           {/* Exhaust trail (bottom-left of the rocket) */}
           <motion.span
@@ -87,21 +87,21 @@ const TopAppBar = () => {
           />
         </motion.div>
         <div className="flex flex-col leading-[1.05]">
-          <span className="label-mono text-[13px] font-bold tracking-[0.12em] text-foreground">
+          <span className="label-mono bg-gradient-to-r from-violet-700 to-fuchsia-500 bg-clip-text text-[12px] font-black tracking-[0.1em] text-transparent dark:from-violet-300 dark:to-fuchsia-300">
             DIGITAL
           </span>
-          <span className="label-mono text-[13px] font-bold tracking-[0.12em] bg-clip-text text-transparent bg-gradient-to-r from-primary to-accent">
+          <span className="label-mono bg-gradient-to-r from-fuchsia-500 to-blue-500 bg-clip-text text-[12px] font-black tracking-[0.1em] text-transparent">
             AGENCY
           </span>
         </div>
-      </div>
+        </div>
 
-      <div className="flex items-center gap-2">
+        <div className="flex items-center gap-2">
         <motion.button
           whileTap={{ scale: 0.9 }}
           onClick={() => void handleNotificationsOpen(true)}
           aria-label={t("notifications.title")}
-          className="relative flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 shadow-sm backdrop-blur-md"
+          className="relative flex h-10 w-10 items-center justify-center rounded-2xl border border-white/60 bg-card/80 text-foreground shadow-[0_6px_18px_rgba(65,47,135,0.10)] backdrop-blur-md dark:border-white/10"
         >
           <Bell size={18} className="text-foreground" />
           {hasUnread && <span className="absolute right-2 top-2 h-2 w-2 rounded-full bg-destructive ring-2 ring-card" />}
@@ -112,12 +112,12 @@ const TopAppBar = () => {
           aria-label={isDark ? t("settings.light") : t("settings.dark")}
           aria-pressed={isDark}
           title={isDark ? t("settings.light") : t("settings.dark")}
-          className="flex h-9 w-9 items-center justify-center rounded-full border border-border/50 bg-card/70 text-foreground shadow-sm backdrop-blur-md"
+          className="flex h-10 w-10 items-center justify-center rounded-2xl border border-white/60 bg-card/80 text-foreground shadow-[0_6px_18px_rgba(65,47,135,0.10)] backdrop-blur-md dark:border-white/10"
         >
           {isDark ? <Sun size={18} /> : <Moon size={18} />}
         </motion.button>
-      </div>
-      </div>
+        </div>
+      </header>
 
       <Dialog open={notificationsOpen} onOpenChange={(open) => void handleNotificationsOpen(open)}>
         <DialogContent className="max-w-sm rounded-2xl bg-card border-border">

@@ -3,6 +3,7 @@ import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth } from "@/contexts/AuthContext";
 import { api } from "@/lib/api";
+import { fetchServices as loadServices, formatServicePrice, getServiceFeatures, getServiceName, isStartingPrice, type Service } from "@/lib/services";
 import { Input } from "@/components/ui/input";
 import { toast } from "sonner";
 import {
@@ -11,27 +12,6 @@ import {
   FileText, Calendar,
 } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
-
-/** Parse a JSON-encoded locale string like {"en":"Landing","uk":"Лендінг",...} */
-function parseLocale(val: string | null | undefined, lang: string): string {
-  if (!val) return "";
-  try {
-    const obj = JSON.parse(val);
-    if (typeof obj === "object" && obj !== null) {
-      return obj[lang] || obj.en || obj.uk || Object.values(obj)[0] || val;
-    }
-  } catch {
-    // not JSON, return as-is
-  }
-  return val;
-}
-
-interface Service {
-  id: number;
-  name: string;
-  description: string | null;
-  price: number;
-}
 
 const fallbackIcons: Record<string, typeof Globe> = {
   "Landing": Globe,
@@ -79,10 +59,7 @@ const OrderScreen = ({ onRequireAuth }: { onRequireAuth?: () => void }) => {
   const fetchServices = useCallback(async () => {
     setLoadingServices(true);
     try {
-      const data = await api.get<{ success: boolean; services: Service[] }>("/services", { noAuth: true });
-      if (data.success && Array.isArray(data.services)) {
-        setServices(data.services);
-      }
+      setServices(await loadServices());
     } catch (error) {
       console.error("Failed to load services:", error);
       setServices([]);
@@ -122,8 +99,8 @@ const OrderScreen = ({ onRequireAuth }: { onRequireAuth?: () => void }) => {
     try {
       await api.post("/orders", {
         service_id: selectedService.id,
-        total: selectedService.price,
-        type: parseLocale(selectedService.name, lang),
+        total: Number(selectedService.price),
+        type: getServiceName(selectedService, lang),
         description: description.trim(),
         deadline: deadline || null,
         contact_name: name.trim(),
@@ -191,23 +168,30 @@ const OrderScreen = ({ onRequireAuth }: { onRequireAuth?: () => void }) => {
             ) : (
               <div className="grid grid-cols-2 gap-3 pb-2">
                 {services.map((service) => {
-                  const Icon = getIconForService(parseLocale(service.name, "en"));
+                  const Icon = getIconForService(getServiceName(service, "en"));
                   const selected = selectedService?.id === service.id;
+                  const features = getServiceFeatures(service, lang);
                   return (
                     <motion.button
                       key={service.id}
                       whileTap={{ scale: 0.95 }}
                       onClick={() => setSelectedService(service)}
-                      className={`flex flex-col items-center gap-2 rounded-2xl border-2 p-4 transition-colors ${
-                        selected ? "border-primary bg-primary/10" : "border-border bg-card"
+                      className={`relative flex min-h-[168px] flex-col items-start gap-2 overflow-hidden rounded-[1.4rem] border p-4 text-left shadow-sm transition-all ${
+                        selected ? "border-primary bg-primary/10 shadow-primary/15" : "border-border/70 bg-card/90 shadow-black/5"
                       }`}
                     >
-                      <Icon size={28} className={selected ? "text-primary" : "text-muted-foreground"} />
-                      <span className={`text-xs font-semibold text-center leading-tight ${selected ? "text-primary" : "text-foreground"}`}>
-                        {parseLocale(service.name, lang)}
+                      <span className={`absolute inset-x-0 top-0 h-1 bg-gradient-to-r ${service.id % 3 === 0 ? "from-emerald-400 to-cyan-400" : service.id % 3 === 1 ? "from-blue-500 to-violet-500" : "from-violet-500 to-fuchsia-500"}`} />
+                      <span className={`flex h-10 w-10 items-center justify-center rounded-xl ${selected ? "bg-primary text-primary-foreground" : "bg-secondary text-primary"}`}>
+                        <Icon size={20} />
                       </span>
-                      <span className="text-[10px] text-muted-foreground">
-                        {t("order.from")} €{Number(service.price).toLocaleString()}
+                      <span className={`text-sm font-extrabold leading-tight ${selected ? "text-primary" : "text-foreground"}`}>
+                        {getServiceName(service, lang)}
+                      </span>
+                      <span className="text-lg font-extrabold text-foreground">
+                        {isStartingPrice(service.id) ? `${t("order.from")} ` : ""}€{formatServicePrice(service.price)}
+                      </span>
+                      <span className="line-clamp-2 text-[10px] leading-relaxed text-muted-foreground">
+                        {features.slice(0, 2).join(" · ")}
                       </span>
                     </motion.button>
                   );
@@ -225,11 +209,11 @@ const OrderScreen = ({ onRequireAuth }: { onRequireAuth?: () => void }) => {
             {selectedService && (
               <div className="mb-4 rounded-xl border border-primary/30 bg-primary/5 p-3 flex items-center gap-3">
                 <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary/15">
-                  {(() => { const Icon = getIconForService(parseLocale(selectedService.name, "en")); return <Icon size={20} className="text-primary" />; })()}
+                  {(() => { const Icon = getIconForService(getServiceName(selectedService, "en")); return <Icon size={20} className="text-primary" />; })()}
                 </div>
                 <div>
-                  <p className="text-sm font-semibold text-foreground">{parseLocale(selectedService.name, lang)}</p>
-                  <p className="text-xs text-muted-foreground">{t("order.from")} €{Number(selectedService.price).toLocaleString()}</p>
+                  <p className="text-sm font-semibold text-foreground">{getServiceName(selectedService, lang)}</p>
+                  <p className="text-xs text-muted-foreground">{isStartingPrice(selectedService.id) ? `${t("order.from")} ` : ""}€{formatServicePrice(selectedService.price)}</p>
                 </div>
               </div>
             )}

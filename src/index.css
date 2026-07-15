@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css2?family=Calistoga&family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500;600&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 
 @tailwind base;
 @tailwind components;
@@ -6,9 +6,9 @@
 
 @layer base {
   :root {
-    /* High-Tech Boutique SaaS — warm off-white canvas + electric blue */
-    --background: 0 0% 98%;
-    --foreground: 222 47% 11%;
+    /* WebMNS brand: bright violet/blue surfaces on a soft cool canvas */
+    --background: 238 100% 99%;
+    --foreground: 228 42% 12%;
 
     --card: 0 0% 100%;
     --card-foreground: 222 47% 11%;
@@ -16,78 +16,77 @@
     --popover: 0 0% 100%;
     --popover-foreground: 222 47% 11%;
 
-    --primary: 221 100% 50%;
+    --primary: 258 70% 55%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96%;
-    --secondary-foreground: 222 30% 25%;
+    --secondary: 238 65% 96%;
+    --secondary-foreground: 228 32% 25%;
 
-    --muted: 210 40% 96%;
-    --muted-foreground: 215 16% 47%;
+    --muted: 238 55% 96%;
+    --muted-foreground: 226 13% 46%;
 
-    --accent: 224 100% 65%;
+    --accent: 218 94% 64%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 214 32% 91%;
-    --input: 214 32% 91%;
-    --ring: 221 100% 50%;
+    --border: 238 35% 89%;
+    --input: 238 35% 89%;
+    --ring: 258 70% 55%;
 
     --radius: 1rem;
 
     --sidebar-background: 0 0% 100%;
     --sidebar-foreground: 222 47% 11%;
-    --sidebar-primary: 221 100% 50%;
+    --sidebar-primary: 258 70% 55%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 210 40% 96%;
+    --sidebar-accent: 238 65% 96%;
     --sidebar-accent-foreground: 222 47% 11%;
-    --sidebar-border: 214 32% 91%;
-    --sidebar-ring: 221 100% 50%;
+    --sidebar-border: 238 35% 89%;
+    --sidebar-ring: 258 70% 55%;
 
     --success: 142 70% 45%;
     --warning: 38 92% 50%;
   }
 
   .dark {
-    /* Cinematic deep-slate dark with the same electric-blue accent */
-    --background: 222 47% 6%;
+    --background: 232 45% 7%;
     --foreground: 210 40% 96%;
 
-    --card: 222 40% 10%;
+    --card: 232 38% 11%;
     --card-foreground: 210 40% 96%;
 
-    --popover: 222 40% 10%;
+    --popover: 232 38% 11%;
     --popover-foreground: 210 40% 96%;
 
-    --primary: 221 100% 62%;
+    --primary: 258 88% 68%;
     --primary-foreground: 0 0% 100%;
 
-    --secondary: 222 30% 16%;
+    --secondary: 235 30% 17%;
     --secondary-foreground: 210 30% 82%;
 
-    --muted: 222 30% 14%;
+    --muted: 235 28% 15%;
     --muted-foreground: 215 20% 62%;
 
-    --accent: 224 100% 68%;
+    --accent: 218 96% 68%;
     --accent-foreground: 0 0% 100%;
 
     --destructive: 0 72% 51%;
     --destructive-foreground: 0 0% 100%;
 
-    --border: 222 30% 18%;
-    --input: 222 30% 18%;
-    --ring: 221 100% 62%;
+    --border: 235 26% 20%;
+    --input: 235 26% 20%;
+    --ring: 258 88% 68%;
 
     --sidebar-background: 222 40% 8%;
     --sidebar-foreground: 210 40% 96%;
-    --sidebar-primary: 221 100% 62%;
+    --sidebar-primary: 258 88% 68%;
     --sidebar-primary-foreground: 0 0% 100%;
     --sidebar-accent: 222 30% 16%;
     --sidebar-accent-foreground: 210 40% 96%;
     --sidebar-border: 222 30% 18%;
-    --sidebar-ring: 221 100% 62%;
+    --sidebar-ring: 258 88% 68%;
 
     --success: 142 70% 45%;
     --warning: 38 92% 50%;
@@ -115,16 +114,16 @@
     border-radius: 0.5rem;
   }
 
-  /* Editorial display headings (Calistoga) per the boutique SaaS system */
+  /* Match the bold geometric typography used on webmns.com. */
   h1, h2 {
-    font-family: 'Calistoga', Georgia, 'Times New Roman', serif;
-    font-weight: 400;
-    letter-spacing: -0.01em;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-weight: 800;
+    letter-spacing: -0.035em;
   }
 
   /* Mono section/eyebrow labels */
   .label-mono {
-    font-family: 'JetBrains Mono', ui-monospace, monospace;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
     text-transform: uppercase;
     letter-spacing: 0.14em;
   }
@@ -163,6 +162,46 @@
   button, a, [role="button"] {
     -webkit-tap-highlight-color: transparent;
     touch-action: manipulation;
+  }
+}
+
+@layer components {
+  .app-surface {
+    background-color: hsl(var(--background));
+    background-image:
+      radial-gradient(circle at 12% 5%, hsl(274 90% 66% / 0.12), transparent 28%),
+      radial-gradient(circle at 92% 18%, hsl(218 95% 62% / 0.13), transparent 30%),
+      linear-gradient(hsl(258 70% 55% / 0.035) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(258 70% 55% / 0.035) 1px, transparent 1px);
+    background-size: auto, auto, 36px 36px, 36px 36px;
+  }
+
+  .dark .app-surface {
+    background-image:
+      radial-gradient(circle at 10% 4%, hsl(274 90% 66% / 0.16), transparent 30%),
+      radial-gradient(circle at 95% 16%, hsl(218 95% 62% / 0.14), transparent 30%),
+      linear-gradient(hsl(258 80% 75% / 0.025) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(258 80% 75% / 0.025) 1px, transparent 1px);
+  }
+
+  .hero-visual-grid {
+    background-image:
+      linear-gradient(hsl(258 70% 55% / 0.06) 1px, transparent 1px),
+      linear-gradient(90deg, hsl(258 70% 55% / 0.06) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+
+  .section-pill {
+    display: inline-flex;
+    align-items: center;
+    border-radius: 9999px;
+    background: linear-gradient(90deg, hsl(var(--primary) / 0.12), hsl(var(--accent) / 0.12));
+    padding: 0.35rem 0.75rem;
+    color: hsl(var(--primary));
+    font-size: 0.625rem;
+    font-weight: 800;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
   }
 }
 
