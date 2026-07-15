@@ -164,6 +164,14 @@ const translations: Record<string, Record<Lang, string>> = {
   "partner.pending": { uk: "Очікування", ru: "Ожидание", en: "Pending", pl: "Oczekujące", de: "Ausstehend" },
   "partner.linkCopied": { uk: "Посилання скопійовано!", ru: "Ссылка скопирована!", en: "Link copied!", pl: "Link skopiowany!", de: "Link kopiert!" },
   "partner.toBonus": { uk: "до бонусу", ru: "до бонуса", en: "to bonus", pl: "do bonusu", de: "zum Bonus" },
+  "partner.available": { uk: "Доступний баланс", ru: "Доступный баланс", en: "Available balance", pl: "Dostępne saldo", de: "Verfügbares Guthaben" },
+  "partner.pendingEarnings": { uk: "Очікує нарахування", ru: "Ожидает начисления", en: "Pending earnings", pl: "Oczekujące środki", de: "Ausstehende Einnahmen" },
+  "partner.rewardNote": { uk: "10% нараховується після оплати замовлення", ru: "10% начисляется после оплаты заказа", en: "10% is credited after an order is paid", pl: "10% nalicza się po opłaceniu zamówienia", de: "10 % werden nach Zahlung gutgeschrieben" },
+  "partner.copyLink": { uk: "Скопіювати партнерське посилання", ru: "Скопировать партнёрскую ссылку", en: "Copy referral link", pl: "Kopiuj link partnerski", de: "Empfehlungslink kopieren" },
+  "partner.active": { uk: "Активний", ru: "Активный", en: "Active", pl: "Aktywny", de: "Aktiv" },
+  "partner.empty": { uk: "Поки немає рефералів", ru: "Пока нет рефералов", en: "No referrals yet", pl: "Brak poleconych", de: "Noch keine Empfehlungen" },
+  "partner.emptyDesc": { uk: "Поділіться посиланням — нові клієнти з’являться тут після реєстрації.", ru: "Поделитесь ссылкой — новые клиенты появятся здесь после регистрации.", en: "Share your link — new clients appear here after registration.", pl: "Udostępnij link — nowi klienci pojawią się tu po rejestracji.", de: "Teilen Sie Ihren Link – neue Kunden erscheinen hier nach der Registrierung." },
+  "partner.loadError": { uk: "Не вдалося завантажити партнерські дані", ru: "Не удалось загрузить партнёрские данные", en: "Could not load partner data", pl: "Nie udało się wczytać danych partnerskich", de: "Partnerdaten konnten nicht geladen werden" },
 
   // ─── Portfolio ───────────────────────────────────────
   "portfolio.title": { uk: "Портфоліо", ru: "Портфолио", en: "Portfolio", pl: "Portfolio", de: "Portfolio" },
@@ -238,6 +246,8 @@ const translations: Record<string, Record<Lang, string>> = {
   "profile.login.confirmPassword": { uk: "Підтвердити пароль", ru: "Подтвердить пароль", en: "Confirm Password", pl: "Potwierdź hasło", de: "Passwort bestätigen" },
   "profile.login.emailRequired": { uk: "Введіть коректний email", ru: "Введите корректный email", en: "Enter a valid email", pl: "Wpisz poprawny adres email", de: "Geben Sie eine gültige E-Mail-Adresse ein" },
   "profile.login.resetSent": { uk: "Посилання для відновлення надіслано на email", ru: "Ссылка для восстановления отправлена на email", en: "Password reset link sent by email", pl: "Link resetujący został wysłany emailem", de: "Link zum Zurücksetzen wurde per E-Mail gesendet" },
+  "profile.login.google": { uk: "Продовжити з Google", ru: "Продолжить с Google", en: "Continue with Google", pl: "Kontynuuj z Google", de: "Mit Google fortfahren" },
+  "profile.login.or": { uk: "або через email", ru: "или через email", en: "or use email", pl: "lub przez email", de: "oder mit E-Mail" },
 
   // ─── Profile - Dashboard ────────────────────────────
   "profile.greeting": { uk: "Привіт", ru: "Привет", en: "Hello", pl: "Cześć", de: "Hallo" },

@@ -50,6 +50,7 @@ async function request<T = unknown>(endpoint: string, options: ApiOptions = {}):
 
   const response = await fetch(url, {
     method,
+    credentials: 'include',
     headers: requestHeaders,
     body: body ? JSON.stringify(body) : undefined,
   });

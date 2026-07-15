@@ -2,7 +2,6 @@ import { useState, useEffect, useCallback } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useLang } from "@/i18n/LanguageContext";
 import { useAuth, type User as AuthUser } from "@/contexts/AuthContext";
-import { Progress } from "@/components/ui/progress";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { Dialog, DialogContent, DialogDescription, DialogFooter, DialogHeader, DialogTitle } from "@/components/ui/dialog";
@@ -12,25 +11,29 @@ import { useTheme } from "next-themes";
 import {
   User, LogOut, CheckCircle, Loader2,
   ChevronRight, CreditCard, Users,
-  Copy, Check, DollarSign, UserPlus, Eye, ShoppingCart,
+  Check,
   Mail, Lock, UserIcon, HelpCircle, MessageSquare, Settings,
 } from "lucide-react";
 import TicketsScreen from "@/screens/TicketsScreen";
 import OrdersScreen from "@/screens/OrdersScreen";
 import FAQScreen from "@/screens/FAQScreen";
 import { langNames, type Lang } from "@/i18n/translations";
+import ReferralDashboard from "@/components/ReferralDashboard";
+import { normalizeReferralData, type ReferralData } from "@/lib/referral";
 
-interface ReferralSummary {
-  referral_code: string;
-  referral_link: string;
-  total_referrals: number;
-  total_earnings: number;
-}
+const GoogleIcon = () => (
+  <svg aria-hidden="true" viewBox="0 0 18 18" className="h-[18px] w-[18px] shrink-0">
+    <path fill="#4285F4" d="M17.64 9.205c0-.638-.057-1.252-.164-1.841H9v3.481h4.844a4.14 4.14 0 0 1-1.797 2.716v2.258h2.909c1.702-1.567 2.684-3.875 2.684-6.614Z" />
+    <path fill="#34A853" d="M9 18c2.43 0 4.467-.806 5.956-2.181l-2.909-2.258c-.806.54-1.835.859-3.047.859-2.344 0-4.328-1.584-5.037-3.711H.956v2.333A9 9 0 0 0 9 18Z" />
+    <path fill="#FBBC05" d="M3.963 10.709A5.41 5.41 0 0 1 3.682 9c0-.593.102-1.17.281-1.709V4.958H.956A9 9 0 0 0 0 9c0 1.452.347 2.827.956 4.042l3.007-2.333Z" />
+    <path fill="#EA4335" d="M9 3.58c1.321 0 2.507.454 3.44 1.346l2.582-2.582C13.463.892 11.426 0 9 0A9 9 0 0 0 .956 4.958l3.007 2.333C4.672 5.164 6.656 3.58 9 3.58Z" />
+  </svg>
+);
 
 const ProfileScreen = () => {
   const { t, lang, setLang } = useLang();
   const { theme, setTheme } = useTheme();
-  const { user, isAuthenticated, login, register, logout, updateUser, isLoading: authLoading } = useAuth();
+  const { user, isAuthenticated, login, loginWithGoogle, register, logout, updateUser, isLoading: authLoading } = useAuth();
   
   const [isRegisterMode, setIsRegisterMode] = useState(false);
   const [email, setEmail] = useState("");
@@ -38,12 +41,14 @@ const ProfileScreen = () => {
   const [name, setName] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
   const [loginLoading, setLoginLoading] = useState(false);
+  const [googleLoading, setGoogleLoading] = useState(false);
   const [forgotLoading, setForgotLoading] = useState(false);
   const [loginError, setLoginError] = useState("");
 
   const [activeTab, setActiveTab] = useState<"orders" | "tickets" | "partner" | "settings" | "faq">("orders");
-  const [copied, setCopied] = useState(false);
-  const [refData, setRefData] = useState<ReferralSummary | null>(null);
+  const [refData, setRefData] = useState<ReferralData | null>(null);
+  const [refLoading, setRefLoading] = useState(false);
+  const [refError, setRefError] = useState("");
   const [notificationsEnabled, setNotificationsEnabled] = useState(true);
   const [editProfileOpen, setEditProfileOpen] = useState(false);
   const [changePasswordOpen, setChangePasswordOpen] = useState(false);
@@ -54,28 +59,32 @@ const ProfileScreen = () => {
   const [newPasswordConfirm, setNewPasswordConfirm] = useState("");
   const [settingsSaving, setSettingsSaving] = useState(false);
 
-  // Fetch referral data when partner tab is active
-  useEffect(() => {
-    if (isAuthenticated && activeTab === "partner" && !refData) {
-      api.get<{ data: ReferralSummary }>("/referral")
-        .then((res) => { if (res.data) setRefData(res.data); })
-        .catch(() => {});
-    }
-  }, [isAuthenticated, activeTab, refData]);
-
-  const refLink = refData?.referral_link || (user?.referral_code ? `https://webmns.com?ref=${user.referral_code}` : "");
-
-  const handleCopy = async () => {
-    if (!refLink) return;
+  const loadReferralData = useCallback(async () => {
+    if (!isAuthenticated) return;
+    setRefLoading(true);
+    setRefError("");
     try {
-      await navigator.clipboard.writeText(refLink);
-      setCopied(true);
-      toast.success(t("partner.linkCopied"));
-      setTimeout(() => setCopied(false), 2000);
-    } catch {
-      toast.error(t("common.error"));
+      const response = await api.get<{ data: ReferralData }>("/referral");
+      if (response.data) setRefData(normalizeReferralData(response.data));
+    } catch (error) {
+      setRefError(error instanceof Error ? error.message : t("common.serverError"));
+    } finally {
+      setRefLoading(false);
     }
-  };
+  }, [isAuthenticated, t]);
+
+  useEffect(() => {
+    setRefData(null);
+    setRefError("");
+  }, [user?.id]);
+
+  // The referral endpoint creates a code on first read, so authenticated users
+  // are enrolled automatically and do not need a fake second "join" action.
+  useEffect(() => {
+    if (isAuthenticated && activeTab === "partner" && !refData && !refLoading && !refError) {
+      void loadReferralData();
+    }
+  }, [isAuthenticated, activeTab, refData, refLoading, refError, loadReferralData]);
 
   const tabs = [
     { key: "orders" as const, label: "nav.orders", icon: CreditCard },
@@ -104,6 +113,16 @@ const ProfileScreen = () => {
     const result = await register(name, email, password);
     if (!result.success) setLoginError(result.error || t("common.error"));
     setLoginLoading(false);
+  };
+
+  const handleGoogleLogin = async () => {
+    setGoogleLoading(true);
+    setLoginError("");
+    const result = await loginWithGoogle();
+    if (!result.success) {
+      setLoginError(result.error || t("common.error"));
+      setGoogleLoading(false);
+    }
   };
 
   const handleForgotPassword = async () => {
@@ -210,6 +229,22 @@ const ProfileScreen = () => {
         )}
 
         <motion.div initial={{ opacity: 0, y: 15 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: 0.1 }} className="flex flex-col gap-3">
+          <motion.button
+            whileTap={{ scale: 0.97 }}
+            onClick={handleGoogleLogin}
+            disabled={googleLoading || loginLoading}
+            className="flex w-full items-center justify-center gap-3 rounded-xl border border-border bg-card py-3.5 text-sm font-semibold text-foreground shadow-sm transition-colors hover:bg-secondary/70 disabled:opacity-50"
+          >
+            {googleLoading ? <Loader2 size={18} className="animate-spin text-primary" /> : <GoogleIcon />}
+            {t("profile.login.google")}
+          </motion.button>
+
+          <div className="flex items-center gap-3 py-1">
+            <span className="h-px flex-1 bg-border" />
+            <span className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">{t("profile.login.or")}</span>
+            <span className="h-px flex-1 bg-border" />
+          </div>
+
           {isRegisterMode && (
             <div className="relative">
               <UserIcon size={16} className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground" />
@@ -314,40 +349,14 @@ const ProfileScreen = () => {
 
           {activeTab === "partner" && (
             <motion.div key="partner" initial={{ opacity: 0, x: 20 }} animate={{ opacity: 1, x: 0 }} exit={{ opacity: 0, x: -20 }} className="no-scrollbar h-full overflow-y-auto px-4 pb-4">
-              {/* Stats */}
-              <div className="mt-3 grid grid-cols-2 gap-3">
-                {[
-                  { icon: DollarSign, value: `€${refData?.total_earnings || 0}`, label: t("partner.earned") },
-                  { icon: UserPlus, value: String(refData?.total_referrals || 0), label: t("partner.referrals") },
-                  { icon: Eye, value: "—", label: t("partner.clicks") },
-                  { icon: ShoppingCart, value: "—", label: t("partner.orders") },
-                ].map((s, i) => {
-                  const Icon = s.icon;
-                  return (
-                    <motion.div key={i} initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ delay: i * 0.08 }} className="flex flex-col items-center gap-1 rounded-2xl bg-card border border-border p-4">
-                      <Icon size={18} className="text-primary" />
-                      <span className="text-lg font-bold text-foreground">{s.value}</span>
-                      <span className="text-[10px] text-muted-foreground">{s.label}</span>
-                    </motion.div>
-                  );
-                })}
-              </div>
-              <div className="mt-3 rounded-2xl bg-card border border-border p-4">
-                <p className="text-xs font-semibold uppercase text-muted-foreground mb-2">{t("partner.yourLink")}</p>
-                <div className="flex items-center gap-2">
-                  <div className="flex-1 rounded-xl bg-secondary px-3 py-2.5 text-xs text-foreground truncate">{refLink || t("common.loading")}</div>
-                  <motion.button whileTap={{ scale: 0.9 }} onClick={handleCopy} disabled={!refLink} className="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-primary text-primary-foreground disabled:opacity-50">
-                    {copied ? <Check size={16} /> : <Copy size={16} />}
-                  </motion.button>
-                </div>
-              </div>
-              <div className="mt-3 rounded-2xl border border-primary/30 bg-primary/10 p-4">
-                <div className="flex items-center justify-between mb-2">
-                  <span className="text-xs font-semibold uppercase text-muted-foreground">{t("partner.balance")}</span>
-                  <span className="text-lg font-bold text-foreground">€{refData?.total_earnings || 0}</span>
-                </div>
-                <Progress value={Math.min(((refData?.total_earnings || 0) / 1000) * 100, 100)} className="h-1.5 bg-secondary [&>div]:bg-primary" />
-                <p className="text-[10px] text-muted-foreground mt-1.5">€{refData?.total_earnings || 0} / €1000 {t("partner.toBonus")}</p>
+              <div className="mt-3">
+                {refLoading ? (
+                  <div className="flex min-h-48 items-center justify-center">
+                    <Loader2 size={24} className="animate-spin text-primary" />
+                  </div>
+                ) : (
+                  <ReferralDashboard data={refData} error={refError} onRetry={loadReferralData} />
+                )}
               </div>
             </motion.div>
           )}
